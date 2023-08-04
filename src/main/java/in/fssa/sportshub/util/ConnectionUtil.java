@@ -1,4 +1,4 @@
-package in.fwsa.demoapp.util;
+package in.fssa.sportshub.util;
 
 public class ConnectionUtil {
 
