@@ -140,4 +140,33 @@ public class TeamDAO {
 			ConnectionUtil.close(con,ps,rs);
 		}
 	}
+	
+	public void delete(int playerId, int teamId) throws ValidationException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "UPDATE teams SET modified_by =? ,is_active=0 "
+					+ "WHERE id = ?";
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, playerId);
+			ps.setInt(2, teamId);
+			int rowsAffected = ps.executeUpdate();
+			
+			if (rowsAffected > 0) {
+			      System.out.println("Team successfully deleted");
+			}else {
+				throw new ValidationException("Sql issue : Team not delete");
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+	}
 }

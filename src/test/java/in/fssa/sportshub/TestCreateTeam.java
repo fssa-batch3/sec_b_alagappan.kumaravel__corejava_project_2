@@ -42,4 +42,13 @@ public class TestCreateTeam {
 			teamService.update(team);
 		});
 	}
+	
+	@Test
+	public void DeleteTeamWithValidData() throws Exception {
+		TeamService teamService = new TeamService();
+		
+		assertDoesNotThrow(()->{
+			teamService.delete(3,1);
+		});
+	}
 }

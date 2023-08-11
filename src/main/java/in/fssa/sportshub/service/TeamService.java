@@ -87,49 +87,39 @@ public void update(Team team) throws Exception{
 			team.getAddress().setId(addressId);
 			
 			TeamDAO teamDao = new TeamDAO();
-			teamDao.update(team);
-		
-			
+			teamDao.update(team);	
 	}
 
-//	public boolean playerExist(int id) throws Exception{
-//		PlayerValidator.validateId(id);
-//		PlayerDAO dao = new PlayerDAO();
-//		return dao.playerExist(id);
-//	}
+public void delete(int teamId, int playerId) throws Exception{
 	
-//	public void update(Player player) throws Exception{
-//		
-//		PlayerValidator.validatePartial(player);
-//		AddressValidator.validate(player.getAddress());
-//		boolean checkPlayerExist = this.playerExist(player.getId());
-//		if(checkPlayerExist){
-//			
-//			Address address = player.getAddress();
-//			AddressService addressService = new AddressService();
-//			int addressId = addressService.create(address);
-//			
-//			player.getAddress().setId(addressId);
-//			
-//			PlayerDAO playerDao = new PlayerDAO();
-//			playerDao.update(player);	
-//			
-//		}else {
-//			throw new Exception("Player not exist");
-//		}
-//	}
-//	
-//	public void delete(int id) throws Exception{
-//		
-//		PlayerValidator.validateId(id);;
-//		boolean checkPlayerExist = this.playerExist(id);
-//		if(checkPlayerExist){
-//			
-//			PlayerDAO playerDao = new PlayerDAO();
-//			playerDao.delete(id);	
-//			
-//		}else {
-//			throw new Exception("Player not exist");
-//		}
-//	}
+	TeamValidator.validateId(teamId, "Team");
+	TeamValidator.validateId(playerId, "Player");
+	
+	PlayerService playerService = new PlayerService();
+	boolean checkPlayerExist = playerService.playerExist(playerId);
+	if(checkPlayerExist){
+		throw new Exception("Player not exist");
+	}
+	
+	boolean checkTeamExist = this.checkTeamExist(teamId);
+	if(!checkTeamExist){
+		throw new Exception("Team not exist");
+	}
+	
+	TeamMemberService teamMemService = new TeamMemberService();
+	boolean isCaptain = teamMemService.isPlayerCaptainOfSpecificTeam(playerId, teamId);
+	if(!isCaptain){
+		throw new Exception("player not a captian of this team");
+	}
+	
+	
+		TeamDAO teamDao = new TeamDAO();
+		teamDao.delete(playerId, teamId);
+		
+		TeamMemberService teamMemServ = new TeamMemberService();
+		teamMemServ.delete(teamId, playerId);
+	
+		
+}
+
 }

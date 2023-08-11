@@ -100,4 +100,34 @@ public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) {
 		
 		return value;
 	}
+
+public void delete(int teamId, int playerId) {
+	
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+
+		String query = "UPDATE team_member SET is_captain =0, is_active=0 "
+				+ "WHERE team_id=? && user_id = ? && is_captain=1";
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, teamId);
+		ps.setInt(2, playerId);
+		int rowsAffected = ps.executeUpdate();
+		if (rowsAffected > 0) {
+			System.out.println("team member deleted");
+		}else {
+			throw new RuntimeException("Sql issue: team member not delete");
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println(e.getMessage());
+		throw new RuntimeException(e);
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+}
 }

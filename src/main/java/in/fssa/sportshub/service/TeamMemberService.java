@@ -45,4 +45,24 @@ public void create(TeamMember teamMember) throws Exception{
 		return dao.isPlayerCaptainOfSpecificTeam(player_id, team_id);
 	}
 
+public void delete(int teamId, int playerId) throws Exception{
+		
+		TeamMemberValidator.validateId(teamId, "Team");
+		TeamMemberValidator.validateId(playerId, "Player");
+		PlayerService playerService = new PlayerService();
+		boolean checkPlayerExist = playerService.playerExist(playerId);
+		if(checkPlayerExist){
+			throw new Exception("Player not exist");
+		}
+
+		
+		boolean isCaptain = this.isPlayerCaptainOfSpecificTeam(playerId, teamId);
+		if(!isCaptain){
+			throw new Exception("player not a captian of this team");
+		}
+		
+		TeamMemberDAO dao = new TeamMemberDAO();
+		dao.delete(teamId, playerId);
+			
+	}
 }
