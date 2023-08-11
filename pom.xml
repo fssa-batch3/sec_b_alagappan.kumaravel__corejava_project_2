@@ -129,7 +129,6 @@
 				            </goals>
 				            <configuration>
 				                <outputType>xml</outputType>
-				                <outputDirectory>${project.build.directory}/site/jacoco/</outputDirectory>
 				            </configuration>
 				        </execution>
 				    </executions>
