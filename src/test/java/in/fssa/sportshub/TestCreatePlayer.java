@@ -16,17 +16,17 @@ public class TestCreatePlayer {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
-		player.setUserName("Alagu");
-		player.setFirstName("Alagappan");
-		player.setLastName("Kumaravel");
-		player.setUrl("shssssdsfdsd");
+		player.setPhoneNumber(9344655221l);
+		player.setUserName("Pks");
+		player.setFirstName("Praveen");
+		player.setLastName("kumar");
+		player.setUrl("shssssdsfdsdfvdfgvdfd");
 		player.setPassword("Aa!1aaaaa");
 		Gender personGender = Gender.MALE;
 		player.setGender(personGender);
 		player.getAddress().setArea("Aminjikarai");
 		player.getAddress().setDistrict("Chennai");
-		player.setDateOfBirth(LocalDate.of(2001, 10, 26));
+		player.setDateOfBirth(LocalDate.of(2002, 11, 26));
 		player.setAbout("I am a good boy");
 		
 		assertDoesNotThrow(()->{

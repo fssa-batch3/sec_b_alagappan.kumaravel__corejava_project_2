@@ -120,6 +120,40 @@ public Address findById(int id) {
 	return address;
 }
 
+
+public boolean checkAddressExist(int id) {
+	boolean value;
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "SELECT * FROM address WHERE id=?";
+		
+		con = ConnectionUtil.getConnection();
+		
+		ps = con.prepareStatement(query);
+		ps.setInt(1, id);
+		
+		rs = ps.executeQuery();
+
+		if (rs.next()) {
+			  value = true;
+		      System.out.println("Address found");
+		}else {
+			value = false;
+			System.out.println("Address not found");
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println(e.getMessage());
+		throw new RuntimeException(e);
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	return value;
+}
+
 public Set<Address> getAllAddress() {
 	Set<Address> addressList = new HashSet<>();;
 	Connection con = null;

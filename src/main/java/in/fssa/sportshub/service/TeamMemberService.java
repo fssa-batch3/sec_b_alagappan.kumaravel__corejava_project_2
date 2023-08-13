@@ -11,7 +11,7 @@ public void create(TeamMember teamMember) throws Exception{
 		TeamMemberValidator.validateId(teamMember.getUserId(), "Player");
 		PlayerService playerService = new PlayerService();
 		boolean checkPlayerExist = playerService.playerExist(teamMember.getUserId());
-		if(checkPlayerExist){
+		if(!checkPlayerExist){
 			throw new Exception("Player not exist");
 		}
 		
@@ -30,7 +30,11 @@ public void create(TeamMember teamMember) throws Exception{
 		dao.create(teamMember);
 			
 	}
-
+	public TeamMember findById(int id) throws Exception{
+		TeamMemberValidator.validateId(id, "Team member id");
+		TeamMemberDAO dao = new TeamMemberDAO();
+		return dao.findById(id);
+	}
 
 	public boolean isPlayerCaptain(int id) throws Exception{
 		TeamMemberValidator.validateId(id, "Player");

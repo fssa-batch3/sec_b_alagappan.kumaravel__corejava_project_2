@@ -4,8 +4,8 @@ public class TeamMember {
 	private int id;
 	private int teamId;
 	private int userId;
-	private boolean isCaptain;
-	private boolean isActive;
+	private int isCaptain;
+	private int isActive;
 	public int getId() {
 		return id;
 	}
@@ -24,16 +24,16 @@ public class TeamMember {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public boolean isCaptain() {
+	public int getIsCaptain() {
 		return isCaptain;
 	}
-	public void setCaptain(boolean isCaptain) {
+	public void setIsCaptain(int isCaptain) {
 		this.isCaptain = isCaptain;
 	}
-	public boolean isActive() {
+	public int getIsActive() {
 		return isActive;
 	}
-	public void setActive(boolean isActive) {
+	public void setIsActive(int isActive) {
 		this.isActive = isActive;
 	}
 	@Override

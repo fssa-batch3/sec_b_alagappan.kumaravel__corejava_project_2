@@ -69,6 +69,40 @@ public class TeamMemberDAO {
 		return value;
 	}
 	
+public TeamMember findById(int id) {
+	TeamMember teamMemberData = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String query = "SELECT * FROM team_member WHERE is_active=1 && id=?";
+			
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+		    if (rs.next()) {
+		    	teamMemberData = new TeamMember();
+		    	teamMemberData.setId(rs.getInt("id"));
+		    	teamMemberData.setIsActive(rs.getInt("is_active"));
+		    	teamMemberData.setIsCaptain(rs.getInt("is_captain"));
+		    	teamMemberData.setTeamId(rs.getInt("team_id"));
+		    	teamMemberData.setUserId(rs.getInt("user_id"));
+		    }else {
+		    	System.out.println("team member data not avaliable from dao");
+		    }
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new RuntimeException(e);
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+		
+		return teamMemberData;
+	}
+	
 public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) {
 		
 		boolean value;

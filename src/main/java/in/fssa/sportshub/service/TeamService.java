@@ -14,9 +14,11 @@ public class TeamService {
 public void create(Team team) throws Exception{
 		
 		TeamValidator.validateAll(team);
+		
 		PlayerService playerService = new PlayerService();
+		
 		boolean checkPlayerExist = playerService.playerExist(team.getCreatedBy());
-		if(checkPlayerExist){
+		if(!checkPlayerExist){
 			throw new Exception("Player not exist");
 		}
 		TeamMemberService teamMemService = new TeamMemberService();

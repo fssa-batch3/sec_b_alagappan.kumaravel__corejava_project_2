@@ -1,24 +1,23 @@
 package in.fssa.sportshub.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class MatchRequest {
 	private int id;
 	private int createdBy;
 	private int toTeam;
-	private String area;
-	private String district;
 	private int addressId;
 	private boolean Status;
-	private char typeOfMatch;
+	private int typeOfMatch;
 	private int members; 
 	private int membersAgeFrom; 
 	private int membersAgeTo; 
-	private LocalDate matchTime;
+	private LocalDateTime matchTime;
 	private String location;
 	private String information;
-	private LocalDate createdAt;
-	private LocalDate modifiedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
 	public int getId() {
 		return id;
 	}
@@ -37,18 +36,6 @@ public class MatchRequest {
 	public void setToTeam(int toTeam) {
 		this.toTeam = toTeam;
 	}
-	public String getArea() {
-		return area;
-	}
-	public void setArea(String area) {
-		this.area = area;
-	}
-	public String getDistrict() {
-		return district;
-	}
-	public void setDistrict(String district) {
-		this.district = district;
-	}
 	public int getAddressId() {
 		return addressId;
 	}
@@ -61,10 +48,10 @@ public class MatchRequest {
 	public void setStatus(boolean status) {
 		Status = status;
 	}
-	public char getTypeOfMatch() {
+	public int getTypeOfMatch() {
 		return typeOfMatch;
 	}
-	public void setTypeOfMatch(char typeOfMatch) {
+	public void setTypeOfMatch(int typeOfMatch) {
 		this.typeOfMatch = typeOfMatch;
 	}
 	public int getMembers() {
@@ -85,10 +72,10 @@ public class MatchRequest {
 	public void setMembersAgeTo(int membersAgeTo) {
 		this.membersAgeTo = membersAgeTo;
 	}
-	public LocalDate getMatchTime() {
+	public LocalDateTime getMatchTime() {
 		return matchTime;
 	}
-	public void setMatchTime(LocalDate matchTime) {
+	public void setMatchTime(LocalDateTime matchTime) {
 		this.matchTime = matchTime;
 	}
 	public String getLocation() {
@@ -103,22 +90,22 @@ public class MatchRequest {
 	public void setInformation(String information) {
 		this.information = information;
 	}
-	public LocalDate getCreatedAt() {
+	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(LocalDate createdAt) {
+	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
-	public LocalDate getModifiedAt() {
+	public LocalDateTime getModifiedAt() {
 		return modifiedAt;
 	}
-	public void setModifiedAt(LocalDate modifiedAt) {
+	public void setModifiedAt(LocalDateTime modifiedAt) {
 		this.modifiedAt = modifiedAt;
 	}
 	@Override
 	public String toString() {
-		return "MatchRequest [id=" + id + ", createdBy=" + createdBy + ", toTeam=" + toTeam + ", area=" + area
-				+ ", district=" + district + ", addressId=" + addressId + ", Status=" + Status + ", typeOfMatch="
+		return "MatchRequest [id=" + id + ", createdBy=" + createdBy + ", toTeam=" + toTeam + 
+				", addressId=" + addressId + ", Status=" + Status + ", typeOfMatch="
 				+ typeOfMatch + ", members=" + members + ", membersAgeFrom=" + membersAgeFrom + ", membersAgeTo="
 				+ membersAgeTo + ", matchTime=" + matchTime + ", location=" + location + ", information=" + information
 				+ ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + "]";

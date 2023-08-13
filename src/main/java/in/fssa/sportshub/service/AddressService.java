@@ -37,6 +37,12 @@ public class AddressService {
 			AddressDAO addressDao = new AddressDAO();
 			return addressDao.findById(id);
 	 }
+	 public boolean checkAddressExist(int id) throws Exception{
+		 	AddressValidator.validateId(id);
+	 	
+			AddressDAO addressDao = new AddressDAO();
+			return addressDao.checkAddressExist(id);
+	 }
 	 public Set<Address> getAllAddress() throws Exception{
 
 			AddressDAO addressDao = new AddressDAO();

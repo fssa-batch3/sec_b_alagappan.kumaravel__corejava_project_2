@@ -14,13 +14,13 @@ public class TestCreateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Rockers");
+		team.setTeamName("Indians");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(1);
-		team.setModifiedBy(1);
+		team.setCreatedBy(2);
+		team.setModifiedBy(2);
 		assertDoesNotThrow(()->{
 			teamService.create(team);
 		});
