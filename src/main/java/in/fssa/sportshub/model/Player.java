@@ -10,13 +10,13 @@ public class Player {
 	private long phoneNumber;
 	private String userName;
 	private String firstName;
-	private String lastName;
-	private String Url;
+	private String lastName;//can null
+	private String Url;//can null not validate
 	private String Password;
-	private Gender gender;
+	private Gender gender;// not validate
 	private Address address = new Address();
 	private LocalDate dateOfBirth;
-	private String about;
+	private String about;//can null
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
 	private boolean isActive;

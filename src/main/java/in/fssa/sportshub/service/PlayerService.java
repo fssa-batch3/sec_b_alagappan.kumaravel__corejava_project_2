@@ -62,18 +62,21 @@ public class PlayerService {
 		}
 	}
 	
-	public void delete(int id) throws Exception{// not check team already exist
+	public void delete(int id) throws Exception{
 		
-		PlayerValidator.validateId(id, "PLayer");
+		PlayerValidator.validateId(id, "Player");
 		boolean checkPlayerExist = this.playerExist(id);
-		if(checkPlayerExist){
-			
-			PlayerDAO playerDao = new PlayerDAO();
-			playerDao.delete(id);	
-			
-		}else {
+		if(!checkPlayerExist){
 			throw new ValidationException("Player not exist");
 		}
+		TeamMemberService teamMemService = new TeamMemberService();
+		boolean isCaptain = teamMemService.isPlayerCaptain(id);
+		if(isCaptain){
+			throw new Exception("Player is captain of a team");
+		}
+		
+			PlayerDAO playerDao = new PlayerDAO();
+			playerDao.delete(id);	
 	}
 	
 }

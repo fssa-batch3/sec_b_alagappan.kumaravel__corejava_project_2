@@ -12,37 +12,37 @@ import in.fssa.sportshub.enumm.Gender;
 import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.service.PlayerService;
 
-public class TestCreatePlayer {
+public class TestUpdatePlayer {
 	
 	@Test
-	public void createPlayerWithValidData() throws Exception {
+	public void updatePlayerWithValidData() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655231l);// here change new phone number
-		player.setUserName("Pksaasd");
-		player.setFirstName("Praveen");
-		player.setLastName("kumar");
-		player.setUrl("shssssdsfdsdfvdfgvdfd");
+		player.setId(1);
+		player.setUserName("Alagu");
+		player.setFirstName("Alagappan");
+		player.setLastName("Kumaravel");
+		player.setUrl("shssssdsfdsd");
 		player.setPassword("Aa!1aaaaa");
 		Gender personGender = Gender.MALE;
 		player.setGender(personGender);
-		player.getAddress().setArea("Aminjikarai");
+		player.getAddress().setArea("ShennoiNagar");// here case should i check
 		player.getAddress().setDistrict("Chennai");
-		player.setDateOfBirth(LocalDate.of(2002, 11, 26));
-		player.setAbout("I am a good boy");
+		player.setDateOfBirth(LocalDate.of(2001, 10, 26));
+		player.setAbout("I am a good batsman");
 		
 		assertDoesNotThrow(()->{
-			playerService.create(player);
+			playerService.update(player);
 		});
 	}
 	
 	@Test
-    public void createPlayerWithNullValues() {
+    public void updatePlayerWithNullValues() {
         PlayerService playerService = new PlayerService();
 
         Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(null);
+            playerService.update(null);
         });
         
         String exceptedMessage = "Invalid player input";
@@ -51,12 +51,12 @@ public class TestCreatePlayer {
     }
 	
 	@Test
-	public void createPlayerWithInvalidPhoneNumber() throws Exception {
+	public void updatePlayerWithInvalidPlayerId() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(93446552l);
-		player.setUserName("Pksaaaa");
+		player.setId(-1);
+		player.setUserName("Pranven");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
 		player.setUrl("shssssdsfdsdfvdfgvdfd");
@@ -69,20 +69,47 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
-        String exceptedMessage = "Invalid phone number";
+        String exceptedMessage = "Invalid Player id";
 		String actualMessage = exception.getMessage();
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	
 	@Test
-	public void createPlayerWithUserNameValueNull() throws Exception {
+	public void updatePlayerWithNotExistPlayerId() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(100);
+		player.setUserName("Pranven");
+		player.setFirstName("Praveen");
+		player.setLastName("kumar");
+		player.setUrl("shssssdsfdsdfvdfgvdfd");
+		player.setPassword("Aa!1aaaaa");
+		Gender personGender = Gender.MALE;
+		player.setGender(personGender);
+		player.getAddress().setArea("Aminjikarai");
+		player.getAddress().setDistrict("Chennai");
+		player.setDateOfBirth(LocalDate.of(2002, 11, 26));
+		player.setAbout("I am a good boy");
+		
+		Exception exception = assertThrows(Exception.class, () -> {
+            playerService.update(player);
+        });
+        
+        String exceptedMessage = "Player not exist";
+		String actualMessage = exception.getMessage();
+		assertTrue(exceptedMessage.equals(actualMessage));
+	}
+	
+	@Test
+	public void updatePlayerWithUserNameValueNull() throws Exception {
+		PlayerService playerService = new PlayerService();
+		
+		Player player = new Player();
+		player.setId(2);
 		player.setUserName(null);
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -96,7 +123,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "User name can't be null or empty";
@@ -105,11 +132,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithUserNameValueEmpty() throws Exception {
+	public void updatePlayerWithUserNameValueEmpty() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("  ");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -123,7 +150,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "User name can't be null or empty";
@@ -132,11 +159,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithLessUserNameCharacterLength() throws Exception {
+	public void updatePlayerWithLessUserNameCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("assd");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -150,7 +177,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "User name length does not match pattern";
@@ -159,11 +186,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithMoreUserNameCharacterLength() throws Exception {
+	public void updatePlayerWithMoreUserNameCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("asddaskbafkjbadkjbfkjdbdkdnb");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -177,7 +204,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "User name length does not match pattern";
@@ -186,11 +213,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithNumericUserName() throws Exception {
+	public void updatePlayerWithNumericUserName() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("12345");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -204,7 +231,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "User name does not match pattern";
@@ -213,11 +240,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithFirstNameValueNull() throws Exception {
+	public void updatePlayerWithFirstNameValueNull() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName(null);
 		player.setLastName("kumar");
@@ -231,7 +258,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "First name can't be null or empty";
@@ -240,11 +267,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithFirstNameValueEmpty() throws Exception {
+	public void updatePlayerWithFirstNameValueEmpty() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("  ");
 		player.setLastName("kumar");
@@ -258,7 +285,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "First name can't be null or empty";
@@ -267,11 +294,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithNumericFirstName() throws Exception {
+	public void updatePlayerWithNumericFirstName() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Pr123");
 		player.setLastName("kumar");
@@ -285,7 +312,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "First name does not match pattern";
@@ -294,11 +321,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithLessFirstNameCharacterLength() throws Exception {
+	public void updatePlayerWithLessFirstNameCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("praveen");
 		player.setFirstName("Pr");
 		player.setLastName("kumar");
@@ -312,7 +339,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "First name length does not match pattern";
@@ -321,11 +348,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithMoreFirstNameCharacterLength() throws Exception {
+	public void updatePlayerWithMoreFirstNameCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("asdddd");
 		player.setFirstName("Praveencsdfcbnsdkjvnsdkjfnsdkjfvnsdkjfvn");
 		player.setLastName("kumar");
@@ -339,7 +366,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "First name length does not match pattern";
@@ -348,11 +375,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithPasswordValueNull() throws Exception {
+	public void updatePlayerWithPasswordValueNull() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -366,7 +393,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Password can't be null or empty";
@@ -375,11 +402,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithPasswordValueEmpty() throws Exception {
+	public void updatePlayerWithPasswordValueEmpty() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("praveen");
 		player.setLastName("kumar");
@@ -393,7 +420,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Password can't be null or empty";
@@ -402,11 +429,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithWeakPassword() throws Exception {
+	public void updatePlayerWithWeakPassword() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -420,7 +447,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Invalid password";
@@ -429,11 +456,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithDOBValueNull() throws Exception {
+	public void updatePlayerWithDOBValueNull() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -447,7 +474,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Date of birth can not be null";
@@ -456,11 +483,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithDOBLessThanTenYear() throws Exception {
+	public void updatePlayerWithDOBLessThanTenYear() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -474,7 +501,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Age should be more than 10 years";
@@ -483,11 +510,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithDOBFutureDate() throws Exception {
+	public void updatePlayerWithDOBFutureDate() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -501,7 +528,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Age should be more than 10 years";
@@ -510,11 +537,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithDOBLeapYearDate() throws Exception {
+	public void updatePlayerWithDOBLeapYearDate() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -528,7 +555,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Date of birth is a leap year";
@@ -538,11 +565,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithAddressValueNull() throws Exception {
+	public void updatePlayerWithAddressValueNull() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -555,7 +582,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Invalid Address input";
@@ -564,11 +591,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithAreaValueNull() throws Exception {
+	public void updatePlayerWithAreaValueNull() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -582,7 +609,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Area can't be null or empty";
@@ -591,11 +618,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithAreaValueEmpty() throws Exception {
+	public void updatePlayerWithAreaValueEmpty() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -609,7 +636,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Area can't be null or empty";
@@ -618,11 +645,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithNumericalAreaValue() throws Exception {
+	public void updatePlayerWithNumericalAreaValue() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -636,7 +663,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Area does not match pattern";
@@ -645,11 +672,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithDistrictValueNull() throws Exception {
+	public void updatePlayerWithDistrictValueNull() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -663,7 +690,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "District can't be null or empty";
@@ -673,11 +700,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithDistrictValueEmpty() throws Exception {
+	public void updatePlayerWithDistrictValueEmpty() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -691,7 +718,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "District can't be null or empty";
@@ -700,11 +727,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithNumericalDistrictValue() throws Exception {
+	public void updatePlayerWithNumericalDistrictValue() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -718,7 +745,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "District does not match pattern";
@@ -727,11 +754,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithLessAreaCharacterLength() throws Exception {
+	public void updatePlayerWithLessAreaCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -745,7 +772,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Area length does not match pattern";
@@ -753,11 +780,11 @@ public class TestCreatePlayer {
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	@Test
-	public void createPlayerWithMoreAreaCharacterLength() throws Exception {
+	public void updatePlayerWithMoreAreaCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -771,7 +798,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Area length does not match pattern";
@@ -780,11 +807,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithLessDistrictCharacterLength() throws Exception {
+	public void updatePlayerWithLessDistrictCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -798,7 +825,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "District length does not match pattern";
@@ -806,11 +833,11 @@ public class TestCreatePlayer {
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	@Test
-	public void createPlayerWithMoreDistrictCharacterLength() throws Exception {
+	public void updatePlayerWithMoreDistrictCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("Praveen");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -824,7 +851,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "District length does not match pattern";
@@ -833,11 +860,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithLessLastNameCharacterLength() throws Exception {
+	public void updatePlayerWithLessLastNameCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("assdsdsdf");
 		player.setFirstName("Praveen");
 		player.setLastName("");
@@ -851,7 +878,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Last name does not match pattern";
@@ -860,11 +887,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithMoreLastNameCharacterLength() throws Exception {
+	public void updatePlayerWithMoreLastNameCharacterLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("asddask");
 		player.setFirstName("Praveen");
 		player.setLastName("kumardsvsfdvnvdfsdfsdfvsd");
@@ -878,7 +905,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Last name length does not match pattern";
@@ -887,11 +914,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithNumericLastName() throws Exception {
+	public void updatePlayerWithNumericLastName() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("pksasddd");
 		player.setFirstName("Praveen");
 		player.setLastName("1");
@@ -905,7 +932,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "Last name does not match pattern";
@@ -914,11 +941,11 @@ public class TestCreatePlayer {
 	}
 	
 	@Test
-	public void createPlayerWithMoreAboutStringLength() throws Exception {
+	public void updatePlayerWithMoreAboutStringLength() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
+		player.setId(2);
 		player.setUserName("pksasddd");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -932,7 +959,7 @@ public class TestCreatePlayer {
 		player.setAbout("I am a good boy jhgvjhgvjhvjhvjhbvjhgbjhgjhgjhvkhgjvjhgkghvjhvugghgvjvkjkbncsdkjfnsdfvkjsdnfsdkjnsdfkjbnfskdjfnsdkjfnskdjfnskdjfnsdjfnsdljfnjhgrijriuqejnweiufhwoeiyulefbgdyfghbsdgfiyerbidfbisudfhihjbfiufhijhbnfishfidfbnsijdfisdjbnfisdjnfisjdnfisjdfnsidjfudgfdsfgdfhdfgndfgnfghnghngfdfsdgtuuoiptdgfgjmghfj");
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
+            playerService.update(player);
         });
         
         String exceptedMessage = "About player data length does not match pattern";
@@ -940,32 +967,6 @@ public class TestCreatePlayer {
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	
-	@Test
-	public void createPlayerWithExistingPhoneNumber() throws Exception {
-		PlayerService playerService = new PlayerService();
-		
-		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
-		player.setUserName("Pksaasd");
-		player.setFirstName("Praveen");
-		player.setLastName("kumar");
-		player.setUrl("shssssdsfdsdfvdfgvdfd");
-		player.setPassword("Aa!1aaaaa");
-		Gender personGender = Gender.MALE;
-		player.setGender(personGender);
-		player.getAddress().setArea("Aminjikarai");
-		player.getAddress().setDistrict("Chennai");
-		player.setDateOfBirth(LocalDate.of(2002, 11, 26));
-		player.setAbout("I am a good boy");
-		
-		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
-        });
-        
-        String exceptedMessage = "Phone number already exist";
-		String actualMessage = exception.getMessage();
-		assertTrue(exceptedMessage.equals(actualMessage));
-	}
 	
 	
 }

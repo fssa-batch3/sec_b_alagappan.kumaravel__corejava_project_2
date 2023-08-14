@@ -1,6 +1,8 @@
 package in.fssa.sportshub.validator;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,10 +22,16 @@ public class PlayerValidator {
 			throw new ValidationException("Invalid player input");
 		}
 		
-		StringUtil.rejectIfInvalidString(player.getUserName(), "UserName");
-		StringUtil.rejectIfPatternDoesNotMatch(player.getUserName(), "UserName");
-		StringUtil.rejectIfInvalidString(player.getFirstName(), "FirstName");
-		StringUtil.rejectIfPatternDoesNotMatch(player.getFirstName(), "FirstName");
+		StringUtil.rejectIfInvalidString(player.getUserName(), "User name");
+		StringUtil.rejectIfPatternDoesNotMatch(player.getUserName(), "User name");
+		StringUtil.rejectIfInvalidString(player.getFirstName(), "First name");
+		StringUtil.rejectIfPatternDoesNotMatch(player.getFirstName(), "First name");
+		if(player.getUserName().length() < 5 || player.getUserName().length() > 20) {
+			throw new ValidationException("User name length does not match pattern");
+		}
+		if(player.getFirstName().length() < 3 || player.getFirstName().length() > 20) {
+			throw new ValidationException("First name length does not match pattern");
+		}
 		StringUtil.rejectIfInvalidString(player.getPassword(), "Password");	
 		//password match pattern here
         String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
@@ -36,10 +44,28 @@ public class PlayerValidator {
 		// dateofbirth validate here
 		 LocalDate currentDate = LocalDate.now();  
 		 LocalDate dateOfBirth = player.getDateOfBirth();
+		 if(dateOfBirth ==  null) {
+			 throw new ValidationException("Date of birth can not be null");
+		 }
 		 LocalDate minimumValidDate = currentDate.minusYears(10);
-		 if(!dateOfBirth.isAfter(currentDate) && !dateOfBirth.isBefore(minimumValidDate)) {
+		 if(dateOfBirth.isAfter(currentDate) || !dateOfBirth.isBefore(minimumValidDate)) {
 				throw new ValidationException("Age should be more than 10 years");
 		}
+		 if (PlayerValidator.isValidLeapYearDateOfBirth(dateOfBirth)) {
+			 throw new ValidationException("Date of birth is a leap year");
+	      }
+		 if(player.getLastName() != null) {
+			 StringUtil.rejectIfPatternDoesNotMatch(player.getLastName(), "Last name");
+			 if(player.getLastName().length() < 1 || player.getLastName().length() > 20) {
+					throw new ValidationException("Last name length does not match pattern");
+				}
+		 }
+		 
+		 if(player.getAbout() != null) {
+			 if(player.getAbout().length() > 50) {
+					throw new ValidationException("About player data length does not match pattern");
+				}
+		 }
 	}
 	
 	public static void validatePhoneNumber(long phoneNumber) throws ValidationException {
@@ -54,4 +80,16 @@ public class PlayerValidator {
 			throw new ValidationException("Invalid "+name+" id");
 		}
 	}
+	
+	 public static boolean isValidLeapYearDateOfBirth(LocalDate dateOfBirth) {
+	        try {
+	            // Check if the year is a leap year
+	            boolean isLeapYear = Year.of(dateOfBirth.getYear()).isLeap();
+
+	            // Check if the day and month are valid for a leap year
+	            return isLeapYear && dateOfBirth.getMonthValue() == 2 && dateOfBirth.getDayOfMonth() <= 29;
+	        } catch (DateTimeException e) {
+	            return false; // Invalid date format
+	        }
+	  }
 }

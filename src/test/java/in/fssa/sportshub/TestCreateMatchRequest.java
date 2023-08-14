@@ -23,11 +23,9 @@ public class TestCreateMatchRequest {
 		matchRequest.setMembersAgeFrom(19);
 		matchRequest.setMembersAgeTo(22);
         LocalDateTime currentDateTime = LocalDateTime.now();
-        long amountToAdd = 3; // Change this to the desired amount
-        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
-
+        long amountToAdd = 3; 
+        ChronoUnit unit = ChronoUnit.DAYS;
         LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
-
 		matchRequest.setMatchTime(futureDateTime);
 		matchRequest.setLocation("Shennoi nagar ground");
 		matchRequest.setInformation("100 rs betting");
