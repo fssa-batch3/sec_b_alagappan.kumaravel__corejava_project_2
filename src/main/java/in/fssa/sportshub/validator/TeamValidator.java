@@ -8,8 +8,9 @@ public class TeamValidator {
 	
 	public static void validateAll(Team team) throws ValidationException {
 		TeamValidator.validatePartial(team);
-		TeamValidator.validateId(team.getCreatedBy(), "Create Player");
-		TeamValidator.validateId(team.getModifiedBy(), "Modify Player");
+		AddressValidator.validate(team.getAddress());
+		TeamValidator.validateId(team.getCreatedBy(), "create player");
+		TeamValidator.validateId(team.getModifiedBy(), "modify player");
 	}
 	
 	public static void validatePartial(Team team) throws ValidationException {
@@ -18,9 +19,16 @@ public class TeamValidator {
 			throw new ValidationException("Invalid team input");
 		}
 		
-		StringUtil.rejectIfInvalidString(team.getTeamName(), "TeamName");
-		StringUtil.rejectIfPatternDoesNotMatch(team.getTeamName(), "TeamName");
-		
+		StringUtil.rejectIfInvalidString(team.getTeamName(), "Team name");
+		StringUtil.rejectIfPatternDoesNotMatch(team.getTeamName(), "Team name");
+		if(team.getTeamName().length() < 5 || team.getTeamName().length() > 20) {
+			throw new ValidationException("Team name length does not match pattern");
+		}
+		if(team.getAbout() != null) {
+			 if(team.getAbout().length() > 50) {
+					throw new ValidationException("About team data length does not match pattern");
+				}
+		 }
 	}
 	
 	public static void validateId(int id, String name) throws ValidationException {

@@ -55,7 +55,7 @@ public void delete(int teamId, int playerId) throws Exception{
 		TeamMemberValidator.validateId(playerId, "Player");
 		PlayerService playerService = new PlayerService();
 		boolean checkPlayerExist = playerService.playerExist(playerId);
-		if(checkPlayerExist){
+		if(!checkPlayerExist){
 			throw new Exception("Player not exist");
 		}
 

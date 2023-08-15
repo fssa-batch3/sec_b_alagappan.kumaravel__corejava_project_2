@@ -63,11 +63,11 @@ public void create(Team team) throws Exception{
 public void update(Team team) throws Exception{
 		
 		TeamValidator.validatePartial(team);
-		TeamValidator.validateId(team.getModifiedBy(), "Modify Player");
+		TeamValidator.validateId(team.getModifiedBy(), "modify player");
 		
 		PlayerService playerService = new PlayerService();
 		boolean checkPlayerExist = playerService.playerExist(team.getModifiedBy());
-		if(checkPlayerExist){
+		if(!checkPlayerExist){
 			throw new Exception("Player not exist");
 		}
 		
@@ -94,12 +94,12 @@ public void update(Team team) throws Exception{
 
 public void delete(int teamId, int playerId) throws Exception{
 	
-	TeamValidator.validateId(teamId, "Team");
-	TeamValidator.validateId(playerId, "Player");
+	TeamValidator.validateId(teamId, "team");
+	TeamValidator.validateId(playerId, "player");
 	
 	PlayerService playerService = new PlayerService();
 	boolean checkPlayerExist = playerService.playerExist(playerId);
-	if(checkPlayerExist){
+	if(!checkPlayerExist){
 		throw new Exception("Player not exist");
 	}
 	

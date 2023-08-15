@@ -9,31 +9,31 @@ import org.junit.jupiter.api.Test;
 import in.fssa.sportshub.model.Team;
 import in.fssa.sportshub.service.TeamService;
 
-public class TestCreateTeam {
+public class TestUpdateTeam {
+
 	@Test
-	public void createTeamWithValidData() throws Exception {
+	public void updateTeamWithValidData() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
-
-		team.setTeamName("Sharks");// here change team name
+		team.setId(7);
+		team.setTeamName("Rockers");
 		team.setUrl("shssssdsfdsd");
-		team.getAddress().setArea("AnnaNagar");
+		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
-		team.setAbout("Playing cricket");
-		team.setCreatedBy(3);// here change team name
+		team.setAbout("Playing Street cricket");
 		team.setModifiedBy(3);
 		assertDoesNotThrow(()->{
-			teamService.create(team);
+			teamService.update(team);
 		});
 	}
 	
 	@Test
-    public void createTeamWithNullValues() {
+    public void updateTeamWithNullValues() {
 		TeamService teamService = new TeamService();
 
         Exception exception = assertThrows(Exception.class, () -> {
-        	teamService.create(null);
+        	teamService.update(null);
         });
         
         String exceptedMessage = "Invalid team input";
@@ -42,7 +42,7 @@ public class TestCreateTeam {
     }
 	
 	@Test
-	public void createTeamWithTeamNameValueNull() throws Exception {
+	public void updateTeamWithTeamNameValueNull() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -52,10 +52,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Team name can't be null or empty";
@@ -65,7 +65,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithTeamNameValueEmpty() throws Exception {
+	public void updateTeamWithTeamNameValueEmpty() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -75,10 +75,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Team name can't be null or empty";
@@ -87,7 +87,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithNumericTeamName() throws Exception {
+	public void updateTeamWithNumericTeamName() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -97,10 +97,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Team name does not match pattern";
@@ -109,7 +109,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithLessTeamNameCharacterLength() throws Exception {
+	public void updateTeamWithLessTeamNameCharacterLength() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -119,10 +119,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
 		
         String exceptedMessage = "Team name length does not match pattern";
@@ -131,7 +131,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithMoreTeamNameCharacterLength() throws Exception {
+	public void updateTeamWithMoreTeamNameCharacterLength() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -141,10 +141,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Team name length does not match pattern";
@@ -153,7 +153,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithMoreAboutStringLength() throws Exception {
+	public void updateTeamWithMoreAboutStringLength() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -163,10 +163,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket dfsdkjnhjfbvjsdvbsjdhvbsxdsdfjdnfksdjnsdkfjnsdfkjnsdkjndjnfojnfsojdnskdjfnskjdnfskjdnfskjdfnskjdnfksjdfnsjgygfwejfsygsdhbasdfilysgoqr");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
 		
 		String exceptedMessage = "About team data length does not match pattern";
@@ -175,7 +175,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithAddressValueNull() throws Exception {
+	public void updateTeamWithAddressValueNull() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -184,10 +184,10 @@ public class TestCreateTeam {
 		team.setUrl("shssssdsfdsd");
 		team.setAddress(null);
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Invalid Address input";
@@ -196,7 +196,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithAreaValueNull() throws Exception {
+	public void updateTeamWithAreaValueNull() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -206,10 +206,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea(null);
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Area can't be null or empty";
@@ -218,7 +218,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithAreaValueEmpty() throws Exception {
+	public void updateTeamWithAreaValueEmpty() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -228,10 +228,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("  ");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Area can't be null or empty";
@@ -240,7 +240,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithNumericalAreaValue() throws Exception {
+	public void updateTeamWithNumericalAreaValue() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -250,10 +250,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Ami354karai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Area does not match pattern";
@@ -262,7 +262,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithDistrictValueNull() throws Exception {
+	public void updateTeamWithDistrictValueNull() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -272,10 +272,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict(null);
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "District can't be null or empty";
@@ -285,7 +285,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithDistrictValueEmpty() throws Exception {
+	public void updateTeamWithDistrictValueEmpty() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -295,10 +295,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("  ");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "District can't be null or empty";
@@ -307,7 +307,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithNumericalDistrictValue() throws Exception {
+	public void updateTeamWithNumericalDistrictValue() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -317,10 +317,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chen467nai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "District does not match pattern";
@@ -329,7 +329,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithLessAreaCharacterLength() throws Exception {
+	public void updateTeamWithLessAreaCharacterLength() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -339,10 +339,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Am");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Area length does not match pattern";
@@ -350,7 +350,7 @@ public class TestCreateTeam {
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	@Test
-	public void createTeamWithMoreAreaCharacterLength() throws Exception {
+	public void updateTeamWithMoreAreaCharacterLength() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -360,10 +360,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikaraitfjhgvhkgvjhgfvkjgfhjgxdgfufhfghgfjhggjhgjhgjhghjhgkhgjh");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Area length does not match pattern";
@@ -372,7 +372,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithLessDistrictCharacterLength() throws Exception {
+	public void updateTeamWithLessDistrictCharacterLength() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -382,10 +382,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Ch");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "District length does not match pattern";
@@ -393,7 +393,7 @@ public class TestCreateTeam {
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	@Test
-	public void createTeamWithMoreDistrictCharacterLength() throws Exception {
+	public void updateTeamWithMoreDistrictCharacterLength() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -403,10 +403,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chinjikaraitfjhgvhkgvjhgfvkjgfhjgxdgfufhfghgfjhggjhgjhgjhghjhgkhgjh");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(2);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "District length does not match pattern";
@@ -415,7 +415,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithInvalidCreatedById() throws Exception {
+	public void updateTeamWithInvalidModifiedById() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -425,19 +425,19 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(-1);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(-1);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
-        String exceptedMessage = "Invalid create player id";
+        String exceptedMessage = "Invalid modify player id";
 		String actualMessage = exception.getMessage();
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	
 	@Test
-	public void createTeamWithNotExistingPlayer() throws Exception {
+	public void updateTeamWithNotExistingPlayer() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -447,10 +447,10 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(100);
-		team.setModifiedBy(2);
+		team.setId(7);
+		team.setModifiedBy(100);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
         String exceptedMessage = "Player not exist";
@@ -459,7 +459,7 @@ public class TestCreateTeam {
 	}
 	
 	@Test
-	public void createTeamWithAlreadyCaptainInTeam() throws Exception {
+	public void updateTeamWithInvalidTeamId() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -469,19 +469,19 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(1);
-		team.setModifiedBy(2);
+		team.setId(-1);
+		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
-        String exceptedMessage = "Player already a captain in team";
+        String exceptedMessage = "Invalid Team id";
 		String actualMessage = exception.getMessage();
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	
 	@Test
-	public void createTeamWithExistingTeamName() throws Exception {
+	public void updateTeamWithNotExistingTeam() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
@@ -491,14 +491,37 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(3);//here should change
+		team.setId(100);
 		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.create(team);
+			teamService.update(team);
         });
         
-        String exceptedMessage = "Team name already exist";
+        String exceptedMessage = "Team not exist";
 		String actualMessage = exception.getMessage();
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
+	
+	@Test
+	public void updateTeamWithNotCaptainOfTeam() throws Exception {
+		TeamService teamService = new TeamService();
+		
+		Team team = new Team();
+
+		team.setTeamName("Indians");
+		team.setUrl("shssssdsfdsd");
+		team.getAddress().setArea("Aminjikarai");
+		team.getAddress().setDistrict("chennai");
+		team.setAbout("Playing cricket");
+		team.setId(7);
+		team.setModifiedBy(2);
+		Exception exception = assertThrows(Exception.class, () -> {
+			teamService.update(team);
+        });
+        
+        String exceptedMessage = "player not a captian of this team";
+		String actualMessage = exception.getMessage();
+		assertTrue(exceptedMessage.equals(actualMessage));
+	}
+	
 }

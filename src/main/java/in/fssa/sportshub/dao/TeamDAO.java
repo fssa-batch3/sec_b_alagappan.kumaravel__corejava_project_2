@@ -87,7 +87,7 @@ public class TeamDAO {
 			ps.setInt(3, team.getAddress().getId());
 			ps.setString(4, team.getAbout());
 			ps.setInt(5, team.getCreatedBy());
-			ps.setInt(6, team.getModifiedBy());
+			ps.setInt(6, team.getCreatedBy());
 			int rowsAffected = ps.executeUpdate();
 			
 			if (rowsAffected > 0) {
