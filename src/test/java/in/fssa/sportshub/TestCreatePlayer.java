@@ -19,8 +19,8 @@ public class TestCreatePlayer {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655231l);// here change new phone number
-		player.setUserName("Pksaasd");
+		player.setPhoneNumber(9344655321l);// here change new phone number
+		player.setUserName("Madhan");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
 		player.setUrl("shssssdsfdsdfvdfgvdfd");

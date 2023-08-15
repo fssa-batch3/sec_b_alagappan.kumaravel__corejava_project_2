@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import in.fssa.sportshub.model.Team;
 import in.fssa.sportshub.service.TeamService;
 
 public class TestDeleteTeam {
