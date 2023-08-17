@@ -39,6 +39,8 @@ public class MatchRequestService {
 		}
 		
 		MatchRequestDAO matchReqDao = new MatchRequestDAO();
+		
+		
 		if(typeOfMatch == 1) {
 			TeamService teamService = new TeamService();
 			boolean checkTeamExist = teamService.checkTeamExist(matchRequest.getToTeam());
