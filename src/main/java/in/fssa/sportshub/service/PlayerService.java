@@ -8,6 +8,13 @@ import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.validator.AddressValidator;
 import in.fssa.sportshub.validator.PlayerValidator;
 public class PlayerService {
+//	service doa validator util
+	
+	/**
+	 * 
+	 * @param player
+	 * @throws Exception
+	 */
 	public void create(Player player) throws Exception{
 		
 		PlayerValidator.validateAll(player);
@@ -29,18 +36,34 @@ public class PlayerService {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param phoneNumber
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean phoneNumberAlreadyExist(long phoneNumber) throws Exception{
 		PlayerValidator.validatePhoneNumber(phoneNumber);
 		PlayerDAO dao = new PlayerDAO();
 		return dao.phoneNumberAlreadyExist(phoneNumber);
 	}
-	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean playerExist(int id) throws Exception{
 		PlayerValidator.validateId(id, "Player");
 		PlayerDAO dao = new PlayerDAO();
 		return dao.playerExist(id);
 	}
 	
+	/**
+	 * 
+	 * @param player
+	 * @throws Exception
+	 */
 	public void update(Player player) throws Exception{
 		
 		PlayerValidator.validatePartial(player);
@@ -61,7 +84,11 @@ public class PlayerService {
 			throw new ValidationException("Player not exist");
 		}
 	}
-	
+	/**
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
 	public void delete(int id) throws Exception{
 		
 		PlayerValidator.validateId(id, "Player");

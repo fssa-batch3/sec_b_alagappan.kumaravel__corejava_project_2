@@ -3,12 +3,15 @@ package in.fssa.sportshub.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import in.fssa.sportshub.enumm.OpponentType;
+
 public class MatchRequest {
 	private int id;
 	private int createdBy;
 	private int toTeam;
 	private int addressId;
 	private boolean Status;
+	private OpponentType opponentType;
 	private int typeOfMatch;
 	private int members; 
 	private int membersAgeFrom; 
@@ -18,6 +21,7 @@ public class MatchRequest {
 	private String information;
 	private LocalDateTime createdAt;
 	private LocalDateTime modifiedAt;
+	
 	public int getId() {
 		return id;
 	}
@@ -36,6 +40,7 @@ public class MatchRequest {
 	public void setToTeam(int toTeam) {
 		this.toTeam = toTeam;
 	}
+	
 	public int getAddressId() {
 		return addressId;
 	}

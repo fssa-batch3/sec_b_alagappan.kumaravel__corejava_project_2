@@ -1,0 +1,6 @@
+in.fssa.sportshub.dao
+in.fssa.sportshub.exception
+in.fssa.sportshub.model
+in.fssa.sportshub.service
+in.fssa.sportshub.util
+in.fssa.sportshub.validator
