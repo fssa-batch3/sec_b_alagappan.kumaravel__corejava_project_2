@@ -1,4 +1,10 @@
-USE product ;
+use alagappan_kumaravel_corejava_project;
+
+CREATE TABLE IF NOT EXISTS address(
+id INT PRIMARY KEY AUTO_INCREMENT,
+area VARCHAR(50) NOT NULL,
+district VARCHAR(50) NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS players(
 id int PRIMARY KEY AUTO_INCREMENT,
@@ -6,9 +12,9 @@ phone_number VARCHAR(20) UNIQUE NOT NULL,
 user_name VARCHAR(50) NOT NULL,
 first_name VARCHAR(50) NOT NULL,
 last_name VARCHAR(50),
-image text,
+image VARCHAR(200),
 password VARCHAR(50) NOT NULL,
-gender TINYINT,
+gender enum('Male','Female','Other'),
 address_id int NOT NULL,
 date_of_birth DATE NOT NULL,
 about VARCHAR(200),
@@ -18,18 +24,13 @@ is_active boolean DEFAULT true,
 FOREIGN KEY (address_id) REFERENCES address(id)
 );
 
-CREATE TABLE IF NOT EXISTS address(
-id INT PRIMARY KEY AUTO_INCREMENT,
-area VARCHAR(50) NOT NULL,
-district VARCHAR(50) NOT NULL
-);
-
 CREATE INDEX user_index
 ON players(user_name);
+
 CREATE TABLE IF NOT EXISTS teams(
 id INT PRIMARY KEY AUTO_INCREMENT,
 team_name VARCHAR(50) UNIQUE NOT NULL,
-url text,
+url VARCHAR(200),
 address_id int NOT NULL,
 about VARCHAR(200) NOT NULL,
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -62,7 +63,7 @@ type_of_match TINYINT NOT NULL,
 members INT NOT NULL,
 members_age_from INT NOT NULL,
 members_age_to INT NOT NULL,
-match_time DATE NOT NULL,
+match_time TIMESTAMP NOT NULL,
 location VARCHAR(200) NOT NULL,
 information VARCHAR(200),
 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -81,8 +82,3 @@ status_of_response boolean NOT NULL,
 FOREIGN KEY (request_id) REFERENCES match_request(id),
 FOREIGN KEY (from_team_id) REFERENCES teams(id)
 );
-
-
-
-
-
