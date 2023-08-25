@@ -6,12 +6,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import in.fssa.sportshub.exception.ValidationException;
+import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.model.Team;
 import in.fssa.sportshub.util.ConnectionUtil;
 
 public class TeamDAO {
-	public boolean teamNameAlreadyExist(String teamName){
+	public boolean nameAlreadyExist(String teamName) throws PersistanceException{
 		boolean value;
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -33,7 +33,7 @@ public class TeamDAO {
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
@@ -41,7 +41,7 @@ public class TeamDAO {
 		return value;
 	}
 	
-	public boolean teamAlreadyExist(int id){
+	public boolean checkExistById(int id) throws PersistanceException{
 		boolean value;
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -63,7 +63,7 @@ public class TeamDAO {
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
@@ -71,7 +71,7 @@ public class TeamDAO {
 		return value;
 	}
 	
-	public int create(Team team) {
+	public int create(Team team) throws PersistanceException{
 		int teamId = 0;
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -103,14 +103,14 @@ public class TeamDAO {
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
 		return teamId;
 	}
 	
-	public void update(Team team) throws ValidationException {
+	public void update(Team team) throws PersistanceException {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -129,19 +129,19 @@ public class TeamDAO {
 			if (rowsAffected > 0) {
 			      System.out.println("Team successfully updated");
 			}else {
-				throw new ValidationException("Sql issue : Team not updated");
+				throw new PersistanceException("Sql issue : Team not updated");
 			}
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
 	}
 	
-	public void delete(int playerId, int teamId) throws ValidationException {
+	public void delete(int playerId, int teamId) throws PersistanceException {
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -158,13 +158,13 @@ public class TeamDAO {
 			if (rowsAffected > 0) {
 			      System.out.println("Team successfully deleted");
 			}else {
-				throw new ValidationException("Sql issue : Team not delete");
+				throw new PersistanceException("Sql issue : Team not delete");
 			}
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}

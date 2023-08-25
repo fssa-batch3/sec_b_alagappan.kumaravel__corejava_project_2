@@ -5,11 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.model.TeamMember;
 import in.fssa.sportshub.util.ConnectionUtil;
 
 public class TeamMemberDAO {
-	public void create(TeamMember teamMember) {
+	public void create(TeamMember teamMember)throws PersistanceException {
 
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -25,20 +26,20 @@ public class TeamMemberDAO {
 			if (rowsAffected > 0) {
 				System.out.println("team member created");
 			}else {
-				throw new RuntimeException("Sql issue: team member not created");
+				throw new PersistanceException("Sql issue: team member not created");
 			}
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
 		
 	}
 	
-	public boolean isPlayerCaptain(int id) {
+	public boolean isPlayerCaptain(int id) throws PersistanceException{
 		
 		boolean value;
 		Connection con = null;
@@ -61,7 +62,7 @@ public class TeamMemberDAO {
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
@@ -69,7 +70,7 @@ public class TeamMemberDAO {
 		return value;
 	}
 	
-public TeamMember findById(int id) {
+public TeamMember findById(int id) throws PersistanceException{
 	TeamMember teamMemberData = null;
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -95,7 +96,7 @@ public TeamMember findById(int id) {
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
@@ -103,7 +104,7 @@ public TeamMember findById(int id) {
 		return teamMemberData;
 	}
 	
-public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) {
+public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) throws PersistanceException{
 		
 		boolean value;
 		Connection con = null;
@@ -127,7 +128,7 @@ public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) {
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
@@ -135,7 +136,7 @@ public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) {
 		return value;
 	}
 
-public void delete(int teamId, int playerId) {
+public void delete(int teamId, int playerId) throws PersistanceException{
 	
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -152,13 +153,13 @@ public void delete(int teamId, int playerId) {
 		if (rowsAffected > 0) {
 			System.out.println("team member deleted");
 		}else {
-			throw new RuntimeException("Sql issue: team member not delete");
+			throw new PersistanceException("Sql issue: team member not delete");
 		}
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
 		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}

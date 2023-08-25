@@ -1,16 +1,16 @@
 package in.fssa.sportshub.enumm;
 
 public enum OpponentType {
-	TO_TEAM(1),
-    TO_AREA(2);
+	TO_TEAM("1"),
+    TO_AREA("2");
 
-    private final int displayType;
+    private final String displayType;
 
-    OpponentType(int displayName) {
+    OpponentType(String displayName) {
         this.displayType = displayName;
     }
 
-    public int getDisplayName() {
+    public String getDisplayName() {
         return displayType;
     }
 }

@@ -9,21 +9,30 @@ import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
 
+import in.fssa.sportshub.enumm.Gender;
+import in.fssa.sportshub.enumm.OpponentType;
 import in.fssa.sportshub.model.MatchRequest;
 import in.fssa.sportshub.service.MatchRequestService;
 
 public class TestCreateMatchRequest {
+	
+//	database update pannanum for matchrequest type of match update need 
+//	matchcreate testcase , service validator need to update	
+//	github la user flow update pannnum
+	
 	@Test
 	public void CreateMatchRequestWithValidDataToTeam() throws Exception {
 		MatchRequestService matchRequestServ = new MatchRequestService();
 		MatchRequest matchRequest = new MatchRequest();
 		
 		matchRequest.setCreatedBy(1);
-		matchRequest.setToTeam(6);
+		matchRequest.setToTeam(2);
 		matchRequest.setTypeOfMatch(1);
 		matchRequest.setMembers(10);
 		matchRequest.setMembersAgeFrom(19);
-		matchRequest.setMembersAgeTo(22);
+		matchRequest.setMembersAgeTo(22);	
+		OpponentType opponentType = OpponentType.TO_TEAM;
+		matchRequest.setOpponentType(opponentType);
         LocalDateTime currentDateTime = LocalDateTime.now();
         long amountToAdd = 3; 
         ChronoUnit unit = ChronoUnit.DAYS;
@@ -47,7 +56,9 @@ public class TestCreateMatchRequest {
 		matchRequest.setTypeOfMatch(1);
 		matchRequest.setMembers(10);
 		matchRequest.setMembersAgeFrom(19);
-		matchRequest.setMembersAgeTo(22);
+		matchRequest.setMembersAgeTo(22);	
+		OpponentType opponentType = OpponentType.TO_AREA;	
+		matchRequest.setOpponentType(opponentType);
         LocalDateTime currentDateTime = LocalDateTime.now();
         long amountToAdd = 3; // Change this to the desired amount
         ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -86,6 +97,8 @@ public class TestCreateMatchRequest {
 		matchRequest.setMembers(10);
 		matchRequest.setMembersAgeFrom(19);
 		matchRequest.setMembersAgeTo(22);
+		OpponentType opponentType = OpponentType.TO_TEAM;
+		matchRequest.setOpponentType(opponentType);
         LocalDateTime currentDateTime = LocalDateTime.now();
         long amountToAdd = 3; // Change this to the desired amount
         ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -116,6 +129,8 @@ public class TestCreateMatchRequest {
 		matchRequest.setMembers(10);
 		matchRequest.setMembersAgeFrom(19);
 		matchRequest.setMembersAgeTo(22);
+		OpponentType opponentType = OpponentType.TO_TEAM;
+		matchRequest.setOpponentType(opponentType);
         LocalDateTime currentDateTime = LocalDateTime.now();
         long amountToAdd = 3; // Change this to the desired amount
         ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -144,7 +159,7 @@ public class TestCreateMatchRequest {
 		matchRequest.setTypeOfMatch(1);
 		matchRequest.setMembers(0);
 		matchRequest.setMembersAgeFrom(19);
-		matchRequest.setMembersAgeTo(22);
+		matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
         LocalDateTime currentDateTime = LocalDateTime.now();
         long amountToAdd = 3; // Change this to the desired amount
         ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -173,7 +188,7 @@ public class TestCreateMatchRequest {
 		matchRequest.setTypeOfMatch(1);
 		matchRequest.setMembers(50);
 		matchRequest.setMembersAgeFrom(19);
-		matchRequest.setMembersAgeTo(22);
+		matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
         LocalDateTime currentDateTime = LocalDateTime.now();
         long amountToAdd = 3; // Change this to the desired amount
         ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -202,7 +217,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(7);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -231,7 +246,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(70);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -318,7 +333,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = -1; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -347,7 +362,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -376,7 +391,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -405,7 +420,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -434,7 +449,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -463,7 +478,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -493,6 +508,8 @@ public class TestCreateMatchRequest {
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
 			matchRequest.setMembersAgeTo(22);
+			OpponentType opponentType = OpponentType.TO_TEAM;
+			matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -512,17 +529,18 @@ public class TestCreateMatchRequest {
 	    }
 	
 	@Test
-	 public void createMatchRequestWithUpdateBothTeamAndAddressId() {
+	 public void createMatchRequestWithInvalidToTeamId() {
 			MatchRequestService matchRequestServ = new MatchRequestService();
 			MatchRequest matchRequest = new MatchRequest();
 			
 			matchRequest.setCreatedBy(1);
-			matchRequest.setToTeam(2);
-			matchRequest.setAddressId(4);
+			matchRequest.setToTeam(-12);
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
 			matchRequest.setMembersAgeTo(22);
+			OpponentType opponentType = OpponentType.TO_TEAM;
+			matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -536,21 +554,24 @@ public class TestCreateMatchRequest {
 	        	matchRequestServ.create(matchRequest, 1);
 	        });
 	        
-	        String exceptedMessage = "Any one type should only update";
+	        String exceptedMessage = "Invalid to team id";
 			String actualMessage = exception.getMessage();
 			assertTrue(exceptedMessage.equals(actualMessage));
 	    }
 	
 	@Test
-	 public void createMatchRequestWithNotUpdateBothTeamAndAddressId() {
+	 public void createMatchRequestWithInvalidToAddressId() {
 			MatchRequestService matchRequestServ = new MatchRequestService();
 			MatchRequest matchRequest = new MatchRequest();
 			
 			matchRequest.setCreatedBy(1);
+			matchRequest.setAddressId(-1);;
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
 			matchRequest.setMembersAgeTo(22);
+			OpponentType opponentType = OpponentType.TO_AREA;
+			matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -564,7 +585,7 @@ public class TestCreateMatchRequest {
 	        	matchRequestServ.create(matchRequest, 1);
 	        });
 	        
-	        String exceptedMessage = "Both to team and area not valid";
+	        String exceptedMessage = "Invalid to address id";
 			String actualMessage = exception.getMessage();
 			assertTrue(exceptedMessage.equals(actualMessage));
 	    }
@@ -579,7 +600,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -608,7 +629,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -637,7 +658,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -666,7 +687,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -695,7 +716,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -724,7 +745,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -754,6 +775,8 @@ public class TestCreateMatchRequest {
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
 			matchRequest.setMembersAgeTo(22);
+			OpponentType opponentType = OpponentType.TO_TEAM;
+			matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit

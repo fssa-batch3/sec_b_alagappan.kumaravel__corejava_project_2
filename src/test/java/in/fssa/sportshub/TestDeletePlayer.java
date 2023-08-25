@@ -5,15 +5,28 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Order;
 import in.fssa.sportshub.service.PlayerService;
+import in.fssa.sportshub.service.TeamService;
 
 public class TestDeletePlayer {
 	
 	@Test
+	@Order(1)
+	public void changeIsActiveFalseTotrue() throws Exception {
+		
+		PlayerService playerService = new PlayerService();
+		assertDoesNotThrow(()->{
+			playerService.changeDelete(4);
+		});
+	}
+	
+	@Test
+	@Order(2)
 	public void deletePlayerWithValidData() throws Exception {
 		PlayerService playerService = new PlayerService();
 		assertDoesNotThrow(()->{
-			playerService.delete(3);// here change the database
+			playerService.delete(4);
 		});
 	}
 	

@@ -61,22 +61,17 @@ public class MatchRequestValidator {
 		}
 	}
 	
-	public static int validateTypeOfMatch(MatchRequest matchRequest) throws ValidationException {
-		int value = 0;
-		if(matchRequest.getToTeam() <= 0) {
-			if(matchRequest.getAddressId() <= 0){
-				throw new ValidationException("Both to team and area not valid");
-			}else {
-				value = 2;
-			}
-		}else {
-			if(matchRequest.getAddressId() > 0){
-				throw new ValidationException("Any one type should only update");
-			}else {
-				value = 1;
-			}
+	public static void validateTypeOfMatch(MatchRequest matchRequest) throws ValidationException {
+		
+		if(matchRequest.getOpponentType().getDisplayName() == "1"  && (matchRequest.getToTeam() <= 0)){
+				throw new ValidationException("Invalid to team id");
+			
+				
 		}
-		return value;
+		if(matchRequest.getOpponentType().getDisplayName() == "2" && (matchRequest.getAddressId() <= 0)){
+				throw new ValidationException("Invalid to address id");
+			
+		}
 	}
 	
 	public static boolean isValidLeapYearDateOfBirth(LocalDate dateOfBirth) {

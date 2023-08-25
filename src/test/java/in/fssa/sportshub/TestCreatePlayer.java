@@ -14,12 +14,20 @@ import in.fssa.sportshub.service.PlayerService;
 
 public class TestCreatePlayer {
 	
+	private long generateRandomPhoneNumber() {
+	    // Generate a random long phone number within a specific range
+	    long minPhoneNumber = 8000000000L; // 10 digits
+	    long maxPhoneNumber = 9999999999L; // 10 digits
+
+	    return minPhoneNumber + (long) (Math.random() * (maxPhoneNumber - minPhoneNumber + 1));
+	}
+	
 	@Test
 	public void createPlayerWithValidData() throws Exception {
 		PlayerService playerService = new PlayerService();
 		
 		Player player = new Player();
-		player.setPhoneNumber(9344655321l);// here change new phone number
+		player.setPhoneNumber(generateRandomPhoneNumber());// here change new phone number
 		player.setUserName("Madhan");
 		player.setFirstName("Praveen");
 		player.setLastName("kumar");
@@ -27,7 +35,7 @@ public class TestCreatePlayer {
 		player.setPassword("Aa!1aaaaa");
 		Gender personGender = Gender.MALE;
 		player.setGender(personGender);
-		player.getAddress().setArea("Aminjikarai");
+		player.getAddress().setArea("ShennoiNagar");
 		player.getAddress().setDistrict("Chennai");
 		player.setDateOfBirth(LocalDate.of(2002, 11, 26));
 		player.setAbout("I am a good boy");
@@ -74,6 +82,7 @@ public class TestCreatePlayer {
         
         String exceptedMessage = "Invalid phone number";
 		String actualMessage = exception.getMessage();
+		System.out.println(actualMessage);
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	

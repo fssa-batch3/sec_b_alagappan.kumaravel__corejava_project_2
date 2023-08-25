@@ -5,17 +5,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import in.fssa.sportshub.exception.PersistanceException;
+import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.util.ConnectionUtil;
 
 public class PlayerDAO {
-public boolean playerExist(int id){
+public boolean checkIfExistById(int id) throws PersistanceException{
+	
 	boolean value;
 	Connection con = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-		String query = "SELECT * FROM players WHERE is_active=1 && id = ?";
+		String query = "SELECT id FROM players WHERE is_active=1 && id = ?";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
@@ -30,8 +33,8 @@ public boolean playerExist(int id){
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
-		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}
@@ -39,7 +42,7 @@ public boolean playerExist(int id){
 	return value;
 }
 	
-public void create(Player player) {
+public void create(Player player) throws PersistanceException{
 
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -69,14 +72,14 @@ public void create(Player player) {
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
-		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}
 	
 }
-public boolean phoneNumberAlreadyExist(long phoneNumber) {
+public boolean phoneNumberAlreadyExist(long phoneNumber) throws PersistanceException{
 	boolean value;
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -96,8 +99,8 @@ public boolean phoneNumberAlreadyExist(long phoneNumber) {
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
-		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}
@@ -105,7 +108,7 @@ public boolean phoneNumberAlreadyExist(long phoneNumber) {
 	return value;
 }
 
-public void update(Player player) {
+public void update(Player player) throws PersistanceException{
 
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -135,8 +138,8 @@ public void update(Player player) {
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
-		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}
@@ -144,7 +147,7 @@ public void update(Player player) {
 }
 
 
-public void delete(int id) {
+public void delete(int id) throws PersistanceException{
 
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -160,13 +163,42 @@ public void delete(int id) {
 		if (rowsAffected > 0) {
 			System.out.println("Player deleted");
 		}else {
-			throw new RuntimeException("Sql issue: Player not created");
+			throw new RuntimeException("Sql issue: Player not deleted");
 		}
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
-		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+}
+
+public void changeDelete(int id) throws PersistanceException{
+
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "UPDATE players SET is_active =1 WHERE id=?";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, id);
+		
+		int rowsAffected = ps.executeUpdate();
+		if (rowsAffected > 0) {
+			System.out.println("Player deleted changed");
+		}else {
+			throw new RuntimeException("Sql issue: Player Change not done correctly");
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}

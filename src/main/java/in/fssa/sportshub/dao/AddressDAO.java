@@ -8,11 +8,18 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.model.Address;
 import in.fssa.sportshub.util.ConnectionUtil;
 
 public class AddressDAO {
-public int create(Address newAddress) { 
+	/**
+	 * This method create address in database.
+	 * @param newAddress
+	 * @return address id
+	 * @throws PersistanceException
+	 */
+public int create(Address newAddress) throws PersistanceException{ 
 		int id = 0;
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -36,12 +43,13 @@ public int create(Address newAddress) {
 			      id = generatedId;
 			      System.out.println("Address has been successfullly created.");
 			    }
+			}else {
+				throw new PersistanceException("Address not created in data base.");
 			}
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
-			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
@@ -49,8 +57,14 @@ public int create(Address newAddress) {
 		return id;
 	}
 
-
-public int findByAreaAndDistrict(String area, String district) {
+/**
+ * This method return address id if exist otherwise it return -1.
+ * @param area
+ * @param district
+ * @return address id
+ * @throws PersistanceException
+ */
+public int findByDistrictAndArea(String area, String district)throws PersistanceException {
 	int id = 0;
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -76,16 +90,20 @@ public int findByAreaAndDistrict(String area, String district) {
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
-		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}
 	return id;
 }
 
-
-public Address findById(int id) {
+/**
+ * This method return address id if exist otherwise throw exception.
+ * @param id
+ * @return Address object
+ * @throws PersistanceException
+ */
+public Address findById(int id)throws PersistanceException {
 	Address address;
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -107,7 +125,7 @@ public Address findById(int id) {
 		      address.setDistrict(rs.getString("district"));
 		      System.out.println("Address found");
 		}else {
-			throw new RuntimeException("Address not found in data base");
+			throw new PersistanceException("Address not found in data base");
 		}
 		
 	}catch(SQLException e) {
@@ -120,8 +138,13 @@ public Address findById(int id) {
 	return address;
 }
 
-
-public boolean checkAddressExist(int id) {
+/**
+ * This method return true if address exist othwerwise return false.
+ * @param id
+ * @return boolean data
+ * @throws PersistanceException
+ */
+public boolean checkIfExist(int id) throws PersistanceException{
 	boolean value;
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -146,15 +169,19 @@ public boolean checkAddressExist(int id) {
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
-		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}
 	return value;
 }
 
-public Set<Address> getAllAddress() {
+/**
+ * It returns list of address object.
+ * @return
+ * @throws PersistanceException
+ */
+public Set<Address> getAll() throws PersistanceException{
 	Set<Address> addressList = new HashSet<>();;
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -177,8 +204,7 @@ public Set<Address> getAllAddress() {
 		
 	}catch(SQLException e) {
 		e.printStackTrace();
-		System.out.println(e.getMessage());
-		throw new RuntimeException(e);
+		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
 	}

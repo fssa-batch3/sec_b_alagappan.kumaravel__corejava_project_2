@@ -6,11 +6,78 @@ import java.time.Year;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.Player;
+import in.fssa.sportshub.service.PlayerService;
+import in.fssa.sportshub.service.TeamMemberService;
 import in.fssa.sportshub.util.StringUtil;
 
 public class PlayerValidator {
+	
+	/**
+	 * 
+	 * @param player
+	 * @throws ValidationException
+	 */
+	public static void validateCreate(Player player) throws ValidationException {
+		PlayerValidator.validateAll(player);
+	
+		PlayerService playerSer = new PlayerService();
+	
+		boolean checkPhoneNumberExist;
+		try {
+			checkPhoneNumberExist = playerSer.phoneNumberAlreadyExist(player.getPhoneNumber());
+			if(checkPhoneNumberExist){
+				throw new ValidationException("Phone number already exist");
+			}
+		} catch (ValidationException | ServiceException e) {
+			e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+		}
+	}
+	
+	public static void validateUpdate(Player player) throws ValidationException {
+		PlayerValidator.validatePartial(player);
+		AddressValidator.validate(player.getAddress());
+		try {
+		PlayerService playerSer = new PlayerService();
+		boolean checkPlayerExist = playerSer.playerExist(player.getId());
+		if(!checkPlayerExist){
+			throw new ValidationException("Player not exist");
+		}
+		}catch (ValidationException | ServiceException e) {
+		e.printStackTrace();
+		throw new ValidationException(e.getMessage());
+		}
+	}
+	
+	public static void validateDelete(int id) throws ValidationException {
+		
+		PlayerValidator.validateId(id, "Player");
+		try {
+		PlayerService playerSer = new PlayerService();
+		boolean checkPlayerExist = playerSer.playerExist(id);
+		if(!checkPlayerExist){
+			throw new ValidationException("Player not exist");
+		}
+		TeamMemberService teamMemService = new TeamMemberService();
+		boolean isCaptain = teamMemService.isPlayerCaptain(id);
+		
+		if(isCaptain){
+			throw new ValidationException("Player is captain of a team");
+		}
+		}catch (ValidationException | ServiceException e) {
+			e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+		}
+	}
+	
+	public static void validateDeleteChange(int id) throws ValidationException {
+		
+		PlayerValidator.validateId(id, "Player");
+	}
+	
 	public static void validateAll(Player player) throws ValidationException {
 		PlayerValidator.validatePartial(player);
 		PlayerValidator.validatePhoneNumber(player.getPhoneNumber());

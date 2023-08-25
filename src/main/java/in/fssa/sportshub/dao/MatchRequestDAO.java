@@ -8,17 +8,18 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
+import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.model.MatchRequest;
 import in.fssa.sportshub.util.ConnectionUtil;
 
 public class MatchRequestDAO {
-	public void createToTeam(MatchRequest matchRequest) {
+	public void createToTeam(MatchRequest matchRequest) throws PersistanceException{
 
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "Insert into match_request (created_by, to_team, type_of_match, members, members_age_from, members_age_to, match_time, location, information) Values (?,?,?,?,?,?,?,?,?)";
+			String query = "Insert into match_request (created_by, to_team, type_of_match, members, members_age_from, members_age_to, match_time, location, information, type_of_opponent) Values (?,?,?,?,?,?,?,?,?,?)";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -32,12 +33,12 @@ public class MatchRequestDAO {
 			ps.setTimestamp(7, timestamp);
 			ps.setString(8, matchRequest.getLocation());
 			ps.setString(9, matchRequest.getInformation());
-			
+			ps.setString(10, matchRequest.getOpponentType().getDisplayName());
 			int rowsAffected = ps.executeUpdate();
 			if (rowsAffected > 0) {
 				System.out.println("Match request created");
 			}else {
-				throw new RuntimeException("Sql issue: Match request not created");
+				throw new PersistanceException("Sql issue: Match request not created");
 			}
 			
 		}catch(SQLException e) {
@@ -50,7 +51,7 @@ public class MatchRequestDAO {
 		
 	}
 	
-	public void createToArea(MatchRequest matchRequest) {
+	public void createToArea(MatchRequest matchRequest) throws PersistanceException{
 
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -75,7 +76,7 @@ public class MatchRequestDAO {
 			if (rowsAffected > 0) {
 				System.out.println("Match request created");
 			}else {
-				throw new RuntimeException("Sql issue: Match request not created");
+				throw new PersistanceException("Sql issue: Match request not created");
 			}
 			
 		}catch(SQLException e) {
@@ -88,7 +89,7 @@ public class MatchRequestDAO {
 		
 	}
 	
-	public Set<MatchRequest> listAllOpenRequest() {
+	public Set<MatchRequest> getAllOpenRequest() throws PersistanceException{
 		
 		Set<MatchRequest> listOfRequest = new HashSet<>();
 		Connection con = null;
@@ -121,7 +122,7 @@ public class MatchRequestDAO {
 		}catch(SQLException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
-			throw new RuntimeException(e);
+			throw new PersistanceException(e.getMessage());
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}

@@ -21,8 +21,8 @@ public class TestCreateTeam {
 		team.getAddress().setArea("AnnaNagar");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(3);// here change team name
-		team.setModifiedBy(3);
+		team.setCreatedBy(1);// here change team name
+		team.setModifiedBy(1);
 		assertDoesNotThrow(()->{
 			teamService.create(team);
 		});

@@ -2,25 +2,25 @@ package in.fssa.sportshub.service;
 
 
 import in.fssa.sportshub.dao.PlayerDAO;
+import in.fssa.sportshub.exception.PersistanceException;
+import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.Address;
 import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.validator.AddressValidator;
 import in.fssa.sportshub.validator.PlayerValidator;
 public class PlayerService {
-//	service doa validator util
 	
 	/**
 	 * 
 	 * @param player
-	 * @throws Exception
+	 * @throws ValidationException, ServiceException
 	 */
-	public void create(Player player) throws Exception{
+	public void create(Player player) throws ValidationException, ServiceException{
 		
-		PlayerValidator.validateAll(player);
+		try {
+		PlayerValidator.validateCreate(player);
 		
-		boolean checkPhoneNumberExist = this.phoneNumberAlreadyExist(player.getPhoneNumber());
-		if(!checkPhoneNumberExist){
 			
 			Address address = player.getAddress();
 			AddressService addressService = new AddressService();
@@ -28,48 +28,67 @@ public class PlayerService {
 			
 			player.getAddress().setId(addressId);
 			
-			PlayerDAO playerDao = new PlayerDAO();
-			playerDao.create(player);	
+			PlayerDAO playerDAO = new PlayerDAO();
+			playerDAO.create(player);	
 			
-		}else {
-			throw new ValidationException("Phone number already exist");
-		}
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
 	}
 	
 	/**
 	 * 
 	 * @param phoneNumber
 	 * @return
-	 * @throws Exception
+	 * @throws ValidationException, ServiceException
 	 */
-	public boolean phoneNumberAlreadyExist(long phoneNumber) throws Exception{
+	public boolean phoneNumberAlreadyExist(long phoneNumber) throws ValidationException, ServiceException{
+		try {
 		PlayerValidator.validatePhoneNumber(phoneNumber);
+		
 		PlayerDAO dao = new PlayerDAO();
 		return dao.phoneNumberAlreadyExist(phoneNumber);
+ 	}catch(ValidationException e) {
+ 		e.printStackTrace();
+		throw new ValidationException(e.getMessage());
+ 	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
 	}
 	/**
 	 * 
 	 * @param id
 	 * @return
-	 * @throws Exception
+	 * @throws ValidationException, ServiceException
 	 */
-	public boolean playerExist(int id) throws Exception{
+	public boolean playerExist(int id) throws ValidationException, ServiceException{
+		try {
 		PlayerValidator.validateId(id, "Player");
+		
 		PlayerDAO dao = new PlayerDAO();
-		return dao.playerExist(id);
+		return dao.checkIfExistById(id);
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
 	}
 	
 	/**
 	 * 
 	 * @param player
-	 * @throws Exception
+	 * @throws ValidationException, ServiceException
 	 */
-	public void update(Player player) throws Exception{
-		
-		PlayerValidator.validatePartial(player);
-		AddressValidator.validate(player.getAddress());
-		boolean checkPlayerExist = this.playerExist(player.getId());
-		if(checkPlayerExist){
+	public void update(Player player) throws ValidationException, ServiceException{
+		try {
+		PlayerValidator.validateUpdate(player);
 			
 			Address address = player.getAddress();
 			AddressService addressService = new AddressService();
@@ -77,33 +96,52 @@ public class PlayerService {
 			
 			player.getAddress().setId(addressId);
 			
-			PlayerDAO playerDao = new PlayerDAO();
-			playerDao.update(player);	
+			PlayerDAO playerDAO = new PlayerDAO();
+			playerDAO.update(player);	
 			
-		}else {
-			throw new ValidationException("Player not exist");
-		}
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
 	}
+	
 	/**
 	 * 
 	 * @param id
-	 * @throws Exception
+	 * @throws ValidationException, ServiceException
 	 */
-	public void delete(int id) throws Exception{
-		
-		PlayerValidator.validateId(id, "Player");
-		boolean checkPlayerExist = this.playerExist(id);
-		if(!checkPlayerExist){
-			throw new ValidationException("Player not exist");
-		}
-		TeamMemberService teamMemService = new TeamMemberService();
-		boolean isCaptain = teamMemService.isPlayerCaptain(id);
-		if(isCaptain){
-			throw new Exception("Player is captain of a team");
-		}
-		
-			PlayerDAO playerDao = new PlayerDAO();
-			playerDao.delete(id);	
+	public void delete(int id) throws ValidationException, ServiceException{
+		try {	
+			PlayerValidator.validateDelete(id);
+			PlayerDAO playerDAO = new PlayerDAO();
+			playerDAO.delete(id);	
+			
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+	}
+	
+	
+	public void changeDelete(int id) throws ValidationException, ServiceException{
+		try {	
+			PlayerValidator.validateDeleteChange(id);
+			PlayerDAO playerDAO = new PlayerDAO();
+			playerDAO.changeDelete(id);	
+			
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
 	}
 	
 }

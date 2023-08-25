@@ -5,6 +5,10 @@ import in.fssa.sportshub.model.Address;
 import in.fssa.sportshub.util.StringUtil;
 
 public class AddressValidator {
+	
+	
+	
+	
 	public static void validate(Address address) throws ValidationException {
 		
 		if(address == null) {

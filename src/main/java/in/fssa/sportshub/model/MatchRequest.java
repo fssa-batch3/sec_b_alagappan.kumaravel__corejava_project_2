@@ -107,13 +107,23 @@ public class MatchRequest {
 	public void setModifiedAt(LocalDateTime modifiedAt) {
 		this.modifiedAt = modifiedAt;
 	}
+	
+	
+	public OpponentType getOpponentType() {
+		return opponentType;
+	}
+	public void setOpponentType(OpponentType opponentType) {
+		this.opponentType = opponentType;
+	}
+	
 	@Override
 	public String toString() {
-		return "MatchRequest [id=" + id + ", createdBy=" + createdBy + ", toTeam=" + toTeam + 
-				", addressId=" + addressId + ", Status=" + Status + ", typeOfMatch="
-				+ typeOfMatch + ", members=" + members + ", membersAgeFrom=" + membersAgeFrom + ", membersAgeTo="
-				+ membersAgeTo + ", matchTime=" + matchTime + ", location=" + location + ", information=" + information
+		return "MatchRequest [id=" + id + ", createdBy=" + createdBy + ", toTeam=" + toTeam + ", addressId=" + addressId
+				+ ", Status=" + Status + ", opponentType=" + opponentType + ", typeOfMatch=" + typeOfMatch
+				+ ", members=" + members + ", membersAgeFrom=" + membersAgeFrom + ", membersAgeTo=" + membersAgeTo
+				+ ", matchTime=" + matchTime + ", location=" + location + ", information=" + information
 				+ ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + "]";
 	}
+	
 	
 }
