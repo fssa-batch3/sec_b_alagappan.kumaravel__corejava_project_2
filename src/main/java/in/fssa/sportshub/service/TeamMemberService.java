@@ -22,6 +22,8 @@ public void create(TeamMember teamMember) throws ValidationException, ServiceExc
  	}
 			
 	}
+
+
 	public TeamMember findById(int id) throws ValidationException, ServiceException{
 		try {
 		TeamMemberValidator.validateId(id, "Team member id");
@@ -35,27 +37,12 @@ public void create(TeamMember teamMember) throws ValidationException, ServiceExc
 			throw new ServiceException(e.getMessage());
 	 	}
 	}
-
-	public boolean isPlayerCaptain(int id) throws ValidationException, ServiceException{
-		try {
-		TeamMemberValidator.validateId(id, "Player");
-		TeamMemberDAO dao = new TeamMemberDAO();
-		return dao.isPlayerCaptain(id);
-		}catch(ValidationException e) {
-	 		e.printStackTrace();
-			throw new ValidationException(e.getMessage());
-	 	}catch(PersistanceException e) {
-	 		e.printStackTrace();
-			throw new ServiceException(e.getMessage());
-	 	}
-	}
 	
-	public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) throws ValidationException, ServiceException{
+	public TeamMember findByCaptainId(int id) throws ValidationException, ServiceException{
 		try {
-		TeamMemberValidator.validateId(player_id, "Player");
-		TeamMemberValidator.validateId(team_id, "Team");
+		TeamMemberValidator.validateId(id, "Captain id");
 		TeamMemberDAO dao = new TeamMemberDAO();
-		return dao.isPlayerCaptainOfSpecificTeam(player_id, team_id);
+		return dao.findByCaptainId(id);
 		}catch(ValidationException e) {
 	 		e.printStackTrace();
 			throw new ValidationException(e.getMessage());
@@ -64,6 +51,7 @@ public void create(TeamMember teamMember) throws ValidationException, ServiceExc
 			throw new ServiceException(e.getMessage());
 	 	}
 	}
+
 
 public void delete(int teamId, int playerId) throws ValidationException, ServiceException{
 	try {	
@@ -74,6 +62,17 @@ public void delete(int teamId, int playerId) throws ValidationException, Service
  		e.printStackTrace();
 		throw new ValidationException(e.getMessage());
  	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
+			
+	}
+
+public void deleteChange(int teamId, int playerId) throws ValidationException, ServiceException{
+	try {	
+		TeamMemberDAO dao = new TeamMemberDAO();
+		dao.deleteChange(teamId, playerId);
+	}catch(PersistanceException e) {
  		e.printStackTrace();
 		throw new ServiceException(e.getMessage());
  	}

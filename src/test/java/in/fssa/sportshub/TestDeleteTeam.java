@@ -17,7 +17,7 @@ public class TestDeleteTeam {
 		TeamService teamService = new TeamService();
 		
 		assertDoesNotThrow(()->{
-			teamService.changeDelete(2,1);
+			teamService.changeDelete(3,2);
 		});
 	}
 	
@@ -27,7 +27,7 @@ public class TestDeleteTeam {
 		TeamService teamService = new TeamService();
 		
 		assertDoesNotThrow(()->{
-			teamService.delete(7,3);
+			teamService.delete(3,2);
 		});
 	}
 	
@@ -89,7 +89,7 @@ public class TestDeleteTeam {
 		TeamService teamService = new TeamService();
 		
 		Exception exception = assertThrows(Exception.class, () -> {
-			teamService.delete(7,2);
+			teamService.delete(3,1);
         });
         
         String exceptedMessage = "player not a captian of this team";

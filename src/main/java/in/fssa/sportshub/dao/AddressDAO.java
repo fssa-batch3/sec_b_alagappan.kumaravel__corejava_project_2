@@ -150,7 +150,7 @@ public boolean checkIfExist(int id) throws PersistanceException{
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-		String query = "SELECT * FROM address WHERE id=?";
+		String query = "SELECT id FROM address WHERE id=?";
 		
 		con = ConnectionUtil.getConnection();
 		

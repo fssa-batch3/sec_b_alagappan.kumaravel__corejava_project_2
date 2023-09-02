@@ -1,4 +1,4 @@
-package in.fssa.sportshub.enumm;
+package in.fssa.sportshub.model;
 
 public enum Gender {
     MALE("Male"),

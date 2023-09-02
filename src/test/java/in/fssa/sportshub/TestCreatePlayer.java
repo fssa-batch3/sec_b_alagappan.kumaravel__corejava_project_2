@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import in.fssa.sportshub.enumm.Gender;
+import in.fssa.sportshub.model.Gender;
 import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.service.PlayerService;
 

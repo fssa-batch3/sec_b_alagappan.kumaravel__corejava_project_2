@@ -9,9 +9,9 @@ import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.Test;
 
-import in.fssa.sportshub.enumm.Gender;
-import in.fssa.sportshub.enumm.OpponentType;
+
 import in.fssa.sportshub.model.MatchRequest;
+import in.fssa.sportshub.model.OpponentType;
 import in.fssa.sportshub.service.MatchRequestService;
 
 public class TestCreateMatchRequest {
@@ -26,7 +26,7 @@ public class TestCreateMatchRequest {
 		MatchRequest matchRequest = new MatchRequest();
 		
 		matchRequest.setCreatedBy(1);
-		matchRequest.setToTeam(2);
+		matchRequest.setToTeam(3);
 		matchRequest.setTypeOfMatch(1);
 		matchRequest.setMembers(10);
 		matchRequest.setMembersAgeFrom(19);
@@ -52,7 +52,7 @@ public class TestCreateMatchRequest {
 		MatchRequest matchRequest = new MatchRequest();
 		
 		matchRequest.setCreatedBy(1);
-		matchRequest.setAddressId(4);
+		matchRequest.setAddressId(1);
 		matchRequest.setTypeOfMatch(1);
 		matchRequest.setMembers(10);
 		matchRequest.setMembersAgeFrom(19);
@@ -629,7 +629,9 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
+			matchRequest.setMembersAgeTo(22);
+			OpponentType opponentType = OpponentType.TO_AREA;
+			matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -640,7 +642,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setLocation("gvhgvhgvhvhjhjh");
 			matchRequest.setInformation("100 rs betting");
 	        Exception exception = assertThrows(Exception.class, () -> {
-	        	matchRequestServ.create(matchRequest, 4);
+	        	matchRequestServ.create(matchRequest, 5);
 	        });
 	        
 	        String exceptedMessage = "Player not captain of any team";
@@ -687,7 +689,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
+			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_AREA;		matchRequest.setOpponentType(opponentType);
 	        LocalDateTime currentDateTime = LocalDateTime.now();
 	        long amountToAdd = 3; // Change this to the desired amount
 	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
@@ -712,7 +714,7 @@ public class TestCreateMatchRequest {
 			MatchRequest matchRequest = new MatchRequest();
 			
 			matchRequest.setCreatedBy(1);
-			matchRequest.setToTeam(3);
+			matchRequest.setToTeam(1);
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
 			matchRequest.setMembersAgeFrom(19);

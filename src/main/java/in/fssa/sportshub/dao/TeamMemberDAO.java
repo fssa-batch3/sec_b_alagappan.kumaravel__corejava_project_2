@@ -16,7 +16,7 @@ public class TeamMemberDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "Insert into team_member (team_id, user_id) Values (?,?)";
+			String query = "Insert into team_members (team_id, user_id) Values (?,?)";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -46,7 +46,7 @@ public class TeamMemberDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT * FROM team_member WHERE is_active=1 && is_captain=1 && user_id = ?";
+			String query = "SELECT * FROM team_members WHERE is_active=1 && is_captain=1 && user_id = ?";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -76,7 +76,7 @@ public TeamMember findById(int id) throws PersistanceException{
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT * FROM team_member WHERE is_active=1 && id=?";
+			String query = "SELECT * FROM team_members WHERE is_active=1 && id=?";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -103,6 +103,40 @@ public TeamMember findById(int id) throws PersistanceException{
 		
 		return teamMemberData;
 	}
+
+public TeamMember findByCaptainId(int id) throws PersistanceException{
+	TeamMember teamMemberData = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String query = "SELECT * FROM team_members WHERE is_active=1 && is_captain=1 && user_id=?";
+			
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+		    if (rs.next()) {
+		    	teamMemberData = new TeamMember();
+		    	teamMemberData.setId(rs.getInt("id"));
+		    	teamMemberData.setIsActive(rs.getInt("is_active"));
+		    	teamMemberData.setIsCaptain(rs.getInt("is_captain"));
+		    	teamMemberData.setTeamId(rs.getInt("team_id"));
+		    	teamMemberData.setUserId(rs.getInt("user_id"));
+		    }else {
+		    	throw new PersistanceException("Player not captain of any team");
+		    }
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+		
+		return teamMemberData;
+	}
 	
 public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) throws PersistanceException{
 		
@@ -111,7 +145,7 @@ public boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) throws 
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT * FROM team_member WHERE is_active=1 && is_captain=1 && user_id = ? && team_id = ?";
+			String query = "SELECT * FROM team_members WHERE is_active=1 && is_captain=1 && user_id = ? && team_id = ?";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -143,8 +177,41 @@ public void delete(int teamId, int playerId) throws PersistanceException{
 	ResultSet rs = null;
 	try {
 
-		String query = "UPDATE team_member SET is_captain =0, is_active=0 "
+		String query = "UPDATE team_members SET is_captain =0, is_active=0 "
 				+ "WHERE team_id=? && user_id = ? && is_captain=1";
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, teamId);
+		ps.setInt(2, playerId);
+		int rowsAffected = ps.executeUpdate();
+		if (rowsAffected > 0) {
+			System.out.println("team member deleted");
+		}else {
+			throw new PersistanceException("Sql issue: team member not delete");
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println(e.getMessage());
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+}
+
+
+
+
+public void deleteChange(int teamId, int playerId) throws PersistanceException{
+	
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+
+		String query = "UPDATE team_members SET is_captain =1, is_active=1 "
+				+ "WHERE team_id=? && user_id = ?";
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
 		ps.setInt(1, teamId);

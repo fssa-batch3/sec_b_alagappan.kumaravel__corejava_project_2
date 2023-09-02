@@ -40,33 +40,6 @@ public void create(Team team) throws ValidationException, ServiceException{
  	}
 	}
 	
-public boolean checkTeamNameExist(String teamName) throws ValidationException, ServiceException{
-		try {
-		StringUtil.rejectIfInvalidString(teamName, "TeamName");
-		TeamDAO teamDAO = new TeamDAO();
-		return teamDAO.nameAlreadyExist(teamName);
-		}catch(ValidationException e) {
-	 		e.printStackTrace();
-			throw new ValidationException(e.getMessage());
-	 	}catch(PersistanceException e) {
-	 		e.printStackTrace();
-			throw new ServiceException(e.getMessage());
-	 	}
-	}
-	
-public boolean checkTeamExist(int id) throws ValidationException, ServiceException{
-		try {
-		TeamValidator.validateId(id, "Team");
-		TeamDAO teamDAO = new TeamDAO();
-		return teamDAO.checkExistById(id);
-		}catch(ValidationException e) {
-	 		e.printStackTrace();
-			throw new ValidationException(e.getMessage());
-	 	}catch(PersistanceException e) {
-	 		e.printStackTrace();
-			throw new ServiceException(e.getMessage());
-	 	}
-	}
 	
 public void update(Team team) throws ValidationException, ServiceException{
 	try {
@@ -112,10 +85,10 @@ public void changeDelete(int teamId, int playerId) throws ValidationException, S
 		TeamValidator.validateId(teamId, "team");
 		TeamValidator.validateId(playerId, "player");
 		TeamDAO teamDAO = new TeamDAO();
-		teamDAO.delete(playerId, teamId);
+		teamDAO.deleteChange(playerId, teamId);
 		
 		TeamMemberService teamMemServ = new TeamMemberService();
-		teamMemServ.delete(teamId, playerId);
+		teamMemServ.deleteChange(teamId, playerId);
 		
 	}catch(ValidationException e) {
  		e.printStackTrace();
@@ -127,6 +100,49 @@ public void changeDelete(int teamId, int playerId) throws ValidationException, S
 		
 }
 
+// validation yet to be done
+public Team findByCaptainId(int captainId) throws ValidationException, ServiceException{
+	Team team;
+	try {
+		TeamValidator.validateId(captainId, "captainId");
+		
+		TeamMemberService teamMemberService = new TeamMemberService();
+		
+		TeamMember teamMember = teamMemberService.findByCaptainId(captainId);
+		
+		 team = this.findById(teamMember.getTeamId());
+		 
+		 AddressService addressService = new AddressService();
+		 
+		 Address address = addressService.findById(team.getAddress().getId()) ;
+		 
+		 team.setAddress(address);
+		
+	}catch(ValidationException e) {
+ 		e.printStackTrace();
+		throw new ValidationException(e.getMessage());
+ 	}
+	return team;	
+}
+
+//validation yet to be done
+public Team findById(int teamId) throws ValidationException, ServiceException{
+	Team team;
+	try {
+		TeamValidator.validateId(teamId, "team");
+		TeamDAO teamDAO = new TeamDAO();
+		 team = teamDAO.findById(teamId);
+		
+	}catch(ValidationException e) {
+ 		e.printStackTrace();
+		throw new ValidationException(e.getMessage());
+ 	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
+	return team;
+		
+}
 
 
 }

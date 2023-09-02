@@ -87,27 +87,6 @@ public class AddressService {
 	 	}
 	 }
 	 
-	 /**
-	  * 
-	  * @param id
-	  * @return
-	  * @throws ValidationException
-	  * @throws ServiceException
-	  */
-	 public boolean checkAddressExist(int id) throws ValidationException, ServiceException{
-		 try {
-		 	AddressValidator.validateId(id);
-	 	
-			AddressDAO addressDAO = new AddressDAO();
-			return addressDAO.checkIfExist(id);
-		 }catch(ValidationException e) {
-		 		e.printStackTrace();
-				throw new ValidationException(e.getMessage());
-		 	}catch(PersistanceException e) {
-		 		e.printStackTrace();
-				throw new ServiceException(e.getMessage());
-		 	}
-	 }
 	 public Set<Address> getAllAddress() throws ServiceException{
 		 try {
 			AddressDAO addressDAO = new AddressDAO();

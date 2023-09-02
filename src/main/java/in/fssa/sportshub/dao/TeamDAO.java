@@ -17,7 +17,7 @@ public class TeamDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT * FROM teams WHERE is_active=1 && team_name=?";
+			String query = "SELECT id FROM teams WHERE is_active=1 && team_name=?";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -47,7 +47,7 @@ public class TeamDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT * FROM teams WHERE is_active=1 && id=?";
+			String query = "SELECT id FROM teams WHERE is_active=1 && id=?";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -148,6 +148,73 @@ public class TeamDAO {
 
 		try {
 			String query = "UPDATE teams SET modified_by =? ,is_active=0 "
+					+ "WHERE id = ?";
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, playerId);
+			ps.setInt(2, teamId);
+			int rowsAffected = ps.executeUpdate();
+			
+			if (rowsAffected > 0) {
+			      System.out.println("Team successfully deleted");
+			}else {
+				throw new PersistanceException("Sql issue : Team not delete");
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+	}
+	
+	
+	public Team findById(int teamId) throws PersistanceException {
+		Team team = new Team();
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "SELECT * FROM teams WHERE is_active=1 && id=? ";
+
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, teamId);
+			rs = ps.executeQuery();
+			
+			if (rs.next()) {
+			      team.setId(rs.getInt("id"));
+			      team.setTeamName(rs.getString("team_name"));
+			      team.setUrl(rs.getString("url"));
+			      team.setAbout(rs.getString("about"));
+			      team.getAddress().setId(rs.getInt("address_id"));
+			      team.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime().toLocalDate());
+			      
+			}else {
+				throw new PersistanceException("Sql issue : Team not find");
+		    }
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+		return team;
+	}
+	
+	
+	public void deleteChange(int playerId, int teamId) throws PersistanceException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+
+		try {
+			String query = "UPDATE teams SET modified_by =? ,is_active=1 "
 					+ "WHERE id = ?";
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);

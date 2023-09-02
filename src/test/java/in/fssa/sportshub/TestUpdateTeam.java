@@ -16,13 +16,13 @@ public class TestUpdateTeam {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
-		team.setId(7);
-		team.setTeamName("Rockers");
+		team.setId(1);
+		team.setTeamName("Sharks");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing Street cricket");
-		team.setModifiedBy(3);
+		team.setModifiedBy(1);
 		assertDoesNotThrow(()->{
 			teamService.update(team);
 		});
@@ -38,6 +38,7 @@ public class TestUpdateTeam {
         
         String exceptedMessage = "Invalid team input";
 		String actualMessage = exception.getMessage();
+		System.out.println(actualMessage);
 		assertTrue(exceptedMessage.equals(actualMessage));
     }
 	
@@ -52,8 +53,8 @@ public class TestUpdateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -75,8 +76,8 @@ public class TestUpdateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -97,8 +98,8 @@ public class TestUpdateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -119,8 +120,8 @@ public class TestUpdateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -136,13 +137,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indiansjvjgvjhgvjgvjgvjhvjhvhgvjhvgvhgvjhvjhbvjjhvbjhh");
+		team.setTeamName("Indianssssjvjgvjhgvjgvjgvjhvjhvhgvjhvgvhgvjhvjhbvjjhvbjhh");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -158,13 +159,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket dfsdkjnhjfbvjsdvbsjdhvbsxdsdfjdnfksdjnsdkfjnsdfkjnsdkjndjnfojnfsojdnskdjfnskjdnfskjdnfskjdfnskjdnfksjdfnsjgygfwejfsygsdhbasdfilysgoqr");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -180,12 +181,12 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.setAddress(null);
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -201,13 +202,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea(null);
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -223,13 +224,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("  ");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -245,13 +246,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
-		team.getAddress().setArea("Ami354karai");
+		team.getAddress().setArea("Ami154karai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -267,13 +268,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict(null);
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -290,13 +291,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("  ");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -312,13 +313,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
-		team.getAddress().setDistrict("Chen467nai");
+		team.getAddress().setDistrict("Chen461nai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -334,13 +335,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Am");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -355,12 +356,12 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikaraitfjhgvhkgvjhgfvkjgfhjgxdgfufhfghgfjhggjhgjhgjhghjhgkhgjh");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
+		team.setId(1);
 		team.setModifiedBy(3);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
@@ -368,6 +369,7 @@ public class TestUpdateTeam {
         
         String exceptedMessage = "Area length does not match pattern";
 		String actualMessage = exception.getMessage();
+		System.out.println(actualMessage);
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	
@@ -377,13 +379,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Ch");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -398,13 +400,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chinjikaraitfjhgvhkgvjhgfvkjgfhjgxdgfufhfghgfjhggjhgjhgjhghjhgkhgjh");
 		team.setAbout("Playing cricket");
-		team.setId(7);
-		team.setModifiedBy(3);
+		team.setId(1);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -420,12 +422,12 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
+		team.setId(1);
 		team.setModifiedBy(-1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
@@ -442,12 +444,12 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
+		team.setId(1);
 		team.setModifiedBy(100);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
@@ -464,13 +466,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
 		team.setId(-1);
-		team.setModifiedBy(3);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -486,13 +488,13 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
 		team.setId(100);
-		team.setModifiedBy(3);
+		team.setModifiedBy(1);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
         });
@@ -508,12 +510,12 @@ public class TestUpdateTeam {
 		
 		Team team = new Team();
 
-		team.setTeamName("Indians");
+		team.setTeamName("Indianssss");
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
-		team.setId(7);
+		team.setId(1);
 		team.setModifiedBy(2);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.update(team);
@@ -521,6 +523,7 @@ public class TestUpdateTeam {
         
         String exceptedMessage = "player not a captian of this team";
 		String actualMessage = exception.getMessage();
+		System.out.println(actualMessage);
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	

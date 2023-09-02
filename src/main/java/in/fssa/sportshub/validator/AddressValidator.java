@@ -1,13 +1,13 @@
 package in.fssa.sportshub.validator;
 
+import in.fssa.sportshub.dao.AddressDAO;
+import in.fssa.sportshub.exception.PersistanceException;
+import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.Address;
 import in.fssa.sportshub.util.StringUtil;
 
 public class AddressValidator {
-	
-	
-	
 	
 	public static void validate(Address address) throws ValidationException {
 		
@@ -32,5 +32,30 @@ public class AddressValidator {
 				throw new ValidationException("Invalid adderess id");
 			}
 		}
+	
+	 /**
+	  * 
+	  * @param id
+	  * @return
+	  * @throws ValidationException
+	  * @throws ServiceException
+	  */
+	 public static boolean checkAddressExist(int id) throws ValidationException, ServiceException{
+		 boolean result;
+		 try {
+		 	AddressValidator.validateId(id);
+	 	
+			AddressDAO addressDAO = new AddressDAO();
+			 result = addressDAO.checkIfExist(id);
+		 }catch(ValidationException e) {
+		 		e.printStackTrace();
+				throw new ValidationException(e.getMessage());
+		 	}catch(PersistanceException e) {
+		 		e.printStackTrace();
+				throw new ServiceException(e.getMessage());
+		 	}
+		 return result;
+	 }
+	 
 	
 }

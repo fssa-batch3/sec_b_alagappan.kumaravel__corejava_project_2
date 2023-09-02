@@ -10,19 +10,21 @@ import in.fssa.sportshub.model.Team;
 import in.fssa.sportshub.service.TeamService;
 
 public class TestCreateTeam {
+	
+	
 	@Test
 	public void createTeamWithValidData() throws Exception {
 		TeamService teamService = new TeamService();
 		
 		Team team = new Team();
 
-		team.setTeamName("Sharks");// here change team name
+		team.setTeamName("Spider");// here change team name
 		team.setUrl("shssssdsfdsd");
 		team.getAddress().setArea("AnnaNagar");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(1);// here change team name
-		team.setModifiedBy(1);
+		team.setCreatedBy(2);// here change team name dont use 123
+		team.setModifiedBy(2);
 		assertDoesNotThrow(()->{
 			teamService.create(team);
 		});
@@ -61,6 +63,8 @@ public class TestCreateTeam {
         String exceptedMessage = "Team name can't be null or empty";
 		String actualMessage = exception.getMessage();
 		System.out.println(actualMessage);
+		
+		System.out.println(1);
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	
@@ -491,8 +495,8 @@ public class TestCreateTeam {
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("chennai");
 		team.setAbout("Playing cricket");
-		team.setCreatedBy(3);//here should change
-		team.setModifiedBy(3);
+		team.setCreatedBy(2);//here should change
+		team.setModifiedBy(2);
 		Exception exception = assertThrows(Exception.class, () -> {
 			teamService.create(team);
         });
@@ -500,5 +504,20 @@ public class TestCreateTeam {
         String exceptedMessage = "Team name already exist";
 		String actualMessage = exception.getMessage();
 		assertTrue(exceptedMessage.equals(actualMessage));
+	}
+	
+	@Test
+	public void createTeamWithExistingTeamName1() throws Exception {
+		TeamService teamService = new TeamService();
+		
+		Team team = teamService.findByCaptainId(13);
+//		Exception exception = assertThrows(Exception.class, () -> {
+////			teamService.create(team);
+//        });
+//       
+//        String exceptedMessage = "Team name already exist";
+//		String actualMessage = exception.getMessage();
+//		assertTrue(exceptedMessage.equals(actualMessage));
+	System.out.println(team.toString());
 	}
 }

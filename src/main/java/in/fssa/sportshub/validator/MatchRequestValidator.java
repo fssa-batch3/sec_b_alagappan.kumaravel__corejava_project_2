@@ -5,11 +5,43 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 
+import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.MatchRequest;
+import in.fssa.sportshub.model.TeamMember;
+import in.fssa.sportshub.service.TeamMemberService;
 import in.fssa.sportshub.util.StringUtil;
 
 public class MatchRequestValidator {
+	
+	public static void validateCreate(MatchRequest matchRequest, int captainId) throws ValidationException, ServiceException{
+		MatchRequestValidator.validateAll(matchRequest);
+		MatchRequestValidator.validateId(captainId, "player");
+		MatchRequestValidator.validateTypeOfMatch(matchRequest);
+		
+		
+		
+		boolean checkPlayerExist = PlayerValidator.playerExist(captainId);
+		if(!checkPlayerExist){
+			throw new ValidationException("Player not exist");
+		}
+		TeamMemberService teamMemService = new TeamMemberService();
+		boolean isCaptain = TeamMemberValidator.isPlayerCaptain(captainId);
+		if(!isCaptain){
+			throw new ValidationException("Player not captain of any team");
+		}
+		TeamMember teamMemberData = teamMemService.findById(matchRequest.getCreatedBy());
+		
+		if(teamMemberData == null) {
+			throw new ValidationException("Created by id not exist");
+		}
+		if(captainId != teamMemberData.getUserId()) {
+			throw new ValidationException("Captain id not match with the team member captain id");
+		}
+		if(matchRequest.getToTeam() == teamMemberData.getTeamId()) {
+			throw new ValidationException("Created team and sent team same");
+		}
+	}
 	
 	public static void validateAll(MatchRequest matchRequest) throws ValidationException {
 		if(matchRequest == null) {

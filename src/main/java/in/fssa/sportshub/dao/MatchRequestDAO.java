@@ -19,7 +19,7 @@ public class MatchRequestDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "Insert into match_request (created_by, to_team, type_of_match, members, members_age_from, members_age_to, match_time, location, information, type_of_opponent) Values (?,?,?,?,?,?,?,?,?,?)";
+			String query = "Insert into match_requests (created_by, to_team, type_of_match, members, members_age_from, members_age_to, match_time, location, information, type_of_opponent) Values (?,?,?,?,?,?,?,?,?,?)";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -57,7 +57,7 @@ public class MatchRequestDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "Insert into match_request (created_by, address_id, type_of_match, members, members_age_from, members_age_to, match_time, location, information) Values (?,?,?,?,?,?,?,?,?)";
+			String query = "Insert into match_requests (created_by, address_id, type_of_match, members, members_age_from, members_age_to, match_time, location, information) Values (?,?,?,?,?,?,?,?,?)";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -96,7 +96,7 @@ public class MatchRequestDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT * FROM match_request WHERE status=1";
+			String query = "SELECT * FROM match_requests WHERE status=1";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);

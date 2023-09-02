@@ -3,7 +3,6 @@ package in.fssa.sportshub.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import in.fssa.sportshub.enumm.OpponentType;
 
 public class MatchRequest {
 	private int id;

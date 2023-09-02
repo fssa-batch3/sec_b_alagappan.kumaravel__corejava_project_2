@@ -6,6 +6,8 @@ import java.time.Year;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import in.fssa.sportshub.dao.PlayerDAO;
+import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.Player;
@@ -23,15 +25,13 @@ public class PlayerValidator {
 	public static void validateCreate(Player player) throws ValidationException {
 		PlayerValidator.validateAll(player);
 	
-		PlayerService playerSer = new PlayerService();
-	
 		boolean checkPhoneNumberExist;
 		try {
-			checkPhoneNumberExist = playerSer.phoneNumberAlreadyExist(player.getPhoneNumber());
+			checkPhoneNumberExist = PlayerValidator.phoneNumberAlreadyExist(player.getPhoneNumber());
 			if(checkPhoneNumberExist){
 				throw new ValidationException("Phone number already exist");
 			}
-		} catch (ValidationException | ServiceException e) {
+		} catch (ServiceException e) {
 			e.printStackTrace();
 			throw new ValidationException(e.getMessage());
 		}
@@ -41,12 +41,11 @@ public class PlayerValidator {
 		PlayerValidator.validatePartial(player);
 		AddressValidator.validate(player.getAddress());
 		try {
-		PlayerService playerSer = new PlayerService();
-		boolean checkPlayerExist = playerSer.playerExist(player.getId());
+		boolean checkPlayerExist = PlayerValidator.playerExist(player.getId());
 		if(!checkPlayerExist){
 			throw new ValidationException("Player not exist");
 		}
-		}catch (ValidationException | ServiceException e) {
+		}catch (ServiceException e) {
 		e.printStackTrace();
 		throw new ValidationException(e.getMessage());
 		}
@@ -56,18 +55,16 @@ public class PlayerValidator {
 		
 		PlayerValidator.validateId(id, "Player");
 		try {
-		PlayerService playerSer = new PlayerService();
-		boolean checkPlayerExist = playerSer.playerExist(id);
+		boolean checkPlayerExist = PlayerValidator.playerExist(id);
 		if(!checkPlayerExist){
 			throw new ValidationException("Player not exist");
 		}
-		TeamMemberService teamMemService = new TeamMemberService();
-		boolean isCaptain = teamMemService.isPlayerCaptain(id);
+		boolean isCaptain = TeamMemberValidator.isPlayerCaptain(id);
 		
 		if(isCaptain){
 			throw new ValidationException("Player is captain of a team");
 		}
-		}catch (ValidationException | ServiceException e) {
+		}catch (ServiceException e) {
 			e.printStackTrace();
 			throw new ValidationException(e.getMessage());
 		}
@@ -159,4 +156,52 @@ public class PlayerValidator {
 	            return false; // Invalid date format
 	        }
 	  }
+	 
+	 
+	 
+		/**
+		 * 
+		 * @param phoneNumber
+		 * @return
+		 * @throws ValidationException, ServiceException
+		 */
+		public static boolean phoneNumberAlreadyExist(long phoneNumber) throws ValidationException, ServiceException{
+			boolean result;
+			try {
+			PlayerValidator.validatePhoneNumber(phoneNumber);
+			
+			PlayerDAO dao = new PlayerDAO();
+			 result = dao.phoneNumberAlreadyExist(phoneNumber);
+	 	}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+			return result;
+		}
+		
+		/**
+		 * 
+		 * @param id
+		 * @return
+		 * @throws ValidationException, ServiceException
+		 */
+		public static boolean playerExist(int id) throws ValidationException, ServiceException{
+			boolean result;
+			try {
+			PlayerValidator.validateId(id, "Player");
+			
+			PlayerDAO dao = new PlayerDAO();
+			result = dao.checkIfExistById(id);
+			}catch(ValidationException e) {
+		 		e.printStackTrace();
+				throw new ValidationException(e.getMessage());
+		 	}catch(PersistanceException e) {
+		 		e.printStackTrace();
+				throw new ServiceException(e.getMessage());
+		 	}
+			return result;
+		}
 }

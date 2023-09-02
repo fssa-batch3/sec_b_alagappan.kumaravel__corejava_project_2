@@ -1,5 +1,7 @@
 package in.fssa.sportshub.validator;
 
+import in.fssa.sportshub.dao.TeamMemberDAO;
+import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.TeamMember;
@@ -18,23 +20,20 @@ public class TeamMemberValidator {
 		TeamMemberValidator.validateId(teamMember.getTeamId(), "Team");
 		TeamMemberValidator.validateId(teamMember.getUserId(), "Player");
 		try {
-		PlayerService playerService = new PlayerService();
-		boolean checkPlayerExist = playerService.playerExist(teamMember.getUserId());
+		boolean checkPlayerExist = PlayerValidator.playerExist(teamMember.getUserId());
 		if(!checkPlayerExist){
 			throw new ValidationException("Player not exist");
 		}
-		TeamMemberService serv = new TeamMemberService();
-		boolean isCaptain = serv.isPlayerCaptain(teamMember.getUserId());
+		boolean isCaptain = TeamMemberValidator.isPlayerCaptain(teamMember.getUserId());
 		if(isCaptain){
 			throw new ValidationException("Player already a captain in team");
 		}
 		
-		TeamService teamService = new TeamService();
-		boolean checkTeamNameExist = teamService.checkTeamExist(teamMember.getTeamId());
+		boolean checkTeamNameExist = TeamValidator.checkTeamExist(teamMember.getTeamId());
 		if(!checkTeamNameExist) {
 			throw new ValidationException("Team not exist");
 		}
-		} catch (ValidationException | ServiceException e) {
+		} catch (ServiceException e) {
 			e.printStackTrace();
 			throw new ValidationException(e.getMessage());
 		}
@@ -43,19 +42,50 @@ public class TeamMemberValidator {
 		TeamMemberValidator.validateId(teamId, "Team");
 		TeamMemberValidator.validateId(playerId, "Player");
 		try {
-		PlayerService playerService = new PlayerService();
-		boolean checkPlayerExist = playerService.playerExist(playerId);
+		boolean checkPlayerExist = PlayerValidator.playerExist(playerId);
 		if(!checkPlayerExist){
 			throw new ValidationException("Player not exist");
 		}
-		TeamMemberService serv = new TeamMemberService();
-		boolean isCaptain = serv.isPlayerCaptainOfSpecificTeam(playerId, teamId);
+		boolean isCaptain = TeamMemberValidator.isPlayerCaptainOfSpecificTeam(playerId, teamId);
 		if(!isCaptain){
 			throw new ValidationException("player not a captian of this team");
 		}
-		} catch (ValidationException | ServiceException e) {
+		} catch (ServiceException e) {
 			e.printStackTrace();
 			throw new ValidationException(e.getMessage());
 		}
+	}
+	
+	public static boolean isPlayerCaptain(int id) throws ValidationException, ServiceException{
+		boolean result;
+		try {
+		TeamMemberValidator.validateId(id, "Player");
+		TeamMemberDAO dao = new TeamMemberDAO();
+		 result = dao.isPlayerCaptain(id);
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+		return result;
+	}
+	
+	public static boolean isPlayerCaptainOfSpecificTeam(int player_id, int team_id) throws ValidationException, ServiceException{
+		boolean result;
+		try {
+		TeamMemberValidator.validateId(player_id, "Player");
+		TeamMemberValidator.validateId(team_id, "Team");
+		TeamMemberDAO dao = new TeamMemberDAO();
+		result =  dao.isPlayerCaptainOfSpecificTeam(player_id, team_id);
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+		return result;
 	}
 }

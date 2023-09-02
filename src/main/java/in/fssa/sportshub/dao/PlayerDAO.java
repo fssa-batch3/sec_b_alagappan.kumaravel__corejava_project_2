@@ -11,6 +11,14 @@ import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.util.ConnectionUtil;
 
 public class PlayerDAO {
+	
+	/**
+     * Checks if a player with the given ID exists and is active in the database.
+     * 
+     * @param id The player ID to check
+     * @return True if a player with the given ID exists and is active, false otherwise
+     * @throws PersistanceException If there's an issue with database operations
+     */
 public boolean checkIfExistById(int id) throws PersistanceException{
 	
 	boolean value;
@@ -41,7 +49,12 @@ public boolean checkIfExistById(int id) throws PersistanceException{
 	
 	return value;
 }
-	
+	/**
+	 * Creates a new player record in the database.
+	 * 
+	 * @param player The player object to be created
+	 * @throws PersistanceException If there's an issue with database operations
+	 */
 public void create(Player player) throws PersistanceException{
 
 	Connection con = null;
@@ -79,13 +92,21 @@ public void create(Player player) throws PersistanceException{
 	}
 	
 }
+
+/**
+ * Checks if a player with the given phone number already exists in the database.
+ * 
+ * @param phoneNumber The phone number to check
+ * @return True if a player with the given phone number exists, false otherwise
+ * @throws PersistanceException If there's an issue with database operations
+ */
 public boolean phoneNumberAlreadyExist(long phoneNumber) throws PersistanceException{
 	boolean value;
 	Connection con = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-		String query = "SELECT * FROM players WHERE phone_number = ?";
+		String query = "SELECT id FROM players WHERE phone_number = ?";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
@@ -107,6 +128,13 @@ public boolean phoneNumberAlreadyExist(long phoneNumber) throws PersistanceExcep
 	
 	return value;
 }
+
+/**
+ * Updates an existing player's information in the database.
+ * 
+ * @param player The player object with updated information
+ * @throws PersistanceException If there's an issue with database operations
+ */
 
 public void update(Player player) throws PersistanceException{
 
@@ -146,6 +174,12 @@ public void update(Player player) throws PersistanceException{
 	
 }
 
+/**
+ * Deletes a player by setting the is_active field to 0 in the database.
+ * 
+ * @param id The ID of the player to be deleted
+ * @throws PersistanceException If there's an issue with database operations
+ */
 
 public void delete(int id) throws PersistanceException{
 
@@ -176,6 +210,18 @@ public void delete(int id) throws PersistanceException{
 	
 }
 
+
+
+
+
+
+
+/**
+ * Changes the is_active status of a deleted player back to 1 in the database.
+ * 
+ * @param id The ID of the player to be reactivated
+ * @throws PersistanceException If there's an issue with database operations
+ */
 public void changeDelete(int id) throws PersistanceException{
 
 	Connection con = null;
@@ -203,5 +249,35 @@ public void changeDelete(int id) throws PersistanceException{
 		ConnectionUtil.close(con,ps,rs);
 	}
 	
+}
+
+
+public int findByPhoneNumber(long phoneNumber) throws PersistanceException{
+	int value;
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "SELECT id FROM players WHERE phone_number = ?";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setLong(1, phoneNumber);
+		rs = ps.executeQuery();
+	    if (rs.next()) {
+	    	value = rs.getInt("id");
+	    }else {
+	    	throw new PersistanceException("Player not found");
+	    }
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+	return value;
 }
 }

@@ -40,46 +40,6 @@ public class PlayerService {
 	 	}
 	}
 	
-	/**
-	 * 
-	 * @param phoneNumber
-	 * @return
-	 * @throws ValidationException, ServiceException
-	 */
-	public boolean phoneNumberAlreadyExist(long phoneNumber) throws ValidationException, ServiceException{
-		try {
-		PlayerValidator.validatePhoneNumber(phoneNumber);
-		
-		PlayerDAO dao = new PlayerDAO();
-		return dao.phoneNumberAlreadyExist(phoneNumber);
- 	}catch(ValidationException e) {
- 		e.printStackTrace();
-		throw new ValidationException(e.getMessage());
- 	}catch(PersistanceException e) {
- 		e.printStackTrace();
-		throw new ServiceException(e.getMessage());
- 	}
-	}
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 * @throws ValidationException, ServiceException
-	 */
-	public boolean playerExist(int id) throws ValidationException, ServiceException{
-		try {
-		PlayerValidator.validateId(id, "Player");
-		
-		PlayerDAO dao = new PlayerDAO();
-		return dao.checkIfExistById(id);
-		}catch(ValidationException e) {
-	 		e.printStackTrace();
-			throw new ValidationException(e.getMessage());
-	 	}catch(PersistanceException e) {
-	 		e.printStackTrace();
-			throw new ServiceException(e.getMessage());
-	 	}
-	}
 	
 	/**
 	 * 
@@ -142,6 +102,30 @@ public class PlayerService {
 	 		e.printStackTrace();
 			throw new ServiceException(e.getMessage());
 	 	}
+	}
+	
+	
+	/**
+	 * 
+	 * @param phoneNumber
+	 * @return
+	 * @throws ValidationException, ServiceException
+	 */
+	public static int findByPhoneNumber(long phoneNumber) throws ValidationException, ServiceException{
+		int player;
+		try {
+		PlayerValidator.validatePhoneNumber(phoneNumber);
+		
+		PlayerDAO dao = new PlayerDAO();
+		player = dao.findByPhoneNumber(phoneNumber);
+ 	}catch(ValidationException e) {
+ 		e.printStackTrace();
+		throw new ValidationException(e.getMessage());
+ 	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
+		return player;
 	}
 	
 }
