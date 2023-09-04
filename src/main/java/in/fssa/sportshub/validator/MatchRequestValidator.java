@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 
+import in.fssa.sportshub.dao.MatchRequestDAO;
+import in.fssa.sportshub.dao.PlayerDAO;
+import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.MatchRequest;
@@ -117,4 +120,22 @@ public class MatchRequestValidator {
             return false; // Invalid date format
         }
   }
+	public static boolean idExist(int id) throws ValidationException, ServiceException {
+		boolean result;
+		try {
+		MatchRequestValidator.validateId(id, "match request id");
+		
+		MatchRequestDAO dao = new MatchRequestDAO();
+		result = dao.checkIfExistById(id);
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+		return result;
+		
+	}
+	
 }

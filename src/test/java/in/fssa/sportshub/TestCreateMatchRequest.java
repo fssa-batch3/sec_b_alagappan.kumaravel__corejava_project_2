@@ -26,7 +26,7 @@ public class TestCreateMatchRequest {
 		MatchRequest matchRequest = new MatchRequest();
 		
 		matchRequest.setCreatedBy(1);
-		matchRequest.setToTeam(3);
+		matchRequest.setToTeam(4);
 		matchRequest.setTypeOfMatch(1);
 		matchRequest.setMembers(10);
 		matchRequest.setMembersAgeFrom(19);

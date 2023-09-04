@@ -76,6 +76,6 @@ public void deleteChange(int teamId, int playerId) throws ValidationException, S
  		e.printStackTrace();
 		throw new ServiceException(e.getMessage());
  	}
-			
+				
 	}
 }

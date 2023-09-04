@@ -52,4 +52,49 @@ public class MatchRequestService {
 		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
 		return matchReqDAO.getAllOpenRequest();
 	}
+	
+	// invitation page 
+	public Set<MatchRequest> getAllMyMatchRequest(int createdById ,int toTeamId, int addressId) throws ServiceException, ValidationException{
+		
+		try {
+		MatchRequestValidator.validateId(addressId, "addressId");
+		MatchRequestValidator.validateId(toTeamId, "toTeamId");
+		MatchRequestValidator.validateId(createdById, "createdById");
+		
+		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
+		return matchReqDAO.getAllMyMatchRequest(createdById ,toTeamId, addressId);
+		}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+	}
+	
+	// response page
+	public Set<MatchRequest> listOfMyMatchInvitation(int createdById) throws ServiceException, ValidationException{
+		
+		try {
+		MatchRequestValidator.validateId(createdById, "teamId");
+		
+		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
+		return matchReqDAO.listOfMyMatchInvitation(createdById);
+		}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+		
+	}
+	
+	public void updateAccept(int toTeamCaptainRelationId, int matchRequestId) throws ServiceException, ValidationException {		
+		try {
+			MatchRequestValidator.validateId(toTeamCaptainRelationId, "toTeamCaptainRelationId");
+			
+			MatchRequestDAO matchReqDAO = new MatchRequestDAO();
+			matchReqDAO.updateAccept(toTeamCaptainRelationId, matchRequestId);
+			}catch(PersistanceException e) {
+		 		e.printStackTrace();
+				throw new ServiceException(e.getMessage());
+		 	}
+		
+	}
+	
 }

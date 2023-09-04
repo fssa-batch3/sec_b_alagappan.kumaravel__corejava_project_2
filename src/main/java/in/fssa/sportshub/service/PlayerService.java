@@ -128,6 +128,24 @@ public class PlayerService {
 		return player;
 	}
 	
+	public static int logIn(long phoneNumber, String password) throws ValidationException, ServiceException{
+		int player;
+		try {
+		PlayerValidator.validatePhoneNumber(phoneNumber);
+		PlayerValidator.validatePassword(password);
+		
+		PlayerDAO dao = new PlayerDAO();
+		player = dao.logIn(phoneNumber, password);
+ 	}catch(ValidationException e) {
+ 		e.printStackTrace();
+		throw new ValidationException(e.getMessage());
+ 	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
+		return player;
+	}
+	
 }
 
 

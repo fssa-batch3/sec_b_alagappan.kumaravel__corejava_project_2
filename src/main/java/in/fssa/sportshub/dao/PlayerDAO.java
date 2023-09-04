@@ -280,4 +280,36 @@ public int findByPhoneNumber(long phoneNumber) throws PersistanceException{
 	
 	return value;
 }
+
+public int logIn(long phoneNumber, String password) throws PersistanceException{
+	int value;
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "SELECT id FROM players WHERE phone_number = ? && password = ? && is_active=1";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setLong(1, phoneNumber);
+		ps.setString(2, password);
+		rs = ps.executeQuery();
+	    if (rs.next()) {
+	    	value = rs.getInt("id");
+	    	System.out.println(value);
+	    }else {
+	    	throw new PersistanceException("Player not found");
+	    }
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+	return value;
+}
+
 }

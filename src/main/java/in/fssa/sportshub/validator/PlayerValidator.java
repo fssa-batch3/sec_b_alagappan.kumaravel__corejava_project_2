@@ -145,6 +145,19 @@ public class PlayerValidator {
 		}
 	}
 	
+	public static void validatePassword(String password) throws ValidationException {
+		
+		StringUtil.rejectIfInvalidString(password, "Password");	
+		//password match pattern here
+        String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(password);
+        
+        if(!matcher.matches()) {
+        	throw new ValidationException("Invalid password");
+        }
+	}
+	
 	 public static boolean isValidLeapYearDateOfBirth(LocalDate dateOfBirth) {
 	        try {
 	            // Check if the year is a leap year
@@ -156,6 +169,8 @@ public class PlayerValidator {
 	            return false; // Invalid date format
 	        }
 	  }
+	 
+	 
 	 
 	 
 	 
