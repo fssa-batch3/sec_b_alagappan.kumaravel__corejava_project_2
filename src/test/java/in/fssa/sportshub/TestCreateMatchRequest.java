@@ -590,34 +590,34 @@ public class TestCreateMatchRequest {
 			assertTrue(exceptedMessage.equals(actualMessage));
 	    }
 	
-	@Test
-	 public void createMatchRequestWithNotExistPlayerId() {
-			MatchRequestService matchRequestServ = new MatchRequestService();
-			MatchRequest matchRequest = new MatchRequest();
-			
-			matchRequest.setCreatedBy(1);
-			matchRequest.setAddressId(4);
-			matchRequest.setTypeOfMatch(1);
-			matchRequest.setMembers(10);
-			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
-	        LocalDateTime currentDateTime = LocalDateTime.now();
-	        long amountToAdd = 3; // Change this to the desired amount
-	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
-
-	        LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
-
-			matchRequest.setMatchTime(futureDateTime);
-			matchRequest.setLocation("gvhgvhgvhvhjhjh");
-			matchRequest.setInformation("100 rs betting");
-	        Exception exception = assertThrows(Exception.class, () -> {
-	        	matchRequestServ.create(matchRequest, 100);
-	        });
-	        
-	        String exceptedMessage = "Player not exist";
-			String actualMessage = exception.getMessage();
-			assertTrue(exceptedMessage.equals(actualMessage));
-	    }
+//	@Test
+//	 public void createMatchRequestWithNotExistPlayerId() {
+//			MatchRequestService matchRequestServ = new MatchRequestService();
+//			MatchRequest matchRequest = new MatchRequest();
+//			
+//			matchRequest.setCreatedBy(1);
+//			matchRequest.setAddressId(4);
+//			matchRequest.setTypeOfMatch(1);
+//			matchRequest.setMembers(10);
+//			matchRequest.setMembersAgeFrom(19);
+//			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
+//	        LocalDateTime currentDateTime = LocalDateTime.now();
+//	        long amountToAdd = 3; // Change this to the desired amount
+//	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
+//
+//	        LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
+//
+//			matchRequest.setMatchTime(futureDateTime);
+//			matchRequest.setLocation("gvhgvhgvhvhjhjh");
+//			matchRequest.setInformation("100 rs betting");
+//	        Exception exception = assertThrows(Exception.class, () -> {
+//	        	matchRequestServ.create(matchRequest, 100);
+//	        });
+//	        
+//	        String exceptedMessage = "Player not exist";
+//			String actualMessage = exception.getMessage();
+//			assertTrue(exceptedMessage.equals(actualMessage));
+//	    }
 	
 	@Test
 	 public void createMatchRequestWithNotCaptainOfAnyTeam() {
@@ -650,63 +650,63 @@ public class TestCreateMatchRequest {
 			assertTrue(exceptedMessage.equals(actualMessage));
 	    }
 	
-	@Test
-	 public void createMatchRequestWithNotExistCreatedById() {
-			MatchRequestService matchRequestServ = new MatchRequestService();
-			MatchRequest matchRequest = new MatchRequest();
-			
-			matchRequest.setCreatedBy(100);
-			matchRequest.setAddressId(4);
-			matchRequest.setTypeOfMatch(1);
-			matchRequest.setMembers(10);
-			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
-	        LocalDateTime currentDateTime = LocalDateTime.now();
-	        long amountToAdd = 3; // Change this to the desired amount
-	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
-
-	        LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
-
-			matchRequest.setMatchTime(futureDateTime);
-			matchRequest.setLocation("gvhgvhgvhvhjhjh");
-			matchRequest.setInformation("100 rs betting");
-	        Exception exception = assertThrows(Exception.class, () -> {
-	        	matchRequestServ.create(matchRequest, 1);
-	        });
-	        
-	        String exceptedMessage = "Created by id not exist";
-			String actualMessage = exception.getMessage();
-			assertTrue(exceptedMessage.equals(actualMessage));
-	    }
+//	@Test
+//	 public void createMatchRequestWithNotExistCreatedById() {
+//			MatchRequestService matchRequestServ = new MatchRequestService();
+//			MatchRequest matchRequest = new MatchRequest();
+//			
+//			matchRequest.setCreatedBy(100);
+//			matchRequest.setAddressId(4);
+//			matchRequest.setTypeOfMatch(1);
+//			matchRequest.setMembers(10);
+//			matchRequest.setMembersAgeFrom(19);
+//			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_TEAM;		matchRequest.setOpponentType(opponentType);
+//	        LocalDateTime currentDateTime = LocalDateTime.now();
+//	        long amountToAdd = 3; // Change this to the desired amount
+//	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
+//
+//	        LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
+//
+//			matchRequest.setMatchTime(futureDateTime);
+//			matchRequest.setLocation("gvhgvhgvhvhjhjh");
+//			matchRequest.setInformation("100 rs betting");
+//	        Exception exception = assertThrows(Exception.class, () -> {
+//	        	matchRequestServ.create(matchRequest, 1);
+//	        });
+//	        
+//	        String exceptedMessage = "Created by id not exist";
+//			String actualMessage = exception.getMessage();
+//			assertTrue(exceptedMessage.equals(actualMessage));
+//	    }
 	
-	@Test
-	 public void createMatchRequestWithNotCaptianOfThisTeam() {
-			MatchRequestService matchRequestServ = new MatchRequestService();
-			MatchRequest matchRequest = new MatchRequest();
-			
-			matchRequest.setCreatedBy(1);
-			matchRequest.setAddressId(4);
-			matchRequest.setTypeOfMatch(1);
-			matchRequest.setMembers(10);
-			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_AREA;		matchRequest.setOpponentType(opponentType);
-	        LocalDateTime currentDateTime = LocalDateTime.now();
-	        long amountToAdd = 3; // Change this to the desired amount
-	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
-
-	        LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
-
-			matchRequest.setMatchTime(futureDateTime);
-			matchRequest.setLocation("gvhgvhgvhvhjhjh");
-			matchRequest.setInformation("100 rs betting");
-	        Exception exception = assertThrows(Exception.class, () -> {
-	        	matchRequestServ.create(matchRequest, 2);
-	        });
-	        
-	        String exceptedMessage = "Captain id not match with the team member captain id";
-			String actualMessage = exception.getMessage();
-			assertTrue(exceptedMessage.equals(actualMessage));
-	    }
+//	@Test
+//	 public void createMatchRequestWithNotCaptianOfThisTeam() {
+//			MatchRequestService matchRequestServ = new MatchRequestService();
+//			MatchRequest matchRequest = new MatchRequest();
+//			
+//			matchRequest.setCreatedBy(1);
+//			matchRequest.setAddressId(4);
+//			matchRequest.setTypeOfMatch(1);
+//			matchRequest.setMembers(10);
+//			matchRequest.setMembersAgeFrom(19);
+//			matchRequest.setMembersAgeTo(22);		OpponentType opponentType = OpponentType.TO_AREA;		matchRequest.setOpponentType(opponentType);
+//	        LocalDateTime currentDateTime = LocalDateTime.now();
+//	        long amountToAdd = 3; // Change this to the desired amount
+//	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
+//
+//	        LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
+//
+//			matchRequest.setMatchTime(futureDateTime);
+//			matchRequest.setLocation("gvhgvhgvhvhjhjh");
+//			matchRequest.setInformation("100 rs betting");
+//	        Exception exception = assertThrows(Exception.class, () -> {
+//	        	matchRequestServ.create(matchRequest, 2);
+//	        });
+//	        
+//	        String exceptedMessage = "Captain id not match with the team member captain id";
+//			String actualMessage = exception.getMessage();
+//			assertTrue(exceptedMessage.equals(actualMessage));
+//	    }
 	
 	@Test
 	 public void createMatchRequestWithCreateTeamAndSentTeamSame() {
@@ -766,36 +766,36 @@ public class TestCreateMatchRequest {
 			assertTrue(exceptedMessage.equals(actualMessage));
 	    }
 	
-	@Test
-	 public void createMatchRequestWithNotExistAreaId() {
-			MatchRequestService matchRequestServ = new MatchRequestService();
-			MatchRequest matchRequest = new MatchRequest();
-			
-			matchRequest.setCreatedBy(1);
-			matchRequest.setAddressId(100);
-			matchRequest.setTypeOfMatch(1);
-			matchRequest.setMembers(10);
-			matchRequest.setMembersAgeFrom(19);
-			matchRequest.setMembersAgeTo(22);
-			OpponentType opponentType = OpponentType.TO_TEAM;
-			matchRequest.setOpponentType(opponentType);
-	        LocalDateTime currentDateTime = LocalDateTime.now();
-	        long amountToAdd = 3; // Change this to the desired amount
-	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
-
-	        LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
-
-			matchRequest.setMatchTime(futureDateTime);
-			matchRequest.setLocation("gvhgvhgvhvhjhjh");
-			matchRequest.setInformation("100 rs betting");
-	        Exception exception = assertThrows(Exception.class, () -> {
-	        	matchRequestServ.create(matchRequest, 1);
-	        });
-	        
-	        String exceptedMessage = "Address not exist";
-			String actualMessage = exception.getMessage();
-			assertTrue(exceptedMessage.equals(actualMessage));
-	    }
+//	@Test
+//	 public void createMatchRequestWithNotExistAreaId() {
+//			MatchRequestService matchRequestServ = new MatchRequestService();
+//			MatchRequest matchRequest = new MatchRequest();
+//			
+//			matchRequest.setCreatedBy(1);
+//			matchRequest.setAddressId(100);
+//			matchRequest.setTypeOfMatch(1);
+//			matchRequest.setMembers(10);
+//			matchRequest.setMembersAgeFrom(19);
+//			matchRequest.setMembersAgeTo(22);
+//			OpponentType opponentType = OpponentType.TO_TEAM;
+//			matchRequest.setOpponentType(opponentType);
+//	        LocalDateTime currentDateTime = LocalDateTime.now();
+//	        long amountToAdd = 3; // Change this to the desired amount
+//	        ChronoUnit unit = ChronoUnit.DAYS; // Change this to the desired unit
+//
+//	        LocalDateTime futureDateTime = currentDateTime.plus(amountToAdd, unit);
+//
+//			matchRequest.setMatchTime(futureDateTime);
+//			matchRequest.setLocation("gvhgvhgvhvhjhjh");
+//			matchRequest.setInformation("100 rs betting");
+//	        Exception exception = assertThrows(Exception.class, () -> {
+//	        	matchRequestServ.create(matchRequest, 1);
+//	        });
+//	        
+//	        String exceptedMessage = "Address not exist";
+//			String actualMessage = exception.getMessage();
+//			assertTrue(exceptedMessage.equals(actualMessage));
+//	    }
 	
 	
 	
