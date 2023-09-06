@@ -20,10 +20,10 @@ public class RequestResponseService {
 		TeamMember teamMember = teamMemberServ.findById(toTeamCaptainRelationId);
 		
 		requsetResponseDAO.accept(teamMember.getTeamId(), matchRequestId);
-		
+		System.out.println("working");
 		MatchRequestService matchReqService = new MatchRequestService();
 		
-		matchReqService.updateAccept(toTeamCaptainRelationId, matchRequestId);
+		matchReqService.updateAccept(teamMember.getTeamId(), matchRequestId);
 		
 		
 		}catch(ValidationException e) {

@@ -62,7 +62,7 @@ public class MatchRequestService {
 		MatchRequestValidator.validateId(addressId, "addressId");
 		MatchRequestValidator.validateId(toTeamId, "toTeamId");
 		MatchRequestValidator.validateId(createdById, "createdById");
-		
+		System.out.println(createdById +" "+toTeamId +" "+addressId);
 		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
 		return matchReqDAO.getAllMyMatchRequest(createdById ,toTeamId, addressId);
 		}catch(PersistanceException e) {

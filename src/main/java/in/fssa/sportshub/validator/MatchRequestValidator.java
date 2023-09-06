@@ -22,8 +22,7 @@ public class MatchRequestValidator {
 		MatchRequestValidator.validateId(captainId, "player");
 		MatchRequestValidator.validateTypeOfMatch(matchRequest);
 		
-		
-		
+		// business validation
 		boolean checkPlayerExist = PlayerValidator.playerExist(captainId);
 		if(!checkPlayerExist){
 			throw new ValidationException("Player not exist");

@@ -63,7 +63,7 @@ public class MatchRequestDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "Insert into match_requests (created_by, address_id, type_of_match, members, members_age_from, members_age_to, match_time, location, information) Values (?,?,?,?,?,?,?,?,?)";
+			String query = "Insert into match_requests (created_by, address_id, type_of_match, members, members_age_from, members_age_to, match_time, location, information, type_of_opponent) Values (?,?,?,?,?,?,?,?,?,?)";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -77,7 +77,7 @@ public class MatchRequestDAO {
 			ps.setTimestamp(7, timestamp);
 			ps.setString(8, matchRequest.getLocation());
 			ps.setString(9, matchRequest.getInformation());
-			
+			ps.setString(10, matchRequest.getOpponentType().getDisplayName());
 			int rowsAffected = ps.executeUpdate();
 			if (rowsAffected > 0) {
 				System.out.println("Match request created");
@@ -145,7 +145,7 @@ public Set<MatchRequestDTO> getAllMyMatchRequest(int CreatedId, int toTeamId, in
 		try {
 			String query = "SELECT mr.* FROM match_requests mr "
 		             + "LEFT JOIN request_responses rr ON mr.id = rr.request_id AND rr.from_team_id = ? "
-		             + "WHERE (mr.status = 0 AND mr.created_by != ?) "
+		             + "WHERE (mr.status = 1 AND mr.created_by != ?) "
 		             + "AND (mr.to_team = ? OR mr.address_id = ?) "
 		             + "AND rr.request_id IS NULL";
 			
@@ -192,14 +192,14 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationAccepted(int CreatedId) throw
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-		String query = "  SELECT mr.*, p.user_name, "
-				+ " t.team_name, t.url, t.about AS team_about "
-				+ "FROM match_requests AS mr "
-				+ "JOIN team_members AS tm ON mr.to_team = tm.id "
-				+ "JOIN players AS p ON tm.user_id = p.id "
-				+ "JOIN teams AS t ON tm.team_id = t.id "
-				+ "WHERE mr.created_by = ? "
-				+ "  AND mr.status = 0";
+			String query = "SELECT mr.*, rs.status_of_response , "
+					+ "       t.team_name, t.url, t.about AS team_about "
+					+ "FROM match_requests AS mr "
+					+ "JOIN team_members AS tm ON mr.to_team = tm.id "
+					+ "JOIN request_responses AS rs ON rs.request_id = mr.id "
+					+ "JOIN teams AS t ON tm.team_id = t.id "
+					+ "WHERE mr.created_by = ? "
+					+ "  AND mr.status = 0 ";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
@@ -225,6 +225,7 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationAccepted(int CreatedId) throw
 			team.setTeamName(rs.getString("team_name"));
 			team.setUrl(rs.getString("url"));
  			matchRequest.setOpponentTeam(team);
+ 			matchRequest.setStatusOfResponse(rs.getInt("status_of_response"));
 			listOfRequest.add(matchRequest);
 			System.out.println(matchRequest.toString());
 		}
@@ -251,7 +252,6 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToTeam(int Created
 				+ "       t.team_name, t.url, t.about AS team_about "
 				+ "FROM match_requests AS mr "
 				+ "JOIN teams AS t ON mr.to_team = t.id "
-				+ "JOIN request_responses AS rs ON mr.id = rs.request_id "
 				+ "WHERE mr.created_by = ? "
 				+ "  AND mr.status = 1";
 		
@@ -279,6 +279,7 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToTeam(int Created
 			team.setTeamName(rs.getString("team_name"));
 			team.setUrl(rs.getString("url"));
  			matchRequest.setOpponentTeam(team);
+ 			matchRequest.setStatusOfResponse(2);
 			listOfRequest.add(matchRequest);
 			System.out.println(matchRequest.toString());
 		}
@@ -331,6 +332,7 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToArea(int Created
 			address.setArea(rs.getString("area"));
 			address.setDistrict(rs.getString("district"));
  			matchRequest.setToAreaAddress(address);
+ 			matchRequest.setStatusOfResponse(2);
 			listOfRequest.add(matchRequest);
 			System.out.println(matchRequest.toString());
 		}
@@ -346,7 +348,7 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToArea(int Created
 }
 
 public void updateAccept(int toTeamCaptainRelationId, int matchRequestId) throws PersistanceException{
-
+	System.out.println("entered ");
 	Connection con = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
