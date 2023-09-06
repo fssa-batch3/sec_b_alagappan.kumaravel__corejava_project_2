@@ -1,5 +1,8 @@
 package in.fssa.sportshub.service;
 
+import java.util.Set;
+
+import in.fssa.sportshub.dao.AddressDAO;
 import in.fssa.sportshub.dao.TeamDAO;
 import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ServiceException;
@@ -142,6 +145,16 @@ public Team findById(int teamId) throws ValidationException, ServiceException{
  	}
 	return team;
 		
+}
+
+public Set<Team> getAllTeam() throws ServiceException{
+	 try {
+		TeamDAO teamDAO = new TeamDAO();
+		return teamDAO.getAll();
+	}catch(PersistanceException e) {
+		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+	}
 }
 
 

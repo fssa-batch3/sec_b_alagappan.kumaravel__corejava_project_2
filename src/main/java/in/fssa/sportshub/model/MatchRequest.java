@@ -46,7 +46,7 @@ public class MatchRequest {
 	public void setAddressId(int addressId) {
 		this.addressId = addressId;
 	}
-	public boolean isStatus() {
+	public boolean getStatus() {
 		return Status;
 	}
 	public void setStatus(boolean status) {

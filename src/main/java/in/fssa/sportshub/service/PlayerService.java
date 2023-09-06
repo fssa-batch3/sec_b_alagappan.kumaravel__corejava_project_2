@@ -146,6 +146,24 @@ public class PlayerService {
 		return player;
 	}
 	
+	public static Player findById(int id) throws ValidationException, ServiceException{
+		Player player;
+		try {
+		PlayerValidator.validateId(id, "Player");
+		
+		PlayerDAO dao = new PlayerDAO();
+		player = dao.findById(id);
+ 	}catch(ValidationException e) {
+ 		e.printStackTrace();
+		throw new ValidationException(e.getMessage());
+ 	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
+		return player;
+	}
+	
+	
 }
 
 

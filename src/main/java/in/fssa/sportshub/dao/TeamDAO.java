@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 import in.fssa.sportshub.exception.PersistanceException;
+import in.fssa.sportshub.model.Address;
 import in.fssa.sportshub.model.Team;
 import in.fssa.sportshub.util.ConnectionUtil;
 
@@ -235,5 +238,38 @@ public class TeamDAO {
 		}finally {
 			ConnectionUtil.close(con,ps,rs);
 		}
+	}
+	
+	public Set<Team> getAll() throws PersistanceException{
+		Set<Team> teamList = new HashSet<>();;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String query = "SELECT * FROM teams";
+			
+			con = ConnectionUtil.getConnection();
+			
+			ps = con.prepareStatement(query);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				  Team team = new Team();
+				  team.setId(rs.getInt("id"));
+			      team.setTeamName(rs.getString("team_name"));
+			      team.setUrl(rs.getString("url"));
+			      team.setAbout(rs.getString("about"));
+			      team.getAddress().setId(rs.getInt("address_id"));
+			      team.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime().toLocalDate());
+			      teamList.add(team);
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new PersistanceException(e.getMessage());
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+		return teamList;
 	}
 }

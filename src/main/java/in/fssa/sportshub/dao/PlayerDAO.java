@@ -4,9 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ValidationException;
+import in.fssa.sportshub.model.Gender;
 import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.util.ConnectionUtil;
 
@@ -310,6 +312,48 @@ public int logIn(long phoneNumber, String password) throws PersistanceException{
 	}
 	
 	return value;
+}
+
+public Player findById(int id) throws PersistanceException{
+	Player player = new Player();
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "SELECT * FROM players AS p INNER JOIN address AS a ON p.address_id = a.id WHERE p.id = ?;";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setLong(1, id);
+		rs = ps.executeQuery();
+	    if (rs.next()) {
+	    	player.setId(rs.getInt("id"));
+			player.setPhoneNumber(rs.getLong("phone_number"));
+			player.setUserName(rs.getString("user_name"));
+			player.setFirstName(rs.getString("first_name"));
+			player.setLastName(rs.getString("last_name"));
+			player.setUrl(rs.getString("image"));
+			player.setPassword(rs.getString("password"));
+			player.setGender(Gender.valueOf(rs.getString("gender").toUpperCase()));
+			player.getAddress().setId(rs.getInt("address_id"));
+			player.getAddress().setArea(rs.getString("area"));
+			player.getAddress().setDistrict(rs.getString("district"));
+			player.setDateOfBirth(LocalDate.of(2002, 11, 26));
+			player.setAbout(rs.getString("about"));
+			player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+	    }else {
+	    	throw new PersistanceException("Player not found");
+	    }
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+	return player;
 }
 
 }

@@ -1,5 +1,6 @@
 package in.fssa.sportshub.service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import in.fssa.sportshub.dao.MatchRequestDAO;
@@ -7,6 +8,7 @@ import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.MatchRequest;
+import in.fssa.sportshub.model.MatchRequestDTO;
 import in.fssa.sportshub.model.TeamMember;
 import in.fssa.sportshub.validator.AddressValidator;
 import in.fssa.sportshub.validator.MatchRequestValidator;
@@ -54,7 +56,7 @@ public class MatchRequestService {
 	}
 	
 	// invitation page 
-	public Set<MatchRequest> getAllMyMatchRequest(int createdById ,int toTeamId, int addressId) throws ServiceException, ValidationException{
+	public Set<MatchRequestDTO> getAllMyMatchRequest(int createdById ,int toTeamId, int addressId) throws ServiceException, ValidationException{
 		
 		try {
 		MatchRequestValidator.validateId(addressId, "addressId");
@@ -70,13 +72,23 @@ public class MatchRequestService {
 	}
 	
 	// response page
-	public Set<MatchRequest> listOfMyMatchInvitation(int createdById) throws ServiceException, ValidationException{
+	public Set<MatchRequestDTO> listOfMyMatchInvitation(int createdById) throws ServiceException, ValidationException{
 		
 		try {
 		MatchRequestValidator.validateId(createdById, "teamId");
 		
 		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
-		return matchReqDAO.listOfMyMatchInvitation(createdById);
+		
+		Set<MatchRequestDTO> data1 = matchReqDAO.listOfMyMatchInvitationAccepted(createdById);
+		Set<MatchRequestDTO> data2 = matchReqDAO.listOfMyMatchInvitationNotAcceptedToTeam(createdById);
+		Set<MatchRequestDTO> data3 = matchReqDAO.listOfMyMatchInvitationNotAcceptedToArea(createdById);
+		Set<MatchRequestDTO> mergedData = new HashSet<>();
+
+		mergedData.addAll(data1);
+		mergedData.addAll(data2);
+		mergedData.addAll(data3);
+		
+		return mergedData;
 		}catch(PersistanceException e) {
 	 		e.printStackTrace();
 			throw new ServiceException(e.getMessage());

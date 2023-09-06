@@ -9,10 +9,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import in.fssa.sportshub.exception.PersistanceException;
+import in.fssa.sportshub.model.Address;
 import in.fssa.sportshub.model.Gender;
 import in.fssa.sportshub.model.MatchRequest;
+import in.fssa.sportshub.model.MatchRequestDTO;
 import in.fssa.sportshub.model.OpponentType;
 import in.fssa.sportshub.model.Player;
+import in.fssa.sportshub.model.Team;
 import in.fssa.sportshub.util.ConnectionUtil;
 
 public class MatchRequestDAO {
@@ -133,16 +136,16 @@ public class MatchRequestDAO {
 		return listOfRequest;
 	}
 	
-public Set<MatchRequest> getAllMyMatchRequest(int CreatedId, int toTeamId, int addressId) throws PersistanceException{
+public Set<MatchRequestDTO> getAllMyMatchRequest(int CreatedId, int toTeamId, int addressId) throws PersistanceException{
 		
-		Set<MatchRequest> listOfRequest = new HashSet<>();
+		Set<MatchRequestDTO> listOfRequest = new HashSet<>();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
 			String query = "SELECT mr.* FROM match_requests mr "
 		             + "LEFT JOIN request_responses rr ON mr.id = rr.request_id AND rr.from_team_id = ? "
-		             + "WHERE (mr.status = 1 AND mr.created_by != ?) "
+		             + "WHERE (mr.status = 0 AND mr.created_by != ?) "
 		             + "AND (mr.to_team = ? OR mr.address_id = ?) "
 		             + "AND rr.request_id IS NULL";
 			
@@ -154,7 +157,7 @@ public Set<MatchRequest> getAllMyMatchRequest(int CreatedId, int toTeamId, int a
 			ps.setInt(4, addressId);
 			rs = ps.executeQuery();
 			while(rs.next()) {
-				MatchRequest matchRequest = new MatchRequest();
+				MatchRequestDTO matchRequest = new MatchRequestDTO();
 				matchRequest.setId(rs.getInt("id"));
 				matchRequest.setCreatedBy(rs.getInt("created_by"));
 				matchRequest.setOpponentType((rs.getInt("type_of_opponent") == 1? OpponentType.TO_TEAM : OpponentType.TO_AREA ));
@@ -182,21 +185,28 @@ public Set<MatchRequest> getAllMyMatchRequest(int CreatedId, int toTeamId, int a
 		return listOfRequest;
 	}
 
-public Set<MatchRequest> listOfMyMatchInvitation(int CreatedId) throws PersistanceException{
+public Set<MatchRequestDTO> listOfMyMatchInvitationAccepted(int CreatedId) throws PersistanceException{
 	
-	Set<MatchRequest> listOfRequest = new HashSet<>();
+	Set<MatchRequestDTO> listOfRequest = new HashSet<>();
 	Connection con = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-		String query = "SELECT * FROM match_requests WHERE status=1 && created_by = ?";
+		String query = "  SELECT mr.*, p.user_name, "
+				+ " t.team_name, t.url, t.about AS team_about "
+				+ "FROM match_requests AS mr "
+				+ "JOIN team_members AS tm ON mr.to_team = tm.id "
+				+ "JOIN players AS p ON tm.user_id = p.id "
+				+ "JOIN teams AS t ON tm.team_id = t.id "
+				+ "WHERE mr.created_by = ? "
+				+ "  AND mr.status = 0";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
 		ps.setInt(1, CreatedId);
 		rs = ps.executeQuery();
 		while(rs.next()) {
-			MatchRequest matchRequest = new MatchRequest();
+			MatchRequestDTO matchRequest = new MatchRequestDTO();
 			matchRequest.setId(rs.getInt("id"));
 			matchRequest.setCreatedBy(rs.getInt("created_by"));
 			matchRequest.setOpponentType((rs.getInt("type_of_opponent") == 1? OpponentType.TO_TEAM : OpponentType.TO_AREA ));
@@ -210,6 +220,117 @@ public Set<MatchRequest> listOfMyMatchInvitation(int CreatedId) throws Persistan
 			matchRequest.setLocation(rs.getString("location"));
 			matchRequest.setInformation(rs.getString("information"));
 			matchRequest.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			matchRequest.setStatus(rs.getInt("status") == 1);
+			Team team = new Team();
+			team.setTeamName(rs.getString("team_name"));
+			team.setUrl(rs.getString("url"));
+ 			matchRequest.setOpponentTeam(team);
+			listOfRequest.add(matchRequest);
+			System.out.println(matchRequest.toString());
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println(e.getMessage());
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	return listOfRequest;
+}
+
+
+public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToTeam(int CreatedId) throws PersistanceException{
+	
+	Set<MatchRequestDTO> listOfRequest = new HashSet<>();
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "SELECT mr.*, "
+				+ "       t.team_name, t.url, t.about AS team_about "
+				+ "FROM match_requests AS mr "
+				+ "JOIN teams AS t ON mr.to_team = t.id "
+				+ "JOIN request_responses AS rs ON mr.id = rs.request_id "
+				+ "WHERE mr.created_by = ? "
+				+ "  AND mr.status = 1";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, CreatedId);
+		rs = ps.executeQuery();
+		while(rs.next()) {
+			MatchRequestDTO matchRequest = new MatchRequestDTO();
+			matchRequest.setId(rs.getInt("id"));
+			matchRequest.setCreatedBy(rs.getInt("created_by"));
+			matchRequest.setOpponentType((rs.getInt("type_of_opponent") == 1? OpponentType.TO_TEAM : OpponentType.TO_AREA ));
+			matchRequest.setToTeam(rs.getInt("to_team"));
+			matchRequest.setAddressId(rs.getInt("address_id"));
+			matchRequest.setTypeOfMatch(rs.getInt("type_of_match"));
+			matchRequest.setMembers(rs.getInt("members"));
+			matchRequest.setMembersAgeFrom(rs.getInt("members_age_from"));
+			matchRequest.setMembersAgeTo(rs.getInt("members_age_to"));
+			matchRequest.setMatchTime(rs.getTimestamp("match_time").toLocalDateTime());
+			matchRequest.setLocation(rs.getString("location"));
+			matchRequest.setInformation(rs.getString("information"));
+			matchRequest.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			matchRequest.setStatus(rs.getInt("status") == 1);
+			Team team = new Team();
+			team.setTeamName(rs.getString("team_name"));
+			team.setUrl(rs.getString("url"));
+ 			matchRequest.setOpponentTeam(team);
+			listOfRequest.add(matchRequest);
+			System.out.println(matchRequest.toString());
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println(e.getMessage());
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	return listOfRequest;
+}
+
+
+public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToArea(int CreatedId) throws PersistanceException{
+	
+	Set<MatchRequestDTO> listOfRequest = new HashSet<>();
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "SELECT * "
+				+ "FROM match_requests AS mr "
+				+ "JOIN address AS a ON mr.address_id = a.id "
+				+ "WHERE mr.created_by = ? "
+				+ "  AND mr.status = 1";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, CreatedId);
+		rs = ps.executeQuery();
+		while(rs.next()) {
+			MatchRequestDTO matchRequest = new MatchRequestDTO();
+			matchRequest.setId(rs.getInt("id"));
+			matchRequest.setCreatedBy(rs.getInt("created_by"));
+			matchRequest.setOpponentType((rs.getInt("type_of_opponent") == 1? OpponentType.TO_TEAM : OpponentType.TO_AREA ));
+			matchRequest.setToTeam(rs.getInt("to_team"));
+			matchRequest.setAddressId(rs.getInt("address_id"));
+			matchRequest.setTypeOfMatch(rs.getInt("type_of_match"));
+			matchRequest.setMembers(rs.getInt("members"));
+			matchRequest.setMembersAgeFrom(rs.getInt("members_age_from"));
+			matchRequest.setMembersAgeTo(rs.getInt("members_age_to"));
+			matchRequest.setMatchTime(rs.getTimestamp("match_time").toLocalDateTime());
+			matchRequest.setLocation(rs.getString("location"));
+			matchRequest.setInformation(rs.getString("information"));
+			matchRequest.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			matchRequest.setStatus(rs.getInt("status") == 1);
+			Address address = new Address();
+			address.setArea(rs.getString("area"));
+			address.setDistrict(rs.getString("district"));
+ 			matchRequest.setToAreaAddress(address);
 			listOfRequest.add(matchRequest);
 			System.out.println(matchRequest.toString());
 		}
