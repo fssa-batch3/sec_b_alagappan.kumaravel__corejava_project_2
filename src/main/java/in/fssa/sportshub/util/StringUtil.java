@@ -30,7 +30,7 @@ public class StringUtil {
 	
 	public static void rejectIfPatternDoesNotMatch(String input, String inputName) throws ValidationException {
 		
-		Pattern pattern = Pattern.compile("^[A-Za-z]+$");
+		Pattern pattern = Pattern.compile("^[A-Za-z ]+$");
 		Matcher matcher = pattern.matcher(input);
 		
 		if(!matcher.matches()) {
