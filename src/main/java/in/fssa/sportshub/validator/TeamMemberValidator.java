@@ -38,6 +38,8 @@ public class TeamMemberValidator {
 			throw new ValidationException(e.getMessage());
 		}
 	}
+	
+	
 	public static void validateDelete(int teamId, int playerId) throws ValidationException {
 		TeamMemberValidator.validateId(teamId, "Team");
 		TeamMemberValidator.validateId(playerId, "Player");

@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ValidationException;
@@ -139,7 +140,7 @@ public boolean phoneNumberAlreadyExist(long phoneNumber) throws PersistanceExcep
  */
 
 public void update(Player player) throws PersistanceException{
-
+	System.out.println("dao in");
 	Connection con = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
@@ -172,8 +173,9 @@ public void update(Player player) throws PersistanceException{
 		throw new PersistanceException(e.getMessage());
 	}finally {
 		ConnectionUtil.close(con,ps,rs);
+		
 	}
-	
+	System.out.println("dao out");
 }
 
 /**
@@ -260,7 +262,7 @@ public int findByPhoneNumber(long phoneNumber) throws PersistanceException{
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-		String query = "SELECT id FROM players WHERE phone_number = ?";
+		String query = "SELECT id FROM players WHERE is_active= 1 && phone_number = ? ";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
@@ -268,6 +270,8 @@ public int findByPhoneNumber(long phoneNumber) throws PersistanceException{
 		rs = ps.executeQuery();
 	    if (rs.next()) {
 	    	value = rs.getInt("id");
+	    	System.out.println(value + "<===");
+	    	System.out.println(phoneNumber + "<===");
 	    }else {
 	    	throw new PersistanceException("Player not found");
 	    }
@@ -320,7 +324,7 @@ public Player findById(int id) throws PersistanceException{
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-		String query = "SELECT * FROM players AS p INNER JOIN address AS a ON p.address_id = a.id WHERE p.id = ?;";
+		String query = "SELECT * FROM players AS p INNER JOIN address AS a ON p.address_id = a.id WHERE p.id = ? ";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
@@ -338,9 +342,14 @@ public Player findById(int id) throws PersistanceException{
 			player.getAddress().setId(rs.getInt("address_id"));
 			player.getAddress().setArea(rs.getString("area"));
 			player.getAddress().setDistrict(rs.getString("district"));
-			player.setDateOfBirth(LocalDate.of(2002, 11, 26));
+			String dateString = rs.getDate("date_of_birth") + "";
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			LocalDate localDate = LocalDate.parse(dateString, formatter);
+			
+			player.setDateOfBirth(localDate);
 			player.setAbout(rs.getString("about"));
 			player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			player.setModifiedAt(rs.getTimestamp("modified_at").toLocalDateTime());
 	    }else {
 	    	throw new PersistanceException("Player not found");
 	    }

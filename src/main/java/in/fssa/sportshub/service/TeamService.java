@@ -9,6 +9,7 @@ import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.Address;
 import in.fssa.sportshub.model.Team;
+import in.fssa.sportshub.model.TeamDetailDTO;
 import in.fssa.sportshub.model.TeamMember;
 import in.fssa.sportshub.util.StringUtil;
 import in.fssa.sportshub.validator.TeamValidator;
@@ -129,8 +130,8 @@ public Team findByCaptainId(int captainId) throws ValidationException, ServiceEx
 }
 
 //validation yet to be done
-public Team findById(int teamId) throws ValidationException, ServiceException{
-	Team team;
+public TeamDetailDTO findById(int teamId) throws ValidationException, ServiceException{
+	TeamDetailDTO team;
 	try {
 		TeamValidator.validateId(teamId, "team");
 		TeamDAO teamDAO = new TeamDAO();
@@ -147,7 +148,8 @@ public Team findById(int teamId) throws ValidationException, ServiceException{
 		
 }
 
-public Set<Team> getAllTeam() throws ServiceException{
+
+public Set<TeamDetailDTO> getAllTeam() throws ServiceException{
 	 try {
 		TeamDAO teamDAO = new TeamDAO();
 		return teamDAO.getAll();
@@ -157,5 +159,14 @@ public Set<Team> getAllTeam() throws ServiceException{
 	}
 }
 
+public Set<TeamDetailDTO> getOpenForPlayerTeamList() throws ServiceException{
+	 try {
+		TeamDAO teamDAO = new TeamDAO();
+		return teamDAO.getOpenForPlayerTeamList();
+	}catch(PersistanceException e) {
+		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+	}
+}
 
 }

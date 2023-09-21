@@ -11,7 +11,9 @@ import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.MatchRequest;
+import in.fssa.sportshub.model.MatchRequestDTO;
 import in.fssa.sportshub.model.TeamMember;
+import in.fssa.sportshub.service.MatchRequestService;
 import in.fssa.sportshub.service.TeamMemberService;
 import in.fssa.sportshub.util.StringUtil;
 
@@ -43,6 +45,44 @@ public class MatchRequestValidator {
 		if(matchRequest.getToTeam() == teamMemberData.getTeamId()) {
 			throw new ValidationException("Created team and sent team same");
 		}
+	}
+	
+	public static void validateDelete(int matchRequestId, int captainId) throws ValidationException, ServiceException{
+		MatchRequestValidator.validateId(captainId, "player");
+		MatchRequestService matchReqServ = new MatchRequestService();
+		MatchRequestDTO checkMatchRequestExist = matchReqServ.findById(matchRequestId);
+
+		
+		if(checkMatchRequestExist == null){
+			throw new ValidationException("Match request not exist");
+		}
+		if(!checkMatchRequestExist.getStatus()) {
+			throw new ValidationException("You can't delete already closed match request");
+		}
+		
+		// business validation
+		boolean checkPlayerExist = PlayerValidator.playerExist(captainId);
+		if(!checkPlayerExist){
+			throw new ValidationException("Player not exist");
+		}
+		
+		TeamMemberService teamMemService = new TeamMemberService();
+		boolean isCaptain = TeamMemberValidator.isPlayerCaptain(captainId);
+		if(!isCaptain){
+			throw new ValidationException("Player not captain of any team");
+		}
+		
+		TeamMember teamMemberData = teamMemService.findByCaptainId(captainId);
+		
+		if(teamMemberData == null) {
+			throw new ValidationException("Created by id not exist");
+		}
+		
+		
+		if(teamMemberData.getId() != checkMatchRequestExist.getCreatedBy()) {
+			throw new ValidationException("You are not create this match request");
+		}
+		
 	}
 	
 	public static void validateAll(MatchRequest matchRequest) throws ValidationException {

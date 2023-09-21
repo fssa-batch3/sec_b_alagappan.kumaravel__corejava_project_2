@@ -143,17 +143,22 @@ public Set<MatchRequestDTO> getAllMyMatchRequest(int CreatedId, int toTeamId, in
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT mr.* FROM match_requests mr "
-		             + "LEFT JOIN request_responses rr ON mr.id = rr.request_id AND rr.from_team_id = ? "
-		             + "WHERE (mr.status = 1 AND mr.created_by != ?) "
-		             + "AND (mr.to_team = ? OR mr.address_id = ?) "
-		             + "AND rr.request_id IS NULL";
+			String query = "SELECT mr.*, p.user_name, tm.user_id as player_id, tm.team_id, t.team_name, t.url as team_url "
+					+ "FROM match_requests mr "
+					+ "LEFT JOIN request_responses rr ON mr.id = rr.request_id AND rr.from_team_id = ? "
+					+ "JOIN team_members AS tm ON mr.created_by = tm.id "
+					+ "JOIN teams AS t ON tm.team_id = t.id "
+					+ "JOIN players AS p ON tm.user_id = p.id "
+					+ "WHERE mr.status = 1 "
+					+ "    AND mr.created_by != ? "
+					+ "    AND (mr.to_team = ? OR mr.address_id = ?) "
+					+ "    AND rr.request_id IS NULL";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
 			ps.setInt(1, toTeamId);
 			ps.setInt(2, CreatedId);
-			ps.setInt(3, toTeamId);
+			ps.setInt(3, CreatedId);
 			ps.setInt(4, addressId);
 			rs = ps.executeQuery();
 			while(rs.next()) {
@@ -171,6 +176,15 @@ public Set<MatchRequestDTO> getAllMyMatchRequest(int CreatedId, int toTeamId, in
 				matchRequest.setLocation(rs.getString("location"));
 				matchRequest.setInformation(rs.getString("information"));
 				matchRequest.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+				Team team = new Team();
+				team.setId(rs.getInt("team_id"));
+				team.setTeamName(rs.getString("team_name"));
+				team.setUrl(rs.getString("team_url"));
+				matchRequest.setCreatedTeam(team);
+				Player player = new Player();
+				player.setId(rs.getInt("player_id"));
+				player.setUserName(rs.getString("user_name"));
+				matchRequest.setCreatedTeamCaptain(player);
 				listOfRequest.add(matchRequest);
 				System.out.println(matchRequest.toString());
 			}
@@ -199,7 +213,7 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationAccepted(int CreatedId) throw
 					+ "JOIN request_responses AS rs ON rs.request_id = mr.id "
 					+ "JOIN teams AS t ON tm.team_id = t.id "
 					+ "WHERE mr.created_by = ? "
-					+ "  AND mr.status = 0 ";
+					+ "  AND mr.status != 1 AND mr.status !=2 ";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
@@ -225,8 +239,10 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationAccepted(int CreatedId) throw
 			team.setTeamName(rs.getString("team_name"));
 			team.setUrl(rs.getString("url"));
  			matchRequest.setOpponentTeam(team);
+ 			
  			matchRequest.setStatusOfResponse(rs.getInt("status_of_response"));
 			listOfRequest.add(matchRequest);
+			System.out.println("hi ");
 			System.out.println(matchRequest.toString());
 		}
 		
@@ -294,6 +310,61 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToTeam(int Created
 	return listOfRequest;
 }
 
+public MatchRequestDTO findById(int matchRequestId) throws PersistanceException{
+	MatchRequestDTO matchRequest = null;
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "SELECT mr.*, p.user_name, tm.user_id as player_id, tm.team_id, t.team_name, t.url as team_url "
+				+ "FROM match_requests mr "
+				+ "JOIN team_members AS tm ON mr.created_by = tm.id "
+				+ "JOIN teams AS t ON tm.team_id = t.id "
+				+ "JOIN players AS p ON tm.user_id = p.id "
+				+ "AND mr.id = ? AND mr.status != 2";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, matchRequestId);
+		rs = ps.executeQuery();
+		if(rs.next()) {
+			matchRequest =  new MatchRequestDTO();
+			matchRequest.setId(rs.getInt("id"));
+			matchRequest.setCreatedBy(rs.getInt("created_by"));
+			matchRequest.setOpponentType((rs.getInt("type_of_opponent") == 1? OpponentType.TO_TEAM : OpponentType.TO_AREA ));
+			matchRequest.setToTeam(rs.getInt("to_team"));
+			matchRequest.setAddressId(rs.getInt("address_id"));
+			matchRequest.setTypeOfMatch(rs.getInt("type_of_match"));
+			matchRequest.setMembers(rs.getInt("members"));
+			matchRequest.setMembersAgeFrom(rs.getInt("members_age_from"));
+			matchRequest.setMembersAgeTo(rs.getInt("members_age_to"));
+			matchRequest.setMatchTime(rs.getTimestamp("match_time").toLocalDateTime());
+			matchRequest.setLocation(rs.getString("location"));
+			matchRequest.setInformation(rs.getString("information"));
+			matchRequest.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			matchRequest.setStatus(rs.getInt("status") == 1 ? true : false);
+			Team team = new Team();
+			team.setId(rs.getInt("team_id"));
+			team.setTeamName(rs.getString("team_name"));
+			team.setUrl(rs.getString("team_url"));
+			matchRequest.setCreatedTeam(team);
+			Player player = new Player();
+			player.setId(rs.getInt("player_id"));
+			player.setUserName(rs.getString("user_name"));
+			matchRequest.setCreatedTeamCaptain(player);
+			System.out.println(matchRequest.toString());
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println(e.getMessage());
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+	return matchRequest;
+}
 
 public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToArea(int CreatedId) throws PersistanceException{
 	
@@ -324,6 +395,7 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToArea(int Created
 			matchRequest.setMembersAgeFrom(rs.getInt("members_age_from"));
 			matchRequest.setMembersAgeTo(rs.getInt("members_age_to"));
 			matchRequest.setMatchTime(rs.getTimestamp("match_time").toLocalDateTime());
+			System.out.println(rs.getTimestamp("match_time").toLocalDateTime());
 			matchRequest.setLocation(rs.getString("location"));
 			matchRequest.setInformation(rs.getString("information"));
 			matchRequest.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
@@ -348,7 +420,7 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToArea(int Created
 }
 
 public void updateAccept(int toTeamCaptainRelationId, int matchRequestId) throws PersistanceException{
-	System.out.println("entered ");
+	System.out.println("entered");
 	Connection con = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
@@ -377,6 +449,35 @@ public void updateAccept(int toTeamCaptainRelationId, int matchRequestId) throws
 	
 }
 
+public void updateReject(int toTeamCaptainRelationId, int matchRequestId) throws PersistanceException{
+	System.out.println("entered");
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "UPDATE match_requests SET status=3, to_team = ? "
+				+ "WHERE id = ?";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, toTeamCaptainRelationId);
+		ps.setInt(2, matchRequestId);		
+		int rowsAffected = ps.executeUpdate();
+		if (rowsAffected > 0) {
+			System.out.println("Update match request");
+		}else {
+			throw new RuntimeException("Sql issue: match request not updated");
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+}
 
 public boolean checkIfExistById(int id) throws PersistanceException{
 	
@@ -408,4 +509,101 @@ public boolean checkIfExistById(int id) throws PersistanceException{
 	
 	return value;
 }
+
+public void delete (int id) throws PersistanceException{
+
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "UPDATE match_requests SET status=2 "
+				+ "WHERE id = ?";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, id);		
+		int rowsAffected = ps.executeUpdate();
+		if (rowsAffected > 0) {
+			System.out.println("Delete match request");
+		}else {
+			throw new PersistanceException("Sql issue: match request not delete");
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+}
+
+
+public Set<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws PersistanceException{
+	
+	Set<MatchRequestDTO> listOfRequest = new HashSet<>();
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+			String query = "SELECT mr.*, t1.id as created_team_id, t1.url as created_team_url, t1.team_name as created_team_name, "
+					+ " t2.id as opponent_team_id, t2.url as opponent_team_url, t2.team_name as opponent_team_name "
+					+ "FROM match_requests mr "
+					+ "JOIN team_members AS tm1 ON mr.created_by = tm1.id "
+					+ "JOIN teams AS t1 ON tm1.team_id = t1.id "
+					+ "JOIN team_members AS tm2 ON mr.to_team = tm2.id "
+					+ "JOIN teams AS t2 ON tm2.team_id = t2.id "
+					+ "WHERE mr.status = 0 AND tm1.team_id OR tm2.team_id IN ( "
+					+ "    SELECT team_id "
+					+ "    FROM team_members tmm "
+					+ "    WHERE user_id = ? "
+					+ "      AND mr.match_time BETWEEN tmm.start_date AND COALESCE(tmm.end_date, NOW())) ";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, playerId);
+		rs = ps.executeQuery();
+		while(rs.next()) {
+			MatchRequestDTO matchRequest = new MatchRequestDTO();
+			matchRequest.setId(rs.getInt("id"));
+			matchRequest.setCreatedBy(rs.getInt("created_by"));
+			matchRequest.setOpponentType((rs.getInt("type_of_opponent") == 1? OpponentType.TO_TEAM : OpponentType.TO_AREA ));
+			matchRequest.setToTeam(rs.getInt("to_team"));
+			matchRequest.setAddressId(rs.getInt("address_id"));
+			matchRequest.setTypeOfMatch(rs.getInt("type_of_match"));
+			matchRequest.setMembers(rs.getInt("members"));
+			matchRequest.setMembersAgeFrom(rs.getInt("members_age_from"));
+			matchRequest.setMembersAgeTo(rs.getInt("members_age_to"));
+			matchRequest.setMatchTime(rs.getTimestamp("match_time").toLocalDateTime());
+			matchRequest.setLocation(rs.getString("location"));
+			matchRequest.setInformation(rs.getString("information"));
+			matchRequest.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			matchRequest.setStatus(rs.getInt("status") == 1);
+			Team createdTeam = new Team();
+			createdTeam.setId(rs.getInt("created_team_id"));
+			createdTeam.setTeamName(rs.getString("created_team_name"));
+			createdTeam.setUrl(rs.getString("created_team_url"));
+ 			matchRequest.setCreatedTeam(createdTeam);
+ 			
+ 			Team opponentTeam = new Team();
+			opponentTeam.setId(rs.getInt("opponent_team_id"));
+			opponentTeam.setTeamName(rs.getString("opponent_team_name"));
+			opponentTeam.setUrl(rs.getString("opponent_team_url"));
+ 			matchRequest.setOpponentTeam(opponentTeam);
+ 			
+			listOfRequest.add(matchRequest);
+			System.out.println(matchRequest.toString());
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println(e.getMessage());
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	return listOfRequest;
+}
+
 }

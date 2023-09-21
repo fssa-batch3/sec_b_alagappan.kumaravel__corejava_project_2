@@ -2,12 +2,12 @@ package in.fssa.sportshub.model;
 
 public class MatchRequestDTO extends MatchRequest {
 	
-	Team createdTeam;
-	Team opponentTeam;
-	Player createdTeamCaptain;
-	Player opponentTeamCaptain;
-	Address ToAreaAddress;
-	int statusOfResponse;
+	private Team createdTeam;
+	private Team opponentTeam;
+	private Player createdTeamCaptain;
+	private Player opponentTeamCaptain;
+	private Address ToAreaAddress;
+	private int statusOfResponse;
 	
 	public Team getCreatedTeam() {
 		return createdTeam;

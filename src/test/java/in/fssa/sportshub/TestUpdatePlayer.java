@@ -27,7 +27,7 @@ public class TestUpdatePlayer {
 		player.setPassword("Aa!1aaaaa");
 		Gender personGender = Gender.MALE;
 		player.setGender(personGender);
-		player.getAddress().setArea("ShennoiNagar");// here case should i check
+		player.getAddress().setArea("Aminjikarai");// here case should i check
 		player.getAddress().setDistrict("Chennai");
 		player.setDateOfBirth(LocalDate.of(2001, 10, 26));
 		player.setAbout("I am a good batsman");

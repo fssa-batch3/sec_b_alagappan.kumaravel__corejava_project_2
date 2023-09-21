@@ -25,10 +25,14 @@ public class MatchRequestService {
 		
 		
 		if(matchRequest.getOpponentType().getDisplayName() == "1") {
-			boolean checkTeamExist = TeamValidator.checkTeamExist(matchRequest.getToTeam());
-			if(!checkTeamExist) {
-				throw new ValidationException("To team not exist");
+			TeamMemberService teamMemService = new TeamMemberService();
+			
+			TeamMember toteamMemberData = teamMemService.findById(matchRequest.getToTeam());
+			
+			if(toteamMemberData == null) {
+				throw new ValidationException("toTeamMember id not exist");
 			}
+
 			matchReqDAO.createToTeam(matchRequest);
 			System.out.println("match created to team");
 		}
@@ -49,6 +53,24 @@ public class MatchRequestService {
 			throw new ServiceException(e.getMessage());
 	 	}
 	}
+	
+	public void delete(int matchRequestId, int captainId) throws ValidationException, ServiceException{
+		try {
+		MatchRequestValidator.validateDelete(matchRequestId, captainId);
+		
+		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
+		
+			matchReqDAO.delete(matchRequestId);
+		
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+	}
+	
 	
 	public Set<MatchRequest> listAllOpenRequest() throws PersistanceException{
 		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
@@ -108,5 +130,49 @@ public class MatchRequestService {
 		 	}
 		
 	}
+	
+	public void updateReject(int toTeamCaptainRelationId, int matchRequestId) throws ServiceException, ValidationException {		
+		try {
+			MatchRequestValidator.validateId(toTeamCaptainRelationId, "toTeamCaptainRelationId");
+			
+			MatchRequestDAO matchReqDAO = new MatchRequestDAO();
+			matchReqDAO.updateReject(toTeamCaptainRelationId, matchRequestId);
+			}catch(PersistanceException e) {
+		 		e.printStackTrace();
+				throw new ServiceException(e.getMessage());
+		 	}
+		
+	}
+	
+	public MatchRequestDTO findById(int matchRequestId) throws ServiceException, ValidationException  {
+		MatchRequestDTO matchRequest;
+		try {
+			MatchRequestValidator.validateId(matchRequestId, "matchRequestId");
+			MatchRequestDAO matchReqDAO = new MatchRequestDAO();
+			matchRequest = matchReqDAO.findById(matchRequestId);
+			}catch(PersistanceException e) {
+		 		e.printStackTrace();
+				throw new ServiceException(e.getMessage());
+		 	}
+		
+		return matchRequest;
+	}
+	
+public Set<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws ServiceException, ValidationException{
+		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
+		Set<MatchRequestDTO> mergedData = null;
+		try {
+		MatchRequestValidator.validateId(playerId, "playerId");
+
+		 mergedData = matchReqDAO.listOfMyMatchByPlayerId(playerId);
+
+		}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+		return mergedData;
+		
+	}
+	
 	
 }

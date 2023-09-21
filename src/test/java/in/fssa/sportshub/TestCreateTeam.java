@@ -12,23 +12,24 @@ import in.fssa.sportshub.service.TeamService;
 public class TestCreateTeam {
 	
 	
-//	@Test
-//	public void createTeamWithValidData() throws Exception {
-//		TeamService teamService = new TeamService();
-//		
-//		Team team = new Team();
-//
-//		team.setTeamName("Spider");// here change team name
-//		team.setUrl("shssssdsfdsd");
-//		team.getAddress().setArea("AnnaNagar");
-//		team.getAddress().setDistrict("Chennai");
-//		team.setAbout("Playing cricket");
-//		team.setCreatedBy(2);// here change team name dont use 123
-//		team.setModifiedBy(2);
-//		assertDoesNotThrow(()->{
-//			teamService.create(team);
-//		});
-//	}
+	@Test
+	public void createTeamWithValidData() throws Exception {
+		TeamService teamService = new TeamService();
+		
+		Team team = new Team();
+
+		team.setTeamName("Spider");// here change team name
+		team.setUrl("https://iili.io/HWhKUrB.webp");
+		team.getAddress().setArea("AnnaNagar");
+		team.getAddress().setDistrict("Chennai");
+		team.setAbout("Playing cricket");
+		team.setOpenForPlayerDescription("we need good players");
+		team.setCreatedBy(3);// here change team name dont use 123
+		team.setModifiedBy(3);
+		assertDoesNotThrow(()->{
+			teamService.create(team);
+		});
+	}
 	
 	@Test
     public void createTeamWithNullValues() {

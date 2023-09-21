@@ -48,8 +48,9 @@ public class PlayerService {
 	 */
 	public void update(Player player) throws ValidationException, ServiceException{
 		try {
+
 		PlayerValidator.validateUpdate(player);
-			
+
 			Address address = player.getAddress();
 			AddressService addressService = new AddressService();
 			int addressId = addressService.create(address);
@@ -60,9 +61,11 @@ public class PlayerService {
 			playerDAO.update(player);	
 			
 		}catch(ValidationException e) {
+			
 	 		e.printStackTrace();
 			throw new ValidationException(e.getMessage());
 	 	}catch(PersistanceException e) {
+	 		System.out.println("service in 1");
 	 		e.printStackTrace();
 			throw new ServiceException(e.getMessage());
 	 	}

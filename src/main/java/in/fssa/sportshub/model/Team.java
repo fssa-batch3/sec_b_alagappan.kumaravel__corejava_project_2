@@ -1,6 +1,8 @@
 package in.fssa.sportshub.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Team {
 	private int id;
@@ -8,8 +10,10 @@ public class Team {
 	private String Url;
 	private Address address = new Address();
 	private String about;
-	private LocalDate createdAt;
-	private LocalDate modifiedAt;
+	private String openForPlayerDescription;
+	private boolean openForPlayerStatus;
+	private String createdAt;
+	private String modifiedAt;
 	private int createdBy;
 	private int modifiedBy;
 	private boolean isActive;
@@ -43,17 +47,49 @@ public class Team {
 	public void setAbout(String about) {
 		this.about = about;
 	}
-	public LocalDate getCreatedAt() {
-		return createdAt;
+	
+	public String getOpenForPlayerDescription() {
+		return openForPlayerDescription;
 	}
-	public void setCreatedAt(LocalDate createdAt) {
-		this.createdAt = createdAt;
+	public void setOpenForPlayerDescription(String openForPlayerDescription) {
+		this.openForPlayerDescription = openForPlayerDescription;
 	}
-	public LocalDate getModifiedAt() {
-		return modifiedAt;
+	public boolean isOpenForPlayerStatus() {
+		return openForPlayerStatus;
 	}
-	public void setModifiedAt(LocalDate modifiedAt) {
-		this.modifiedAt = modifiedAt;
+	public void setOpenForPlayerStatus(boolean openForPlayerStatus) {
+		this.openForPlayerStatus = openForPlayerStatus;
+	}
+	public LocalDateTime getCreatedAt() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime localDateTime = null;
+		 try {
+	             localDateTime = LocalDateTime.parse(createdAt, formatter);
+
+	        } catch (DateTimeParseException e) {
+	            System.err.println("Error parsing LocalDateTime: " + e.getMessage());
+	        }
+		return localDateTime;
+	}
+	public void setCreatedAt(LocalDateTime createdAt) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		this.createdAt = createdAt.format(formatter);
+	}
+	public LocalDateTime getModifiedAt() {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime localDateTime = null;
+		 try {
+	             localDateTime = LocalDateTime.parse(modifiedAt, formatter);
+
+	        } catch (DateTimeParseException e) {
+	            System.err.println("Error parsing LocalDateTime: " + e.getMessage());
+	        }
+		return localDateTime;
+	}
+	public void setModifiedAt(LocalDateTime modifiedAt) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		this.modifiedAt = modifiedAt.format(formatter);
 	}
 	public int getCreatedBy() {
 		return createdBy;
@@ -75,10 +111,13 @@ public class Team {
 	}
 	@Override
 	public String toString() {
-		return "Team [id=" + id + ", teamName=" + teamName + ", Url=" + Url + ", Address="
-				+ address + ", about=" + about + ", createdAt=" + createdAt
-				+ ", modifiedAt=" + modifiedAt + ", createdBy=" + createdBy + ", modifiedBy=" + modifiedBy
-				+ ", isActive=" + isActive + "]";
+		return "Team [id=" + id + ", teamName=" + teamName + ", Url=" + Url + ", address=" + address + ", about="
+				+ about + ", openForPlayerDescription=" + openForPlayerDescription + ", openForPlayerStatus="
+				+ openForPlayerStatus + ", createdAt=" + createdAt + ", modifiedAt=" + modifiedAt + ", createdBy="
+				+ createdBy + ", modifiedBy=" + modifiedBy + ", isActive=" + isActive + "]";
 	}
+	
+	
+
 	
 }

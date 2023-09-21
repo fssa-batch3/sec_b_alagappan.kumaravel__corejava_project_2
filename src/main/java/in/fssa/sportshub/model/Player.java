@@ -2,6 +2,8 @@ package in.fssa.sportshub.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 
 public class Player {
@@ -14,10 +16,10 @@ public class Player {
 	private String Password;
 	private Gender gender;// not validate
 	private Address address = new Address();
-	private LocalDate dateOfBirth;
+	private String dateOfBirth;
 	private String about;//can null
-	private LocalDateTime createdAt;
-	private LocalDateTime modifiedAt;
+	private String createdAt;
+	private String modifiedAt;
 	private boolean isActive;
 	public int getId() {
 		return id;
@@ -75,10 +77,20 @@ public class Player {
 		this.address = address;
 	}
 	public LocalDate getDateOfBirth() {
-		return dateOfBirth;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		LocalDate localDate = null;
+		 try {
+			 System.out.println();
+	             localDate = LocalDate.parse(dateOfBirth, formatter);
+
+	        } catch (DateTimeParseException e) {
+	            System.err.println("Error parsing LocalDateTime: " + e.getMessage());
+	        }
+		return localDate;	
 	}
 	public void setDateOfBirth(LocalDate dateOfBirth) {
-		this.dateOfBirth = dateOfBirth;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		this.dateOfBirth = dateOfBirth.format(formatter);	
 	}
 	public String getAbout() {
 		return about;
@@ -87,16 +99,35 @@ public class Player {
 		this.about = about;
 	}
 	public LocalDateTime getCreatedAt() {
-		return createdAt;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime localDateTime = null;
+		 try {
+	             localDateTime = LocalDateTime.parse(createdAt, formatter);
+
+	        } catch (DateTimeParseException e) {
+	            System.err.println("Error parsing LocalDateTime: " + e.getMessage());
+	        }
+		return localDateTime;
 	}
 	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		this.createdAt = createdAt.format(formatter);
 	}
 	public LocalDateTime getModifiedAt() {
-		return modifiedAt;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		LocalDateTime localDateTime = null;
+		 try {
+	             localDateTime = LocalDateTime.parse(modifiedAt, formatter);
+
+	        } catch (DateTimeParseException e) {
+	            System.err.println("Error parsing LocalDateTime: " + e.getMessage());
+	        }
+		return localDateTime;
 	}
 	public void setModifiedAt(LocalDateTime modifiedAt) {
-		this.modifiedAt = modifiedAt;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+		this.modifiedAt = modifiedAt.format(formatter);
 	}
 	public boolean isActive() {
 		return isActive;

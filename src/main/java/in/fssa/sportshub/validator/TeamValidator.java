@@ -16,6 +16,13 @@ public class TeamValidator {
 
 		try {
 		TeamValidator.validateAll(team);
+		
+		StringUtil.rejectIfInvalidString(team.getOpenForPlayerDescription(), "Open for player description");
+		StringUtil.rejectIfPatternDoesNotMatch(team.getOpenForPlayerDescription(), "Open for player description");
+		if(team.getOpenForPlayerDescription().length() < 5 || team.getOpenForPlayerDescription().length() > 20) {
+			throw new ValidationException("Open for player description length does not match pattern");
+		}
+		
 		boolean checkPlayerExist = PlayerValidator.playerExist(team.getCreatedBy());
 		if(!checkPlayerExist){
 			throw new ValidationException("Player not exist");

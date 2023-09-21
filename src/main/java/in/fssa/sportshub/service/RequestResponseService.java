@@ -4,6 +4,7 @@ import in.fssa.sportshub.dao.RequestResponseDAO;
 import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
+import in.fssa.sportshub.model.MatchRequestDTO;
 import in.fssa.sportshub.model.TeamMember;
 import in.fssa.sportshub.validator.RequestResponseValidator;
 public class RequestResponseService {
@@ -41,11 +42,19 @@ public class RequestResponseService {
 		
 		RequestResponseDAO requsetResponseDAO = new RequestResponseDAO();
 		
+		MatchRequestService matchRequestServ = new MatchRequestService();
+		
 		TeamMemberService teamMemberServ = new TeamMemberService();
 		
 		TeamMember teamMember = teamMemberServ.findById(toTeamCaptainRelationId);
 		
+		MatchRequestDTO matchRequest = matchRequestServ.findById(matchRequestId);
+		
 		requsetResponseDAO.reject(teamMember.getTeamId(), matchRequestId);
+		
+		if(matchRequest.getOpponentType().getDisplayName() == "1") {
+			matchRequestServ.updateReject(toTeamCaptainRelationId, matchRequestId);
+		}
 		
 		}catch(ValidationException e) {
 	 		e.printStackTrace();

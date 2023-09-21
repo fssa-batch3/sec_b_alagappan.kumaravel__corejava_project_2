@@ -742,7 +742,7 @@ public class TestCreateMatchRequest {
 			MatchRequestService matchRequestServ = new MatchRequestService();
 			MatchRequest matchRequest = new MatchRequest();
 			
-			matchRequest.setCreatedBy(1);
+			matchRequest.setCreatedBy(2);
 			matchRequest.setToTeam(100);
 			matchRequest.setTypeOfMatch(1);
 			matchRequest.setMembers(10);
@@ -758,10 +758,10 @@ public class TestCreateMatchRequest {
 			matchRequest.setLocation("gvhgvhgvhvhjhjh");
 			matchRequest.setInformation("100 rs betting");
 	        Exception exception = assertThrows(Exception.class, () -> {
-	        	matchRequestServ.create(matchRequest, 1);
+	        	matchRequestServ.create(matchRequest, 3);
 	        });
 	        
-	        String exceptedMessage = "To team not exist";
+	        String exceptedMessage = "toTeamMember id not exist";
 			String actualMessage = exception.getMessage();
 			assertTrue(exceptedMessage.equals(actualMessage));
 	    }

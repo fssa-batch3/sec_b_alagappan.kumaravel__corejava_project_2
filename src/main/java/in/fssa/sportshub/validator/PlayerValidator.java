@@ -38,11 +38,14 @@ public class PlayerValidator {
 	}
 	
 	public static void validateUpdate(Player player) throws ValidationException {
+		System.out.println("validate in 1");
 		PlayerValidator.validatePartial(player);
+		System.out.println("validate in 2");
 		AddressValidator.validate(player.getAddress());
 		try {
 		boolean checkPlayerExist = PlayerValidator.playerExist(player.getId());
 		if(!checkPlayerExist){
+			
 			throw new ValidationException("Player not exist");
 		}
 		}catch (ServiceException e) {
@@ -85,17 +88,20 @@ public class PlayerValidator {
 		if(player == null) {
 			throw new ValidationException("Invalid player input");
 		}
+		System.out.println("validate in 1.1");
 		
 		StringUtil.rejectIfInvalidString(player.getUserName(), "User name");
 		StringUtil.rejectIfPatternDoesNotMatch(player.getUserName(), "User name");
-		StringUtil.rejectIfInvalidString(player.getFirstName(), "First name");
-		StringUtil.rejectIfPatternDoesNotMatch(player.getFirstName(), "First name");
+		
 		if(player.getUserName().length() < 5 || player.getUserName().length() > 20) {
 			throw new ValidationException("User name length does not match pattern");
 		}
-		if(player.getFirstName().length() < 3 || player.getFirstName().length() > 20) {
-			throw new ValidationException("First name length does not match pattern");
+		if(player.getFirstName() != null) {
+			if(player.getFirstName().length() < 3 || player.getFirstName().length() > 20) {
+				throw new ValidationException("First name length does not match pattern");
+			}
 		}
+		System.out.println("validate in 1.3");
 		StringUtil.rejectIfInvalidString(player.getPassword(), "Password");	
 		//password match pattern here
         String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$";
@@ -105,12 +111,17 @@ public class PlayerValidator {
         if(!matcher.matches()) {
         	throw new ValidationException("Invalid password");
         }
+		 
 		// dateofbirth validate here
 		 LocalDate currentDate = LocalDate.now();  
+		 System.out.println("validate in 1.5");
+		 System.out.println(player.toString());
 		 LocalDate dateOfBirth = player.getDateOfBirth();
+		 System.out.println(dateOfBirth);
 		 if(dateOfBirth ==  null) {
 			 throw new ValidationException("Date of birth can not be null");
 		 }
+
 		 LocalDate minimumValidDate = currentDate.minusYears(10);
 		 if(dateOfBirth.isAfter(currentDate) || !dateOfBirth.isBefore(minimumValidDate)) {
 				throw new ValidationException("Age should be more than 10 years");
@@ -130,6 +141,7 @@ public class PlayerValidator {
 					throw new ValidationException("About player data length does not match pattern");
 				}
 		 }
+		 System.out.println("validate in 1.8");
 	}
 	
 	public static void validatePhoneNumber(long phoneNumber) throws ValidationException {
