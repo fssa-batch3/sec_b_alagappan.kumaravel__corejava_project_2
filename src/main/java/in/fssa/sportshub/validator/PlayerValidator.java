@@ -96,11 +96,13 @@ public class PlayerValidator {
 		if(player.getUserName().length() < 5 || player.getUserName().length() > 20) {
 			throw new ValidationException("User name length does not match pattern");
 		}
-		if(player.getFirstName() != null) {
+		if(player.getFirstName() != null && !"".equals(player.getFirstName())) {
 			if(player.getFirstName().length() < 3 || player.getFirstName().length() > 20) {
 				throw new ValidationException("First name length does not match pattern");
 			}
 		}
+		
+		
 		System.out.println("validate in 1.3");
 		StringUtil.rejectIfInvalidString(player.getPassword(), "Password");	
 		//password match pattern here
@@ -129,14 +131,14 @@ public class PlayerValidator {
 		 if (PlayerValidator.isValidLeapYearDateOfBirth(dateOfBirth)) {
 			 throw new ValidationException("Date of birth is a leap year");
 	      }
-		 if(player.getLastName() != null) {
+		 if(player.getLastName() != null && !"".equals(player.getLastName())) {
 			 StringUtil.rejectIfPatternDoesNotMatch(player.getLastName(), "Last name");
 			 if(player.getLastName().length() < 1 || player.getLastName().length() > 20) {
 					throw new ValidationException("Last name length does not match pattern");
 				}
 		 }
 		 
-		 if(player.getAbout() != null) {
+		 if(player.getAbout() != null && !"".equals(player.getAbout())) {
 			 if(player.getAbout().length() > 50) {
 					throw new ValidationException("About player data length does not match pattern");
 				}

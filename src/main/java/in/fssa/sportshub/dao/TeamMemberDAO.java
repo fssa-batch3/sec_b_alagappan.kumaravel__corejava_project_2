@@ -12,12 +12,14 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import in.fssa.sportshub.exception.PersistanceException;
+import in.fssa.sportshub.exception.ValidationException;
 import in.fssa.sportshub.model.Gender;
 import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.model.PlayerRequestDTO;
 import in.fssa.sportshub.model.TeamMember;
 import in.fssa.sportshub.model.TeamRequestDTO;
 import in.fssa.sportshub.util.ConnectionUtil;
+import in.fssa.sportshub.validator.PlayerValidator;
 
 public class TeamMemberDAO {
 	public void create(TeamMember teamMember)throws PersistanceException {
@@ -65,7 +67,7 @@ public class TeamMemberDAO {
 			ps.setInt(2, teamMember.getUserId());
 			int rowsAffected = ps.executeUpdate();
 			if (rowsAffected > 0) {
-				System.out.println("team member request created");
+
 			}else {
 				throw new PersistanceException("Sql issue: team member request not created");
 			}
@@ -166,6 +168,69 @@ public TeamMember findByCaptainId(int id) throws PersistanceException{
 		    	teamMemberData.setUserId(rs.getInt("user_id"));
 		    }else {
 		    	throw new PersistanceException("Player not captain of any team");
+		    }
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+		
+		return teamMemberData;
+	}
+
+public int findCaptainRelIdbyTeamId(int id) throws PersistanceException{
+	int capRelId = 0;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String query = "SELECT id FROM team_members WHERE is_active=1 && is_captain=1 && team_id=?";
+			
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+		    if (rs.next()) {
+		    	capRelId = rs.getInt("id");
+		    }else {
+		    	throw new PersistanceException("Not found captain relation id");
+		    }
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+		
+		return capRelId;
+	}
+
+public TeamMember findByPlayerId(int id) throws PersistanceException{
+	TeamMember teamMemberData = null;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String query = "SELECT * FROM team_members WHERE is_active=1 && request_status=1 && user_id=?";
+			
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+			rs = ps.executeQuery();
+		    if (rs.next()) {
+		    	teamMemberData = new TeamMember();
+		    	teamMemberData.setId(rs.getInt("id"));
+		    	teamMemberData.setIsActive(rs.getInt("is_active"));
+		    	teamMemberData.setIsCaptain(rs.getInt("is_captain"));
+		    	teamMemberData.setTeamId(rs.getInt("team_id"));
+		    	teamMemberData.setUserId(rs.getInt("user_id"));
+		    }else {
+		    	throw new PersistanceException("Player not in any team");
 		    }
 			
 		}catch(SQLException e) {
@@ -340,12 +405,15 @@ public void exitTeam(int teamId, int playerId) throws PersistanceException{
 	ResultSet rs = null;
 	try {
 
-		String query = "UPDATE team_members SET is_active = 0 "
-				+ "WHERE team_id =? && user_id = ? && is_active=1 && request_status = 1";
+		String query = "UPDATE team_members SET is_active = 0 , end_date = ? "
+				+ "WHERE team_id =? && user_id = ? && is_active=1 && request_status = 1 ";
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
-		ps.setInt(1, teamId);
-		ps.setInt(1, playerId);
+		Timestamp currentTimestamp = new Timestamp(new Date().getTime());
+		 
+		ps.setTimestamp(1, currentTimestamp);
+		ps.setInt(2, teamId);
+		ps.setInt(3, playerId);
 		int rowsAffected = ps.executeUpdate();
 		if (rowsAffected > 0) {
 			System.out.println("team member rejectRequest");
@@ -371,7 +439,7 @@ public Set<PlayerRequestDTO> listAllTeamMemberRequest(int teamId) throws Persist
 	ResultSet rs = null;
 	try {
 
-		String query = "SELECT p.*, a.*, tm.id AS request_id "
+		String query = "SELECT p.*, a.*, tm.id AS request_id , tm.created_at AS created_time "
 				+ "FROM players AS p "
 				+ "JOIN address AS a ON p.address_id = a.id "
 				+ "JOIN team_members AS tm ON tm.user_id = p.id "
@@ -403,6 +471,7 @@ public Set<PlayerRequestDTO> listAllTeamMemberRequest(int teamId) throws Persist
 			player.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 			
 			player.setRequestId(rs.getInt("request_id"));
+			player.setCreatedTime(rs.getTimestamp("created_time")+"");
 			listOfplayers.add(player);
 			System.out.println(player);
 	    }
@@ -420,6 +489,7 @@ public Set<PlayerRequestDTO> listAllTeamMemberRequest(int teamId) throws Persist
 
 
 public Set<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws PersistanceException{
+	
 	Set<TeamRequestDTO> listOfTeam = new HashSet<>();
 	
 	Connection con = null;
@@ -427,7 +497,8 @@ public Set<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws P
 	ResultSet rs = null;
 	try {
 
-		String query = "SELECT t.*,a.*,tm.request_status,tm.id AS request_id FROM teams AS t "
+		String query = "SELECT t.*,a.*,tm.request_status,tm.id AS request_id , tm.created_at AS created_time "
+				+ " FROM teams AS t "
 				+ "JOIN address AS a ON t.address_id = a.id "
 				+ "JOIN team_members AS tm ON tm.team_id = t.id "
 				+ "WHERE tm.is_active = 1 AND tm.is_captain != 1 AND tm.user_id = ? ";
@@ -450,6 +521,7 @@ public Set<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws P
 		      team.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 		      team.setRequestStatus(rs.getInt("request_status"));
 		      team.setRequestId(rs.getInt("request_id"));
+		      team.setCreatedTime(rs.getTimestamp("created_time")+"");
 		      
 			listOfTeam.add(team);
 			System.out.println(team);

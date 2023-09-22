@@ -4,6 +4,15 @@ public class TeamRequestDTO extends Team{
 
 	private int requestStatus;
 	private int requestId;
+	private String createdTime;
+
+	public String getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(String createdTime) {
+		this.createdTime = createdTime;
+	}
 
 	public int getRequestStatus() {
 		return requestStatus;
@@ -23,8 +32,10 @@ public class TeamRequestDTO extends Team{
 
 	@Override
 	public String toString() {
-		return "TeamRequestDTO [requestStatus=" + requestStatus + ", requestId=" + requestId + "]";
+		return "TeamRequestDTO [requestStatus=" + requestStatus + ", requestId=" + requestId + ", createdTime="
+				+ createdTime + "]";
 	}
+
 
 	
 	

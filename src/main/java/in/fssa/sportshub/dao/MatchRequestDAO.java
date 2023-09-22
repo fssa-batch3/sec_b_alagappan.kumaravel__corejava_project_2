@@ -547,22 +547,33 @@ public Set<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws Persist
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-			String query = "SELECT mr.*, t1.id as created_team_id, t1.url as created_team_url, t1.team_name as created_team_name, "
-					+ " t2.id as opponent_team_id, t2.url as opponent_team_url, t2.team_name as opponent_team_name "
-					+ "FROM match_requests mr "
-					+ "JOIN team_members AS tm1 ON mr.created_by = tm1.id "
-					+ "JOIN teams AS t1 ON tm1.team_id = t1.id "
-					+ "JOIN team_members AS tm2 ON mr.to_team = tm2.id "
-					+ "JOIN teams AS t2 ON tm2.team_id = t2.id "
-					+ "WHERE mr.status = 0 AND tm1.team_id OR tm2.team_id IN ( "
-					+ "    SELECT team_id "
-					+ "    FROM team_members tmm "
-					+ "    WHERE user_id = ? "
-					+ "      AND mr.match_time BETWEEN tmm.start_date AND COALESCE(tmm.end_date, NOW())) ";
+			String query = "SELECT mr.*, "
+					+ "       t1.id AS created_team_id, "
+					+ "       t1.url AS created_team_url, "
+					+ "       t1.team_name AS created_team_name, "
+					+ "       t2.id AS opponent_team_id, "
+					+ "       t2.url AS opponent_team_url, "
+					+ "       t2.team_name AS opponent_team_name "
+					+ "  FROM match_requests mr "
+					+ "       JOIN team_members AS tm1 ON mr.created_by = tm1.id "
+					+ "       JOIN teams AS t1 ON tm1.team_id = t1.id "
+					+ "       JOIN team_members AS tm2 ON mr.to_team = tm2.id "
+					+ "       JOIN teams AS t2 ON tm2.team_id = t2.id "
+					+ " WHERE mr.status = 0 "
+					+ "   AND (tm1.team_id IN (SELECT team_id "
+					+ "                         FROM team_members tmm "
+					+ "                        WHERE user_id = ? AND request_status =1 "
+					+ "                          AND mr.created_at BETWEEN tmm.start_date AND COALESCE(tmm.end_date, NOW())) "
+					+ "        OR "
+					+ "        tm2.team_id IN (SELECT team_id "
+					+ "                         FROM team_members tmm "
+					+ "                        WHERE user_id = ? AND request_status =1 "
+					+ "                          AND mr.created_at BETWEEN tmm.start_date AND COALESCE(tmm.end_date, NOW())))";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
 		ps.setInt(1, playerId);
+		ps.setInt(2, playerId);
 		rs = ps.executeQuery();
 		while(rs.next()) {
 			MatchRequestDTO matchRequest = new MatchRequestDTO();

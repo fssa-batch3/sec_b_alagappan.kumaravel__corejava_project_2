@@ -123,15 +123,18 @@ public class TeamDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "UPDATE teams SET url =? ,address_id =?,about =? ,modified_by =? "
-					+ "WHERE id = ?";
+			String query = "UPDATE teams SET team_name=? ,url =? ,address_id =?,about =?, open_for_players_description=? ,modified_by =? , open_for_players_status=? "
+					+ " WHERE id = ? ";
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
-			ps.setString(1, team.getUrl());
-			ps.setInt(2, team.getAddress().getId());
-			ps.setString(3, team.getAbout());
-			ps.setInt(4, team.getModifiedBy());
-			ps.setInt(5, team.getId());
+			ps.setString(1, team.getTeamName());
+			ps.setString(2, team.getUrl());
+			ps.setInt(3, team.getAddress().getId());
+			ps.setString(4, team.getAbout());
+			ps.setString(5, team.getOpenForPlayerDescription());
+			ps.setInt(6, team.getModifiedBy());
+			ps.setInt(7, team.isOpenForPlayerStatus()? 1:0);
+			ps.setInt(8, team.getId());
 			int rowsAffected = ps.executeUpdate();
 			
 			if (rowsAffected > 0) {
@@ -220,7 +223,7 @@ public class TeamDAO {
 				}
 				
 				Player player = new Player();
-				int id = rs.getInt("id");
+				int id = rs.getInt("player_id");
 				player.setId(id);
 				if(rs.getInt("is_captain") == 1) {
 					team.setTeamCaptainId(id);
@@ -289,7 +292,8 @@ public class TeamDAO {
 		try {
 			String query = "SELECT t.*, p.id, p.user_name, tm.id FROM teams AS t "
 					+ "JOIN team_members AS tm ON tm.team_id = t.id "
-					+ "JOIN players AS p ON tm.user_id = p.id ";
+					+ "JOIN players AS p ON tm.user_id = p.id "
+					+ " WHERE tm.is_active=1 AND tm.is_captain=1";
 			
 			con = ConnectionUtil.getConnection();
 			
@@ -326,10 +330,11 @@ public class TeamDAO {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		try {
-			String query = "SELECT t.*, p.id AS player_id, p.user_name FROM teams AS t "
+			String query = "SELECT t.*,a.*, p.id AS player_id, p.user_name FROM teams AS t "
+					+ "JOIN address AS a ON t.address_id = a.id "
 					+ "JOIN team_members AS tm ON tm.team_id = t.id "
 					+ "JOIN players AS p ON tm.user_id = p.id "
-					+ "WHERE t.open_for_players_status = 1";
+					+ "WHERE tm.is_captain=1 AND tm.is_active=1 AND t.open_for_players_status = 1";
 			
 			con = ConnectionUtil.getConnection();
 			
@@ -344,6 +349,8 @@ public class TeamDAO {
 			      team.setAbout(rs.getString("about"));
 			      team.setOpenForPlayerDescription(rs.getString("open_for_players_description"));
 			      team.getAddress().setId(rs.getInt("address_id"));
+			      team.getAddress().setArea(rs.getString("area"));
+			      team.getAddress().setDistrict(rs.getString("district"));
 			      team.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
 			      team.setCaptainName(rs.getString("user_name"));
 			      team.setTeamCaptainId(rs.getInt("player_id"));

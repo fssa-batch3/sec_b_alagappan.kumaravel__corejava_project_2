@@ -19,7 +19,7 @@ public class TeamValidator {
 		
 		StringUtil.rejectIfInvalidString(team.getOpenForPlayerDescription(), "Open for player description");
 		StringUtil.rejectIfPatternDoesNotMatch(team.getOpenForPlayerDescription(), "Open for player description");
-		if(team.getOpenForPlayerDescription().length() < 5 || team.getOpenForPlayerDescription().length() > 20) {
+		if(team.getOpenForPlayerDescription().length() < 5 || team.getOpenForPlayerDescription().length() > 50) {
 			throw new ValidationException("Open for player description length does not match pattern");
 		}
 		
@@ -106,7 +106,7 @@ public class TeamValidator {
 		
 		StringUtil.rejectIfInvalidString(team.getTeamName(), "Team name");
 		StringUtil.rejectIfPatternDoesNotMatch(team.getTeamName(), "Team name");
-		if(team.getTeamName().length() < 5 || team.getTeamName().length() > 20) {
+		if(team.getTeamName().length() < 5 || team.getTeamName().length() > 50) {
 			throw new ValidationException("Team name length does not match pattern");
 		}
 		if(team.getAbout() != null) {
