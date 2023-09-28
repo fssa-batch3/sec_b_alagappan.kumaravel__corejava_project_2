@@ -42,7 +42,8 @@ public class MatchRequestValidator {
 		if(captainId != teamMemberData.getUserId()) {
 			throw new ValidationException("Captain id not match with the team member captain id");
 		}
-		if(matchRequest.getToTeam() == teamMemberData.getTeamId()) {
+		
+		if(matchRequest.getToTeam() == matchRequest.getCreatedBy()) {
 			throw new ValidationException("Created team and sent team same");
 		}
 	}

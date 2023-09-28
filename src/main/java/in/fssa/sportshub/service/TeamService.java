@@ -84,26 +84,6 @@ public void delete(int teamId, int playerId) throws ValidationException, Service
 		
 }
 
-public void changeDelete(int teamId, int playerId) throws ValidationException, ServiceException{
-	try {
-		TeamValidator.validateId(teamId, "team");
-		TeamValidator.validateId(playerId, "player");
-		TeamDAO teamDAO = new TeamDAO();
-		teamDAO.deleteChange(playerId, teamId);
-		
-		TeamMemberService teamMemServ = new TeamMemberService();
-		teamMemServ.deleteChange(teamId, playerId);
-		
-	}catch(ValidationException e) {
- 		e.printStackTrace();
-		throw new ValidationException(e.getMessage());
- 	}catch(PersistanceException e) {
- 		e.printStackTrace();
-		throw new ServiceException(e.getMessage());
- 	}
-		
-}
-
 // validation yet to be done
 public Team findByCaptainId(int captainId) throws ValidationException, ServiceException{
 	Team team;
@@ -159,6 +139,16 @@ public Set<TeamDetailDTO> getAllTeam() throws ServiceException{
 	}
 }
 
+public Set<TeamDetailDTO> getRandomTeam(int areaId) throws ServiceException{
+	 try {
+		TeamDAO teamDAO = new TeamDAO();
+		return teamDAO.getRandomTeam(areaId);
+	}catch(PersistanceException e) {
+		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+	}
+}
+
 public Set<TeamDetailDTO> getOpenForPlayerTeamList() throws ServiceException{
 	 try {
 		TeamDAO teamDAO = new TeamDAO();
@@ -167,6 +157,26 @@ public Set<TeamDetailDTO> getOpenForPlayerTeamList() throws ServiceException{
 		e.printStackTrace();
 		throw new ServiceException(e.getMessage());
 	}
+}
+
+public void changeDelete(int teamId, int playerId) throws ValidationException, ServiceException{
+	try {
+		TeamValidator.validateId(teamId, "team");
+		TeamValidator.validateId(playerId, "player");
+		TeamDAO teamDAO = new TeamDAO();
+		teamDAO.deleteChange(playerId, teamId);
+		
+		TeamMemberService teamMemServ = new TeamMemberService();
+		teamMemServ.deleteChange(teamId, playerId);
+		
+	}catch(ValidationException e) {
+ 		e.printStackTrace();
+		throw new ValidationException(e.getMessage());
+ 	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
+		
 }
 
 }

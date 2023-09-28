@@ -1,22 +1,16 @@
 package in.fssa.sportshub.service;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import in.fssa.sportshub.dao.TeamMemberDAO;
 import in.fssa.sportshub.exception.PersistanceException;
 import in.fssa.sportshub.exception.ServiceException;
 import in.fssa.sportshub.exception.ValidationException;
-import in.fssa.sportshub.model.MatchRequestDTO;
-import in.fssa.sportshub.model.Player;
 import in.fssa.sportshub.model.PlayerRequestDTO;
 import in.fssa.sportshub.model.TeamMember;
 import in.fssa.sportshub.model.TeamRequestDTO;
-import in.fssa.sportshub.validator.PlayerValidator;
 import in.fssa.sportshub.validator.TeamMemberValidator;
-import in.fssa.sportshub.validator.TeamValidator;
 
 public class TeamMemberService {
 public void create(TeamMember teamMember) throws ValidationException, ServiceException{
@@ -125,13 +119,10 @@ public void delete(int teamId, int playerId) throws ValidationException, Service
 	}
 
 public Set<PlayerRequestDTO> listAllTeamMemberRequest(int teamId) throws ValidationException, ServiceException{
-	boolean checkTeamNameExist = TeamValidator.checkTeamExist(teamId);
-	if(!checkTeamNameExist) {
-		throw new ValidationException("Team not exist");
-	}
-	
+
 	Set<PlayerRequestDTO> listOfplayers = new HashSet<>();
-	try {	
+	try {
+		TeamMemberValidator.validateListAllTeamMemberRequest(teamId);
 		TeamMemberDAO dao = new TeamMemberDAO();
 		listOfplayers = dao.listAllTeamMemberRequest(teamId);
 	}catch(PersistanceException e) {
@@ -143,13 +134,10 @@ public Set<PlayerRequestDTO> listAllTeamMemberRequest(int teamId) throws Validat
 	}
 
 public Set<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws ValidationException, ServiceException{
-	boolean checkPlayerExist = PlayerValidator.playerExist(playerId);
-	if(!checkPlayerExist){
-		throw new ValidationException("Player not exist");
-	}
 	
 	Set<TeamRequestDTO> listOfTeams = new HashSet<>();
 	try {	
+		TeamMemberValidator.validateListAllPlayerRequestByPlayerId(playerId);
 		TeamMemberDAO dao = new TeamMemberDAO();
 		listOfTeams = dao.listAllPlayerRequestByPlayerId(playerId);
 	}catch(PersistanceException e) {
@@ -161,21 +149,10 @@ public Set<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws V
 	}
 
 public void deleteRequest(int requestId, int playerId) throws ValidationException, ServiceException{
-	boolean checkPlayerExist = PlayerValidator.playerExist(playerId);
-	if(!checkPlayerExist){
-		throw new ValidationException("Player not exist");
-	}
-	
-	TeamMember teamMembervalidate = this.findById(requestId);
-	if(teamMembervalidate == null) {
-		throw new ValidationException("Request id not found");
-	}
-	
-	
-	try {	
+
+	try {
+		TeamMemberValidator.validateDeleteRequest(requestId,playerId);
 		TeamMemberDAO dao = new TeamMemberDAO();
-		/* dao.deleteRequest(requestId, playerId); */ // validation should done
-		
 		dao.deleteRequest(requestId,playerId);
 	}catch(PersistanceException e) {
  		e.printStackTrace();
@@ -185,26 +162,10 @@ public void deleteRequest(int requestId, int playerId) throws ValidationExceptio
 }
 
 public void acceptRequest(int requestId, int captainId) throws ValidationException, ServiceException{
-	boolean checkPlayerExist = PlayerValidator.playerExist(captainId);
-	if(!checkPlayerExist){
-		throw new ValidationException("Player not exist");
-	}
-	boolean isCaptain = TeamMemberValidator.isPlayerCaptain(captainId);
-	if(!isCaptain){
-		throw new ValidationException("Player not a captain of team");
-	}
 	
-	TeamMember teamMembervalidate = this.findById(requestId);
-	if(teamMembervalidate == null) {
-		throw new ValidationException("Request id not found");
-	}
-	
-	boolean isCaptain1 = TeamMemberValidator.isPlayerCaptainOfSpecificTeam(captainId, teamMembervalidate.getTeamId());
-	if(!isCaptain1){
-		throw new ValidationException("player not a captian of this team");
-	}
 	
 	try {	
+		TeamMemberValidator.validateAcceptRequest(requestId,captainId);
 		TeamMemberDAO dao = new TeamMemberDAO();
 		
 		TeamMember teamMember = this.findById(requestId);
@@ -227,28 +188,11 @@ public void acceptRequest(int requestId, int captainId) throws ValidationExcepti
 }
 
 public void rejectRequest(int requestId, int captainId) throws ValidationException, ServiceException{
-	boolean checkPlayerExist = PlayerValidator.playerExist(captainId);
-	if(!checkPlayerExist){
-		throw new ValidationException("Player not exist");
-	}
-	boolean isCaptain = TeamMemberValidator.isPlayerCaptain(captainId);
-	if(!isCaptain){
-		throw new ValidationException("Player not a captain of team");
-	}
 	
-	TeamMember teamMembervalidate = this.findById(requestId);
-	if(teamMembervalidate == null) {
-		throw new ValidationException("Request id not found");
-	}
-	
-	boolean isCaptain1 = TeamMemberValidator.isPlayerCaptainOfSpecificTeam(captainId, teamMembervalidate.getTeamId());
-	if(!isCaptain1){
-		throw new ValidationException("player not a captian of this team");
-	}
 	
 	try {	
+		TeamMemberValidator.validateRejectRequest(requestId,captainId);
 		TeamMemberDAO dao = new TeamMemberDAO();
-		/* dao.deleteRequest(requestId, playerId); */ // validation should done
 		
 		dao.rejectRequest(requestId);
 	}catch(PersistanceException e) {
@@ -259,30 +203,10 @@ public void rejectRequest(int requestId, int captainId) throws ValidationExcepti
 }
 
 public void exitTeam(int teamId, int playerId) throws ValidationException, ServiceException{
-	boolean checkPlayerExist = PlayerValidator.playerExist(playerId);
-	if(!checkPlayerExist){
-		throw new ValidationException("Player not exist");
-	}
 	
-	boolean checkTeamNameExist = TeamValidator.checkTeamExist(teamId);
-	if(!checkTeamNameExist) {
-		throw new ValidationException("Team not exist");
-	}
-	
-	MatchRequestService matchRequestServ = new MatchRequestService();
-	Set<MatchRequestDTO> listOfMatchInvitation = matchRequestServ.listOfMyMatchByPlayerId(playerId);
-	LocalDateTime currentTime = LocalDateTime.now();
-	Set<MatchRequestDTO> filteredList = listOfMatchInvitation.stream()
-	    .filter(matchRequest -> matchRequest.getMatchTime().isAfter(currentTime))
-	    .collect(Collectors.toSet());
-	Set<MatchRequestDTO> uniqueFilteredList = new HashSet<>(filteredList);
-	if(uniqueFilteredList.size() > 0) {
-		throw new ValidationException("You can exit this team after completed your upcomming match");
-	}
-	
-	try {	
+	try {
+		TeamMemberValidator.validateExitTeam(teamId, playerId);
 		TeamMemberDAO dao = new TeamMemberDAO();
-		/* dao.deleteRequest(requestId, playerId); */ // validation should done
 		
 		dao.exitTeam(teamId, playerId);
 	}catch(PersistanceException e) {

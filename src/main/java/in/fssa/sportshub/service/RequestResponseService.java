@@ -24,7 +24,7 @@ public class RequestResponseService {
 		System.out.println("working");
 		MatchRequestService matchReqService = new MatchRequestService();
 		
-		matchReqService.updateAccept(teamMember.getTeamId(), matchRequestId);
+		matchReqService.updateAccept(toTeamCaptainRelationId, matchRequestId);
 		
 		
 		}catch(ValidationException e) {

@@ -1,6 +1,10 @@
 package in.fssa.sportshub.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import in.fssa.sportshub.dao.MatchRequestDAO;
@@ -94,7 +98,7 @@ public class MatchRequestService {
 	}
 	
 	// response page
-	public Set<MatchRequestDTO> listOfMyMatchInvitation(int createdById) throws ServiceException, ValidationException{
+	public List<MatchRequestDTO> listOfMyMatchInvitation(int createdById) throws ServiceException, ValidationException{
 		
 		try {
 		MatchRequestValidator.validateId(createdById, "teamId");
@@ -104,11 +108,13 @@ public class MatchRequestService {
 		Set<MatchRequestDTO> data1 = matchReqDAO.listOfMyMatchInvitationAccepted(createdById);
 		Set<MatchRequestDTO> data2 = matchReqDAO.listOfMyMatchInvitationNotAcceptedToTeam(createdById);
 		Set<MatchRequestDTO> data3 = matchReqDAO.listOfMyMatchInvitationNotAcceptedToArea(createdById);
-		Set<MatchRequestDTO> mergedData = new HashSet<>();
+		List<MatchRequestDTO> mergedData = new ArrayList<>();
 
 		mergedData.addAll(data1);
 		mergedData.addAll(data2);
 		mergedData.addAll(data3);
+		Comparator<MatchRequestDTO> createdAtComparator = Comparator.comparing(MatchRequestDTO::getCreatedAt);
+		Collections.sort(mergedData, createdAtComparator.reversed());
 		
 		return mergedData;
 		}catch(PersistanceException e) {

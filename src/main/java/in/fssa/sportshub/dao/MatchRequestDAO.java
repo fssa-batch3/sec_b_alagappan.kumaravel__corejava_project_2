@@ -267,7 +267,8 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationNotAcceptedToTeam(int Created
 		String query = "SELECT mr.*, "
 				+ "       t.team_name, t.url, t.about AS team_about "
 				+ "FROM match_requests AS mr "
-				+ "JOIN teams AS t ON mr.to_team = t.id "
+				+ "JOIN team_members AS tm ON mr.to_team = tm.id "
+				+ "JOIN teams AS t ON tm.team_id = t.id "
 				+ "WHERE mr.created_by = ? "
 				+ "  AND mr.status = 1";
 		

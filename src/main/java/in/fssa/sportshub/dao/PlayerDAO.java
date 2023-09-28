@@ -287,6 +287,35 @@ public int findByPhoneNumber(long phoneNumber) throws PersistanceException{
 	return value;
 }
 
+public String getPasswordByPhonenumber(long phoneNumber) throws PersistanceException{
+	String value;
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+		String query = "SELECT password FROM players WHERE is_active= 1 && phone_number = ? ";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setLong(1, phoneNumber);
+		rs = ps.executeQuery();
+	    if (rs.next()) {
+	    	value = rs.getString("password");
+	    }else {
+	    	throw new PersistanceException("Player not found");
+	    }
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	
+	return value;
+}
+
 public int logIn(long phoneNumber, String password) throws PersistanceException{
 	int value;
 	Connection con = null;
@@ -294,7 +323,6 @@ public int logIn(long phoneNumber, String password) throws PersistanceException{
 	ResultSet rs = null;
 	try {
 		String query = "SELECT id FROM players WHERE phone_number = ? && password = ? && is_active=1";
-		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
 		ps.setLong(1, phoneNumber);

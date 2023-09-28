@@ -18,10 +18,12 @@ public class TestUpdateTeam {
 		Team team = new Team();
 		team.setId(1);
 		team.setTeamName("Sharks");
-		team.setUrl("shssssdsfdsd");
+		team.setUrl("https://iili.io/HGUnV71.png");
 		team.getAddress().setArea("Aminjikarai");
 		team.getAddress().setDistrict("Chennai");
 		team.setAbout("Playing Street cricket");
+		team.setOpenForPlayerStatus(true);
+		team.setOpenForPlayerDescription("we need good bowlers");
 		team.setModifiedBy(1);
 		assertDoesNotThrow(()->{
 			teamService.update(team);

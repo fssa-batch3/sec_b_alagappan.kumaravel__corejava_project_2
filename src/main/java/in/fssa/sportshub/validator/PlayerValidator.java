@@ -97,6 +97,9 @@ public class PlayerValidator {
 			throw new ValidationException("User name length does not match pattern");
 		}
 		if(player.getFirstName() != null && !"".equals(player.getFirstName())) {
+			StringUtil.rejectIfInvalidString(player.getFirstName(), "First name");
+			StringUtil.rejectIfPatternDoesNotMatch(player.getFirstName(), "First name");
+			
 			if(player.getFirstName().length() < 3 || player.getFirstName().length() > 20) {
 				throw new ValidationException("First name length does not match pattern");
 			}

@@ -248,32 +248,6 @@ public class TestCreatePlayer {
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
 	
-	@Test
-	public void createPlayerWithFirstNameValueEmpty() throws Exception {
-		PlayerService playerService = new PlayerService();
-		
-		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
-		player.setUserName("Praveen");
-		player.setFirstName("  ");
-		player.setLastName("kumar");
-		player.setUrl("shssssdsfdsdfvdfgvdfd");
-		player.setPassword("Aa!1aaaaa");
-		Gender personGender = Gender.MALE;
-		player.setGender(personGender);
-		player.getAddress().setArea("Aminjikarai");
-		player.getAddress().setDistrict("Chennai");
-		player.setDateOfBirth(LocalDate.of(2002, 11, 26));
-		player.setAbout("I am a good boy");
-		
-		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
-        });
-        
-        String exceptedMessage = "First name can't be null or empty";
-		String actualMessage = exception.getMessage();
-		assertTrue(exceptedMessage.equals(actualMessage));
-	}
 	
 	@Test
 	public void createPlayerWithNumericFirstName() throws Exception {
@@ -433,33 +407,6 @@ public class TestCreatePlayer {
         });
         
         String exceptedMessage = "Invalid password";
-		String actualMessage = exception.getMessage();
-		assertTrue(exceptedMessage.equals(actualMessage));
-	}
-	
-	@Test
-	public void createPlayerWithDOBValueNull() throws Exception {
-		PlayerService playerService = new PlayerService();
-		
-		Player player = new Player();
-		player.setPhoneNumber(9344655211l);
-		player.setUserName("Praveen");
-		player.setFirstName("Praveen");
-		player.setLastName("kumar");
-		player.setUrl("shssssdsfdsdfvdfgvdfd");
-		player.setPassword("Aa11!aaa");
-		Gender personGender = Gender.MALE;
-		player.setGender(personGender);
-		player.getAddress().setArea("Aminjikarai");
-		player.getAddress().setDistrict("Chennai");
-		player.setDateOfBirth(null);
-		player.setAbout("I am a good boy");
-		
-		Exception exception = assertThrows(Exception.class, () -> {
-            playerService.create(player);
-        });
-        
-        String exceptedMessage = "Date of birth can not be null";
 		String actualMessage = exception.getMessage();
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}

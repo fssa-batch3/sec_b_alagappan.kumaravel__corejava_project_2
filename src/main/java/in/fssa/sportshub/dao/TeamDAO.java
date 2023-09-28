@@ -255,6 +255,68 @@ public class TeamDAO {
 	}
 	
 	
+	public Set<TeamDetailDTO> getRandomTeam(int areaId) throws PersistanceException {
+		Set<TeamDetailDTO> teamList = new HashSet<>();
+		
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
+		try {
+			String query = "SELECT t.*, p.id AS player_id, p.user_name ,a.area, a.district "
+					+ "FROM teams AS t  "
+					+ "JOIN team_members AS tm ON tm.team_id = t.id "
+					+ "JOIN players AS p ON tm.user_id = p.id "
+					+ "JOIN address AS a ON t.address_id = a.id "
+					+ "WHERE t.is_active = 1 "
+					+ "    AND t.address_id = ? "
+					+ "    AND tm.is_active = 1 AND tm.is_captain = 1"
+					+ "    AND tm.request_status = 1 "
+					+ "ORDER BY RAND() LIMIT 3";
+			
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setInt(1, areaId);
+			rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				TeamDetailDTO team = new TeamDetailDTO();
+				Set<Player> teamPlayer = new HashSet<Player>();
+			      team.setId(rs.getInt("id"));
+			      team.setTeamName(rs.getString("team_name"));
+			      team.setUrl(rs.getString("url"));
+			      team.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			      team.setCaptainName(rs.getString("user_name"));
+			      
+			      Address address = new Address();
+			      address.setId(rs.getInt("address_id"));
+			      address.setArea(rs.getString("area"));
+			      address.setDistrict(rs.getString("district"));
+			      team.setAddress(address);
+				
+				
+				Player player = new Player();
+				int id = rs.getInt("player_id");
+				player.setId(id);
+				team.setTeamCaptainId(id);
+
+				player.setUserName(rs.getString("user_name"));
+				teamPlayer.add(player);
+				team.setTeamMembers(teamPlayer);
+				teamList.add(team);
+				
+			}	
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+		return teamList;
+	}
+	
 	public void deleteChange(int playerId, int teamId) throws PersistanceException {
 		Connection con = null;
 		PreparedStatement ps = null;

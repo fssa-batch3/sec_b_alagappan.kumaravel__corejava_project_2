@@ -23,7 +23,14 @@ public class RequestResponseValidator {
 
 		boolean checkMatchRequestExist = MatchRequestValidator.idExist(matchRequestId);
 		if(!checkMatchRequestExist){
-			throw new ValidationException("match request id not exist");
+			throw new ValidationException("Match request id not exist");
+		}
+		
+		TeamMemberService teamMemberService = new TeamMemberService();
+		
+		TeamMember validateIsIdAvailable = teamMemberService.findById(toTeamCaptainRelationId);
+		if(validateIsIdAvailable == null){
+			throw new ValidationException("Captain relation id not exist");
 		}
 		
 		TeamMemberService teamMemberServ = new TeamMemberService();
@@ -47,12 +54,12 @@ public class RequestResponseValidator {
 	
 	public static void validateTypeOfMatch(MatchRequest matchRequest) throws ValidationException {
 		
-		if(matchRequest.getOpponentType().getDisplayName() == "1"  && (matchRequest.getToTeam() <= 0)){
+		if("1".equals(matchRequest.getOpponentType().getDisplayName())  && (matchRequest.getToTeam() <= 0)){
 				throw new ValidationException("Invalid to team id");
 			
 				
 		}
-		if(matchRequest.getOpponentType().getDisplayName() == "2" && (matchRequest.getAddressId() <= 0)){
+		if("2".equals(matchRequest.getOpponentType().getDisplayName()) && (matchRequest.getAddressId() <= 0)){
 				throw new ValidationException("Invalid to address id");
 			
 		}

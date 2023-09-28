@@ -758,7 +758,7 @@ public class TestCreateMatchRequest {
 			matchRequest.setLocation("gvhgvhgvhvhjhjh");
 			matchRequest.setInformation("100 rs betting");
 	        Exception exception = assertThrows(Exception.class, () -> {
-	        	matchRequestServ.create(matchRequest, 3);
+	        	matchRequestServ.create(matchRequest, 2);
 	        });
 	        
 	        String exceptedMessage = "toTeamMember id not exist";

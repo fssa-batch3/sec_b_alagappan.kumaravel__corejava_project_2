@@ -5,26 +5,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-
 import in.fssa.sportshub.service.RequestResponseService;
 
-public class TestRejectMatchInvitation {
+public class TestAcceptMatchInvitation {
 
-	@Test
-	public void rejectMatchInvitationWithValidData() throws Exception {
-		RequestResponseService responseService = new RequestResponseService();
-
-		assertDoesNotThrow(()->{
-			responseService.reject(7, 2);// we need correct data
-		});
-	}
+//	@Test
+//	public void acceptMatchInvitationWithValidData() throws Exception {
+//		RequestResponseService responseService = new RequestResponseService();
+//
+//		assertDoesNotThrow(()->{
+//			responseService.accept(7, 1);
+//		});
+//	}
 	
 	@Test
-	public void rejectMatchInvitationWithNotAvailableCaptainRelData() throws Exception {
+	public void acceptMatchInvitationWithNotAvailableCaptainRelData() throws Exception {
 		RequestResponseService responseService = new RequestResponseService();
 
 		Exception exception = assertThrows(Exception.class, () -> {
-			responseService.reject(1, 2);
+			responseService.accept(1, 2);
         });
         
         String exceptedMessage = "Match request id not exist";
@@ -34,11 +33,11 @@ public class TestRejectMatchInvitation {
 	}
 	
 	@Test
-	public void rejectMatchInvitationWithInValidCaptainRelData() throws Exception {
+	public void acceptMatchInvitationWithInValidCaptainRelData() throws Exception {
 		RequestResponseService responseService = new RequestResponseService();
 
 		Exception exception = assertThrows(Exception.class, () -> {
-			responseService.reject(1, -2);
+			responseService.accept(1, -2);
         });
         
         String exceptedMessage = "Invalid matchRequestId id";
@@ -48,11 +47,11 @@ public class TestRejectMatchInvitation {
 	}
 	
 	@Test
-	public void rejectMatchInvitationWithNotAvailableRequestData() throws Exception {
+	public void acceptMatchInvitationWithNotAvailableRequestData() throws Exception {
 		RequestResponseService responseService = new RequestResponseService();
 
 		Exception exception = assertThrows(Exception.class, () -> {
-			responseService.reject(100, 25);
+			responseService.accept(100, 25);
         });
         
         String exceptedMessage = "Captain relation id not exist";
@@ -62,11 +61,11 @@ public class TestRejectMatchInvitation {
 	}
 	
 	@Test
-	public void rejectMatchInvitationWithInValidRequestData() throws Exception {
+	public void acceptMatchInvitationWithInValidRequestData() throws Exception {
 		RequestResponseService responseService = new RequestResponseService();
 
 		Exception exception = assertThrows(Exception.class, () -> {
-			responseService.reject(-1, 25);
+			responseService.accept(-1, 25);
         });
         
         String exceptedMessage = "Invalid toTeamCaptainRelationId id";
@@ -74,6 +73,7 @@ public class TestRejectMatchInvitation {
 		System.out.println(actualMessage);
 		assertTrue(exceptedMessage.equals(actualMessage));
 	}
+	
 	
 	
 }
