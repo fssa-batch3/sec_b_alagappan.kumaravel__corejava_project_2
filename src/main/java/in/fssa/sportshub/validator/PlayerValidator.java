@@ -38,9 +38,10 @@ public class PlayerValidator {
 	}
 	
 	public static void validateUpdate(Player player) throws ValidationException {
-		System.out.println("validate in 1");
+
 		PlayerValidator.validatePartial(player);
-		System.out.println("validate in 2");
+
+		StringUtil.rejectIfInvalidImageUrl(player.getUrl(), "Player image url");
 		AddressValidator.validate(player.getAddress());
 		try {
 		boolean checkPlayerExist = PlayerValidator.playerExist(player.getId());
@@ -93,7 +94,7 @@ public class PlayerValidator {
 		StringUtil.rejectIfInvalidString(player.getUserName(), "User name");
 		StringUtil.rejectIfPatternDoesNotMatch(player.getUserName(), "User name");
 		
-		if(player.getUserName().length() < 5 || player.getUserName().length() > 20) {
+		if(player.getUserName().length() < 3 || player.getUserName().length() > 20) {
 			throw new ValidationException("User name length does not match pattern");
 		}
 		if(player.getFirstName() != null && !"".equals(player.getFirstName())) {

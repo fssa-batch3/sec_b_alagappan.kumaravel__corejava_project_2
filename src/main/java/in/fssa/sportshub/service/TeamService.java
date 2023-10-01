@@ -1,5 +1,6 @@
 package in.fssa.sportshub.service;
 
+import java.util.List;
 import java.util.Set;
 
 import in.fssa.sportshub.dao.AddressDAO;
@@ -149,10 +150,10 @@ public Set<TeamDetailDTO> getRandomTeam(int areaId) throws ServiceException{
 	}
 }
 
-public Set<TeamDetailDTO> getOpenForPlayerTeamList() throws ServiceException{
+public List<TeamDetailDTO> getOpenForPlayerTeamList(int pageSize, int lastTeamId) throws ServiceException{
 	 try {
 		TeamDAO teamDAO = new TeamDAO();
-		return teamDAO.getOpenForPlayerTeamList();
+		return teamDAO.getOpenForPlayerTeamList(pageSize,lastTeamId);
 	}catch(PersistanceException e) {
 		e.printStackTrace();
 		throw new ServiceException(e.getMessage());

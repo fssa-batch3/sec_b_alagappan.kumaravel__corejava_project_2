@@ -55,6 +55,10 @@ public class TeamValidator {
 		if(!checkTeamExist){
 			throw new ValidationException("Team not exist");
 		}
+		boolean checkTeamNameExist = TeamValidator.nameAlreadyExistWithTeamId(team.getId(),team.getTeamName());
+		if(checkTeamNameExist){
+			throw new ValidationException("Team name already exist");
+		}
 		
 		boolean isCaptain = TeamMemberValidator.isPlayerCaptainOfSpecificTeam(team.getModifiedBy(), team.getId());
 		if(!isCaptain){
@@ -104,6 +108,7 @@ public class TeamValidator {
 			throw new ValidationException("Invalid team input");
 		}
 		
+		StringUtil.rejectIfInvalidImageUrl(team.getUrl(), "Team image url");
 		StringUtil.rejectIfInvalidString(team.getTeamName(), "Team name");
 		StringUtil.rejectIfPatternDoesNotMatch(team.getTeamName(), "Team name");
 		if(team.getTeamName().length() < 5 || team.getTeamName().length() > 50) {
@@ -130,6 +135,22 @@ public class TeamValidator {
 		StringUtil.rejectIfInvalidString(teamName, "TeamName");
 		TeamDAO teamDAO = new TeamDAO();
 		result = teamDAO.nameAlreadyExist(teamName);
+		}catch(ValidationException e) {
+	 		e.printStackTrace();
+			throw new ValidationException(e.getMessage());
+	 	}catch(PersistanceException e) {
+	 		e.printStackTrace();
+			throw new ServiceException(e.getMessage());
+	 	}
+		return result;
+	}
+	
+	public static boolean nameAlreadyExistWithTeamId(int teamId, String teamName) throws ValidationException, ServiceException{
+		boolean result;
+		try {
+		StringUtil.rejectIfInvalidString(teamName, "TeamName");
+		TeamDAO teamDAO = new TeamDAO();
+		result = teamDAO.nameAlreadyExistWithTeamId(teamId,teamName);
 		}catch(ValidationException e) {
 	 		e.printStackTrace();
 			throw new ValidationException(e.getMessage());

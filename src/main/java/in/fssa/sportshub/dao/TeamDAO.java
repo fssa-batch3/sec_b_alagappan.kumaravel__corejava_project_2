@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import in.fssa.sportshub.exception.PersistanceException;
@@ -18,6 +20,7 @@ import in.fssa.sportshub.model.TeamDetailDTO;
 import in.fssa.sportshub.util.ConnectionUtil;
 
 public class TeamDAO {
+	
 	public boolean nameAlreadyExist(String teamName) throws PersistanceException{
 		boolean value;
 		Connection con = null;
@@ -29,6 +32,37 @@ public class TeamDAO {
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
 			ps.setString(1, teamName);
+			rs = ps.executeQuery();
+		    if (rs.next()) {
+		    	value = true;
+		    }else {
+		    	System.out.println("no");
+		    	value = false;
+		    }
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new PersistanceException(e.getMessage());
+		}finally {
+			ConnectionUtil.close(con,ps,rs);
+		}
+		
+		return value;
+	}
+	
+	public boolean nameAlreadyExistWithTeamId(int teamId, String teamName) throws PersistanceException{
+		boolean value;
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String query = "SELECT id FROM teams WHERE is_active=1 && team_name=? && id != ?";
+			
+			con = ConnectionUtil.getConnection();
+			ps = con.prepareStatement(query);
+			ps.setString(1, teamName);
+			ps.setInt(2, teamId);
 			rs = ps.executeQuery();
 		    if (rs.next()) {
 		    	value = true;
@@ -386,24 +420,32 @@ public class TeamDAO {
 		return teamList;
 	}
 	
-	public Set<TeamDetailDTO> getOpenForPlayerTeamList() throws PersistanceException{
-		Set<TeamDetailDTO> teamList = new HashSet<>();;
-		Connection con = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			String query = "SELECT t.*,a.*, p.id AS player_id, p.user_name FROM teams AS t "
-					+ "JOIN address AS a ON t.address_id = a.id "
-					+ "JOIN team_members AS tm ON tm.team_id = t.id "
-					+ "JOIN players AS p ON tm.user_id = p.id "
-					+ "WHERE tm.is_captain=1 AND tm.is_active=1 AND t.open_for_players_status = 1";
-			
-			con = ConnectionUtil.getConnection();
-			
-			ps = con.prepareStatement(query);
-			rs = ps.executeQuery();
+	public List<TeamDetailDTO> getOpenForPlayerTeamList(int pageSize, int lastTeamId) throws PersistanceException {
+	    
+		List<TeamDetailDTO> teamList = new ArrayList<>();
+	    Connection con = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
 
-			while (rs.next()) {
+	    try {
+	        String query = "SELECT t.*, a.*, p.id AS player_id, p.user_name FROM teams AS t " +
+	                       "JOIN address AS a ON t.address_id = a.id " +
+	                       "JOIN team_members AS tm ON tm.team_id = t.id " +
+	                       "JOIN players AS p ON tm.user_id = p.id " +
+	                       "WHERE tm.is_captain = 1 AND tm.is_active = 1 " +
+	                       "AND t.open_for_players_status = 1 " +
+	                       "AND t.id > ? " + // Filter out teams already loaded
+	                       "ORDER BY t.id " + // Order by team ID
+	                       "LIMIT ?"; // Add LIMIT clause for pagination
+
+	        con = ConnectionUtil.getConnection();
+	        ps = con.prepareStatement(query);
+	        ps.setInt(1, lastTeamId); // Provide the last loaded team's ID
+	        ps.setInt(2, pageSize); // Set the number of rows to fetch
+
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
 				TeamDetailDTO team = new TeamDetailDTO();
 				  team.setId(rs.getInt("id"));
 			      team.setTeamName(rs.getString("team_name"));
@@ -418,14 +460,57 @@ public class TeamDAO {
 			      team.setTeamCaptainId(rs.getInt("player_id"));
 			      teamList.add(team);
 			      System.out.println(team);
-			}
-			
-		}catch(SQLException e) {
-			e.printStackTrace();
-			throw new PersistanceException(e.getMessage());
-		}finally {
-			ConnectionUtil.close(con,ps,rs);
-		}
-		return teamList;
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(con, ps, rs);
+	    }
+
+	    return teamList;
 	}
+	
+//	public Set<TeamDetailDTO> getOpenForPlayerTeamList() throws PersistanceException{
+//		Set<TeamDetailDTO> teamList = new HashSet<>();;
+//		Connection con = null;
+//		PreparedStatement ps = null;
+//		ResultSet rs = null;
+//		try {
+//			String query = "SELECT t.*,a.*, p.id AS player_id, p.user_name FROM teams AS t "
+//					+ "JOIN address AS a ON t.address_id = a.id "
+//					+ "JOIN team_members AS tm ON tm.team_id = t.id "
+//					+ "JOIN players AS p ON tm.user_id = p.id "
+//					+ "WHERE tm.is_captain=1 AND tm.is_active=1 AND t.open_for_players_status = 1";
+//			
+//			con = ConnectionUtil.getConnection();
+//			
+//			ps = con.prepareStatement(query);
+//			rs = ps.executeQuery();
+//
+//			while (rs.next()) {
+//				TeamDetailDTO team = new TeamDetailDTO();
+//				  team.setId(rs.getInt("id"));
+//			      team.setTeamName(rs.getString("team_name"));
+//			      team.setUrl(rs.getString("url"));
+//			      team.setAbout(rs.getString("about"));
+//			      team.setOpenForPlayerDescription(rs.getString("open_for_players_description"));
+//			      team.getAddress().setId(rs.getInt("address_id"));
+//			      team.getAddress().setArea(rs.getString("area"));
+//			      team.getAddress().setDistrict(rs.getString("district"));
+//			      team.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+//			      team.setCaptainName(rs.getString("user_name"));
+//			      team.setTeamCaptainId(rs.getInt("player_id"));
+//			      teamList.add(team);
+//			      System.out.println(team);
+//			}
+//			
+//		}catch(SQLException e) {
+//			e.printStackTrace();
+//			throw new PersistanceException(e.getMessage());
+//		}finally {
+//			ConnectionUtil.close(con,ps,rs);
+//		}
+//		return teamList;
+//	}
 }
