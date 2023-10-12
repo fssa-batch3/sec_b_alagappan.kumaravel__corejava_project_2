@@ -380,8 +380,8 @@ public class TeamDAO {
 		}
 	}
 	
-	public Set<TeamDetailDTO> getAll() throws PersistanceException{
-		Set<TeamDetailDTO> teamList = new HashSet<>();;
+	public List<TeamDetailDTO> getAll(int pageSize, int lastTeamId) throws PersistanceException{
+		List<TeamDetailDTO> teamList = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -389,11 +389,16 @@ public class TeamDAO {
 			String query = "SELECT t.*, p.id, p.user_name, tm.id FROM teams AS t "
 					+ "JOIN team_members AS tm ON tm.team_id = t.id "
 					+ "JOIN players AS p ON tm.user_id = p.id "
-					+ " WHERE tm.is_active=1 AND tm.is_captain=1";
+					+ " WHERE tm.is_active=1 AND tm.is_captain=1 "
+					+ "AND t.id > ? "
+                    + "ORDER BY t.id "
+                    + "LIMIT ? ";
 			
 			con = ConnectionUtil.getConnection();
 			
 			ps = con.prepareStatement(query);
+			ps.setInt(1, lastTeamId);
+	        ps.setInt(2, pageSize); 
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
@@ -420,6 +425,55 @@ public class TeamDAO {
 		return teamList;
 	}
 	
+	
+public List<TeamDetailDTO> SearchTeamByString(String input, int lastTeamId) throws PersistanceException {
+	    
+		List<TeamDetailDTO> teamList = new ArrayList<>();
+	    Connection con = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+	    	String query = "SELECT t.*, p.id AS player_id, p.user_name, tm.id "
+	    		    + "FROM teams AS t "
+	    		    + "JOIN team_members AS tm ON tm.team_id = t.id "
+	    		    + "JOIN players AS p ON p.id = tm.user_id "
+	    		    + "WHERE "
+	    		    + "    tm.is_captain = 1 "
+	    		    + "    AND tm.is_active = 1 "
+	    		    + "    AND t.id > ? "
+	    		    + "    AND LOWER(t.team_name) LIKE LOWER(?) "
+	    		    + "ORDER BY t.id;"; 
+
+	    		con = ConnectionUtil.getConnection();
+	    		ps = con.prepareStatement(query);
+	    		ps.setInt(1, lastTeamId); 
+	    		ps.setString(2, "%" + input + "%");
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	        	TeamDetailDTO team = new TeamDetailDTO();
+				  team.setId(rs.getInt("id"));
+			      team.setTeamName(rs.getString("team_name"));
+			      team.setUrl(rs.getString("url"));
+			      team.setAbout(rs.getString("about"));
+			      team.setOpenForPlayerDescription(rs.getString("open_for_players_description"));
+			      team.getAddress().setId(rs.getInt("address_id"));
+			      team.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			      team.setCaptainName(rs.getString("user_name"));
+			      team.setTeamCaptainRelId(rs.getInt("tm.id"));
+			      teamList.add(team);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(con, ps, rs);
+	    }
+
+	    return teamList;
+	}
+
 	public List<TeamDetailDTO> getOpenForPlayerTeamList(int pageSize, int lastTeamId) throws PersistanceException {
 	    
 		List<TeamDetailDTO> teamList = new ArrayList<>();
@@ -470,6 +524,66 @@ public class TeamDAO {
 
 	    return teamList;
 	}
+	
+public List<TeamDetailDTO> SearchTeamForPlayerTeamListByString(String input, int lastTeamId) throws PersistanceException {
+	    
+		List<TeamDetailDTO> teamList = new ArrayList<>();
+	    Connection con = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+	    	String query = "SELECT t.*, a.*, p.id AS player_id, p.user_name "
+	    		    + "FROM teams AS t "
+	    		    + "JOIN address AS a ON t.address_id = a.id "
+	    		    + "JOIN team_members AS tm ON tm.team_id = t.id "
+	    		    + "JOIN players AS p ON tm.user_id = p.id "
+	    		    + "WHERE "
+	    		    + "    tm.is_captain = 1 "
+	    		    + "    AND tm.is_active = 1 "
+	    		    + "    AND t.open_for_players_status = 1 "
+	    		    + "    AND t.id > ? "
+	    		    + "    AND ( "
+	    		    + "        LOWER(t.team_name) LIKE LOWER(?) "
+	    		    + "        OR LOWER(a.area) LIKE LOWER(?) "
+	    		    + "        OR LOWER(a.district) LIKE LOWER(?) "
+	    		    + "    ) "
+	    		    + "ORDER BY t.id;"; 
+
+	    		con = ConnectionUtil.getConnection();
+	    		ps = con.prepareStatement(query);
+	    		ps.setInt(1, lastTeamId); 
+	    		ps.setString(2, "%" + input + "%");
+	    		ps.setString(3, "%" + input + "%"); 
+	    		ps.setString(4, "%" + input + "%");
+	        rs = ps.executeQuery();
+
+	        while (rs.next()) {
+				TeamDetailDTO team = new TeamDetailDTO();
+				  team.setId(rs.getInt("id"));
+			      team.setTeamName(rs.getString("team_name"));
+			      team.setUrl(rs.getString("url"));
+			      team.setAbout(rs.getString("about"));
+			      team.setOpenForPlayerDescription(rs.getString("open_for_players_description"));
+			      team.getAddress().setId(rs.getInt("address_id"));
+			      team.getAddress().setArea(rs.getString("area"));
+			      team.getAddress().setDistrict(rs.getString("district"));
+			      team.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			      team.setCaptainName(rs.getString("user_name"));
+			      team.setTeamCaptainId(rs.getInt("player_id"));
+			      teamList.add(team);
+			      System.out.println(team);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        throw new PersistanceException(e.getMessage());
+	    } finally {
+	        ConnectionUtil.close(con, ps, rs);
+	    }
+
+	    return teamList;
+	}
+	
 	
 //	public Set<TeamDetailDTO> getOpenForPlayerTeamList() throws PersistanceException{
 //		Set<TeamDetailDTO> teamList = new HashSet<>();;

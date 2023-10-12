@@ -130,10 +130,10 @@ public TeamDetailDTO findById(int teamId) throws ValidationException, ServiceExc
 }
 
 
-public Set<TeamDetailDTO> getAllTeam() throws ServiceException{
+public List<TeamDetailDTO> getAllTeam(int pageSize, int lastTeamId) throws ServiceException{
 	 try {
 		TeamDAO teamDAO = new TeamDAO();
-		return teamDAO.getAll();
+		return teamDAO.getAll(pageSize,lastTeamId);
 	}catch(PersistanceException e) {
 		e.printStackTrace();
 		throw new ServiceException(e.getMessage());
@@ -154,6 +154,26 @@ public List<TeamDetailDTO> getOpenForPlayerTeamList(int pageSize, int lastTeamId
 	 try {
 		TeamDAO teamDAO = new TeamDAO();
 		return teamDAO.getOpenForPlayerTeamList(pageSize,lastTeamId);
+	}catch(PersistanceException e) {
+		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+	}
+}
+
+public List<TeamDetailDTO> SearchTeamForPlayerTeamListByString(String input, int lastTeamId) throws ServiceException{
+	 try {
+		TeamDAO teamDAO = new TeamDAO();
+		return teamDAO.SearchTeamForPlayerTeamListByString(input,lastTeamId);
+	}catch(PersistanceException e) {
+		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+	}
+}
+
+public List<TeamDetailDTO> SearchTeamByString(String input, int lastTeamId) throws ServiceException{
+	 try {
+		TeamDAO teamDAO = new TeamDAO();
+		return teamDAO.SearchTeamByString(input,lastTeamId);
 	}catch(PersistanceException e) {
 		e.printStackTrace();
 		throw new ServiceException(e.getMessage());
