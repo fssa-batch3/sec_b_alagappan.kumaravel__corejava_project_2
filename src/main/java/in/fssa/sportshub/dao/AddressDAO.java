@@ -77,7 +77,7 @@ public int findByDistrictAndArea(String area, String district)throws Persistance
 		ps = con.prepareStatement(query);
 		ps.setString(1, area);
 		ps.setString(2, district);
-		
+		System.out.println(district);
 		rs = ps.executeQuery();
 
 		if (rs.next()) {

@@ -150,6 +150,16 @@ public Set<TeamDetailDTO> getRandomTeam(int areaId) throws ServiceException{
 	}
 }
 
+public List<TeamDetailDTO> allTeamByPlayerId(int playerId) throws ServiceException{
+	 try {
+		TeamDAO teamDAO = new TeamDAO();
+		return teamDAO.allTeamByPlayerId(playerId);
+	}catch(PersistanceException e) {
+		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+	}
+}
+
 public List<TeamDetailDTO> getOpenForPlayerTeamList(int pageSize, int lastTeamId) throws ServiceException{
 	 try {
 		TeamDAO teamDAO = new TeamDAO();

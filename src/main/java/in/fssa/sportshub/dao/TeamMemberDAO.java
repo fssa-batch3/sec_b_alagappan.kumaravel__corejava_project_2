@@ -7,8 +7,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 
 import in.fssa.sportshub.exception.PersistanceException;
@@ -431,6 +433,65 @@ public void exitTeam(int teamId, int playerId) throws PersistanceException{
 	
 }
 
+
+public void switchCaptain(int teamId, int captainId, int newCaptainId) throws PersistanceException {
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    boolean isTransactionSuccessful = false;
+    
+    try {
+        con = ConnectionUtil.getConnection();
+        con.setAutoCommit(false); 
+        
+        String query = "UPDATE team_members SET is_captain = 0 "
+                + "WHERE is_active = 1 AND request_status = 1 AND user_id = ? AND team_id = ? ";
+        ps = con.prepareStatement(query);
+        ps.setInt(1, captainId);
+        ps.setInt(2, teamId);
+        int rowsAffected = ps.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Team member updated");
+        } else {
+            throw new PersistanceException("SQL issue: Team member not updated");
+        }
+        
+        String query1 = "UPDATE team_members SET is_captain = 1 "
+                + "WHERE is_active = 1 AND request_status = 1 AND user_id = ? AND team_id = ? ";
+        ps = con.prepareStatement(query1);
+        ps.setInt(1, newCaptainId);
+        ps.setInt(2, teamId);
+        rowsAffected = ps.executeUpdate();
+        if (rowsAffected > 0) {
+            System.out.println("Team member updated");
+        } else {
+            throw new PersistanceException("SQL issue: Team member not updated");
+        }
+        
+        con.commit(); 
+        isTransactionSuccessful = true;
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+        System.out.println(e.getMessage());
+        throw new PersistanceException(e.getMessage());
+    } finally {
+ 
+        if (!isTransactionSuccessful) {
+            try {
+                if (con != null) {
+                    con.rollback(); // Roll back the transaction if it was not successful
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+            }
+        }
+        ConnectionUtil.close(con, ps, rs);
+    }
+}
+
+
 public Set<PlayerRequestDTO> listAllTeamMemberRequest(int teamId) throws PersistanceException{
 	Set<PlayerRequestDTO> listOfplayers = new HashSet<>();
 	
@@ -488,9 +549,9 @@ public Set<PlayerRequestDTO> listAllTeamMemberRequest(int teamId) throws Persist
 }
 
 
-public Set<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws PersistanceException{
+public List<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws PersistanceException{
 	
-	Set<TeamRequestDTO> listOfTeam = new HashSet<>();
+	List<TeamRequestDTO> listOfTeam = new ArrayList<>();
 	
 	Connection con = null;
 	PreparedStatement ps = null;
@@ -501,7 +562,8 @@ public Set<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws P
 				+ " FROM teams AS t "
 				+ "JOIN address AS a ON t.address_id = a.id "
 				+ "JOIN team_members AS tm ON tm.team_id = t.id "
-				+ "WHERE tm.is_active = 1 AND tm.is_captain != 1 AND tm.user_id = ? ";
+				+ "WHERE tm.is_active = 1 AND tm.is_captain != 1 AND tm.user_id = ? "
+				+ " ORDER BY tm.created_at DESC ";
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
 		ps.setInt(1, playerId);

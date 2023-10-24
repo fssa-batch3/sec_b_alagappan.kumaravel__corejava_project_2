@@ -8,6 +8,7 @@ public class TeamDetailDTO extends Team{
 	private String captainName;
 	int teamCaptainRelId;
 	int teamCaptainId;
+	boolean currentTeam;
 	
 	Set<Player> teamMembers = new HashSet<>();
 
@@ -44,13 +45,19 @@ public class TeamDetailDTO extends Team{
 		this.teamMembers = teamMembers;
 	}
 
+	public boolean isCurrentTeam() {
+		return currentTeam;
+	}
+
+	public void setCurrentTeam(boolean currentTeam) {
+		this.currentTeam = currentTeam;
+	}
+
 	@Override
 	public String toString() {
-		return "TeamDetailDTO [captainName=" + captainName + ", teamCaptainRelId=" + teamCaptainRelId + ", teamMembers="
-				+ teamMembers + "]";
+		return "TeamDetailDTO [captainName=" + captainName + ", teamCaptainRelId=" + teamCaptainRelId
+				+ ", teamCaptainId=" + teamCaptainId + ", currentTeam=" + currentTeam + ", teamMembers=" + teamMembers
+				+ "]";
 	}
-	
-	
-	
 
 }

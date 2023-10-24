@@ -82,7 +82,7 @@ public class MatchRequestService {
 	}
 	
 	// invitation page 
-	public Set<MatchRequestDTO> getAllMyMatchRequest(int createdById ,int toTeamId, int addressId) throws ServiceException, ValidationException{
+	public List<MatchRequestDTO> getAllMyMatchRequest(int createdById ,int toTeamId, int addressId) throws ServiceException, ValidationException{
 		
 		try {
 		MatchRequestValidator.validateId(addressId, "addressId");
@@ -164,9 +164,9 @@ public class MatchRequestService {
 		return matchRequest;
 	}
 	
-public Set<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws ServiceException, ValidationException{
+public List<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws ServiceException, ValidationException{
 		MatchRequestDAO matchReqDAO = new MatchRequestDAO();
-		Set<MatchRequestDTO> mergedData = null;
+		List<MatchRequestDTO> mergedData = null;
 		try {
 		MatchRequestValidator.validateId(playerId, "playerId");
 
@@ -180,5 +180,20 @@ public Set<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws Service
 		
 	}
 	
+public List<MatchRequestDTO> listOfMyMatchByTeamId(int teamId) throws ServiceException, ValidationException{
+	MatchRequestDAO matchReqDAO = new MatchRequestDAO();
+	List<MatchRequestDTO> mergedData = null;
+	try {
+	MatchRequestValidator.validateId(teamId, "playerId");
+
+	 mergedData = matchReqDAO.listOfMyMatchByTeamId(teamId);
+
+	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
+	return mergedData;
+	
+}
 	
 }

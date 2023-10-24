@@ -474,6 +474,52 @@ public List<TeamDetailDTO> SearchTeamByString(String input, int lastTeamId) thro
 	    return teamList;
 	}
 
+
+public List<TeamDetailDTO> allTeamByPlayerId(int playerId) throws PersistanceException {
+    
+	List<TeamDetailDTO> teamList = new ArrayList<>();
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+    	String query = "SELECT t.*, a.area , a.district , tm.is_active AS current_team, tm.created_at AS join_date "
+    			+ "FROM teams AS t "
+    			+ "JOIN team_members AS tm ON tm.team_id = t.id "
+    			+ "JOIN address AS a ON t.address_id = a.id "
+    			+ "WHERE user_id = ? AND tm.request_status = 1 "
+    			+ "AND tm.created_at = (SELECT MAX(created_at) FROM team_members WHERE team_id = t.id) "; 
+
+    		con = ConnectionUtil.getConnection();
+    		ps = con.prepareStatement(query);
+    		ps.setInt(1, playerId); 
+        rs = ps.executeQuery();
+
+        while (rs.next()) {
+        	TeamDetailDTO team = new TeamDetailDTO();
+			  team.setId(rs.getInt("id"));
+		      team.setTeamName(rs.getString("team_name"));
+		      team.setUrl(rs.getString("url"));
+		      team.setAbout(rs.getString("about"));
+		      team.setOpenForPlayerDescription(rs.getString("open_for_players_description"));
+		      team.getAddress().setId(rs.getInt("address_id"));
+		      team.getAddress().setArea(rs.getString("area"));
+		      team.getAddress().setDistrict(rs.getString("district"));
+		      team.setCurrentTeam(rs.getInt("current_team") == 1);
+		      team.setCreatedAt(rs.getTimestamp("join_date").toLocalDateTime());
+		      teamList.add(team);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+        throw new PersistanceException(e.getMessage());
+    } finally {
+        ConnectionUtil.close(con, ps, rs);
+    }
+
+    return teamList;
+}
+
+
 	public List<TeamDetailDTO> getOpenForPlayerTeamList(int pageSize, int lastTeamId) throws PersistanceException {
 	    
 		List<TeamDetailDTO> teamList = new ArrayList<>();

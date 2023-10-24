@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import in.fssa.sportshub.exception.PersistanceException;
@@ -136,9 +138,9 @@ public class MatchRequestDAO {
 		return listOfRequest;
 	}
 	
-public Set<MatchRequestDTO> getAllMyMatchRequest(int CreatedId, int toTeamId, int addressId) throws PersistanceException{
+public List<MatchRequestDTO> getAllMyMatchRequest(int CreatedId, int toTeamId, int addressId) throws PersistanceException{
 		
-		Set<MatchRequestDTO> listOfRequest = new HashSet<>();
+		List<MatchRequestDTO> listOfRequest = new ArrayList<>();
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -152,7 +154,8 @@ public Set<MatchRequestDTO> getAllMyMatchRequest(int CreatedId, int toTeamId, in
 					+ "WHERE mr.status = 1 "
 					+ "    AND mr.created_by != ? "
 					+ "    AND (mr.to_team = ? OR mr.address_id = ?) "
-					+ "    AND rr.request_id IS NULL";
+					+ "    AND rr.request_id IS NULL "
+					+ " ORDER BY mr.created_at DESC ";
 			
 			con = ConnectionUtil.getConnection();
 			ps = con.prepareStatement(query);
@@ -206,10 +209,11 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationAccepted(int CreatedId) throw
 	PreparedStatement ps = null;
 	ResultSet rs = null;
 	try {
-			String query = "SELECT mr.*, rs.status_of_response , "
+			String query = "SELECT mr.*, rs.status_of_response , p.phone_number , "
 					+ "       t.team_name, t.url, t.about AS team_about "
 					+ "FROM match_requests AS mr "
 					+ "JOIN team_members AS tm ON mr.to_team = tm.id "
+					+ "JOIN players AS p ON p.id = tm.user_id "
 					+ "JOIN request_responses AS rs ON rs.request_id = mr.id "
 					+ "JOIN teams AS t ON tm.team_id = t.id "
 					+ "WHERE mr.created_by = ? "
@@ -239,10 +243,12 @@ public Set<MatchRequestDTO> listOfMyMatchInvitationAccepted(int CreatedId) throw
 			team.setTeamName(rs.getString("team_name"));
 			team.setUrl(rs.getString("url"));
  			matchRequest.setOpponentTeam(team);
+ 			Player player = new Player();
+ 			player.setPhoneNumber(Long.parseLong(rs.getString("phone_number")));
  			
+ 			matchRequest.setOpponentTeamCaptain(player);
  			matchRequest.setStatusOfResponse(rs.getInt("status_of_response"));
 			listOfRequest.add(matchRequest);
-			System.out.println("hi ");
 			System.out.println(matchRequest.toString());
 		}
 		
@@ -541,9 +547,9 @@ public void delete (int id) throws PersistanceException{
 }
 
 
-public Set<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws PersistanceException{
+public List<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws PersistanceException{
 	
-	Set<MatchRequestDTO> listOfRequest = new HashSet<>();
+	List<MatchRequestDTO> listOfRequest = new ArrayList<>();
 	Connection con = null;
 	PreparedStatement ps = null;
 	ResultSet rs = null;
@@ -569,12 +575,93 @@ public Set<MatchRequestDTO> listOfMyMatchByPlayerId(int playerId) throws Persist
 					+ "        tm2.team_id IN (SELECT team_id "
 					+ "                         FROM team_members tmm "
 					+ "                        WHERE user_id = ? AND request_status =1 "
-					+ "                          AND mr.created_at BETWEEN tmm.start_date AND COALESCE(tmm.end_date, NOW())))";
+					+ "                          AND mr.created_at BETWEEN tmm.start_date AND COALESCE(tmm.end_date, NOW()))) "
+					+ " ORDER BY mr.created_at DESC ";
 		
 		con = ConnectionUtil.getConnection();
 		ps = con.prepareStatement(query);
 		ps.setInt(1, playerId);
 		ps.setInt(2, playerId);
+		rs = ps.executeQuery();
+		while(rs.next()) {
+			MatchRequestDTO matchRequest = new MatchRequestDTO();
+			matchRequest.setId(rs.getInt("id"));
+			matchRequest.setCreatedBy(rs.getInt("created_by"));
+			matchRequest.setOpponentType((rs.getInt("type_of_opponent") == 1? OpponentType.TO_TEAM : OpponentType.TO_AREA ));
+			matchRequest.setToTeam(rs.getInt("to_team"));
+			matchRequest.setAddressId(rs.getInt("address_id"));
+			matchRequest.setTypeOfMatch(rs.getInt("type_of_match"));
+			matchRequest.setMembers(rs.getInt("members"));
+			matchRequest.setMembersAgeFrom(rs.getInt("members_age_from"));
+			matchRequest.setMembersAgeTo(rs.getInt("members_age_to"));
+			matchRequest.setMatchTime(rs.getTimestamp("match_time").toLocalDateTime());
+			matchRequest.setLocation(rs.getString("location"));
+			matchRequest.setInformation(rs.getString("information"));
+			matchRequest.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+			matchRequest.setStatus(rs.getInt("status") == 1);
+			Team createdTeam = new Team();
+			createdTeam.setId(rs.getInt("created_team_id"));
+			createdTeam.setTeamName(rs.getString("created_team_name"));
+			createdTeam.setUrl(rs.getString("created_team_url"));
+ 			matchRequest.setCreatedTeam(createdTeam);
+ 			
+ 			Team opponentTeam = new Team();
+			opponentTeam.setId(rs.getInt("opponent_team_id"));
+			opponentTeam.setTeamName(rs.getString("opponent_team_name"));
+			opponentTeam.setUrl(rs.getString("opponent_team_url"));
+ 			matchRequest.setOpponentTeam(opponentTeam);
+ 			
+			listOfRequest.add(matchRequest);
+			System.out.println(matchRequest.toString());
+		}
+		
+	}catch(SQLException e) {
+		e.printStackTrace();
+		System.out.println(e.getMessage());
+		throw new PersistanceException(e.getMessage());
+	}finally {
+		ConnectionUtil.close(con,ps,rs);
+	}
+	return listOfRequest;
+}
+
+
+public List<MatchRequestDTO> listOfMyMatchByTeamId(int teamId) throws PersistanceException{
+	
+	List<MatchRequestDTO> listOfRequest = new ArrayList<>();
+	Connection con = null;
+	PreparedStatement ps = null;
+	ResultSet rs = null;
+	try {
+			String query = "SELECT mr.*, "
+					+ "       t1.id AS created_team_id, "
+					+ "       t1.url AS created_team_url, "
+					+ "       t1.team_name AS created_team_name, "
+					+ "       t2.id AS opponent_team_id, "
+					+ "       t2.url AS opponent_team_url, "
+					+ "       t2.team_name AS opponent_team_name "
+					+ "  FROM match_requests mr "
+					+ "       JOIN team_members AS tm1 ON mr.created_by = tm1.id "
+					+ "       JOIN teams AS t1 ON tm1.team_id = t1.id "
+					+ "       JOIN team_members AS tm2 ON mr.to_team = tm2.id "
+					+ "       JOIN teams AS t2 ON tm2.team_id = t2.id "
+					+ " WHERE mr.status = 0 "
+					+ " AND mr.match_time < NOW() "
+					+ "   AND (tm1.team_id IN (SELECT team_id "
+					+ "                         FROM team_members tmm "
+					+ "                        WHERE team_id = ? AND request_status =1 "
+					+ "                          AND mr.created_at BETWEEN tmm.start_date AND COALESCE(tmm.end_date, NOW())) "
+					+ "        OR "
+					+ "        tm2.team_id IN (SELECT team_id "
+					+ "                         FROM team_members tmm "
+					+ "                        WHERE team_id = ? AND request_status =1 "
+					+ "                          AND mr.created_at BETWEEN tmm.start_date AND COALESCE(tmm.end_date, NOW()))) "
+					+ " ORDER BY mr.created_at DESC ";
+		
+		con = ConnectionUtil.getConnection();
+		ps = con.prepareStatement(query);
+		ps.setInt(1, teamId);
+		ps.setInt(2, teamId);
 		rs = ps.executeQuery();
 		while(rs.next()) {
 			MatchRequestDTO matchRequest = new MatchRequestDTO();

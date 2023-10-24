@@ -1,6 +1,8 @@
 package in.fssa.sportshub.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import in.fssa.sportshub.dao.TeamMemberDAO;
@@ -26,7 +28,7 @@ public void create(TeamMember teamMember) throws ValidationException, ServiceExc
 		throw new ServiceException(e.getMessage());
  	}
 			
-	}
+}
 
 public void createJoinRequest(TeamMember teamMember) throws ValidationException, ServiceException{
 	try {
@@ -133,9 +135,9 @@ public Set<PlayerRequestDTO> listAllTeamMemberRequest(int teamId) throws Validat
 				
 	}
 
-public Set<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws ValidationException, ServiceException{
+public List<TeamRequestDTO> listAllPlayerRequestByPlayerId(int playerId) throws ValidationException, ServiceException{
 	
-	Set<TeamRequestDTO> listOfTeams = new HashSet<>();
+	List<TeamRequestDTO> listOfTeams = new ArrayList<>();
 	try {	
 		TeamMemberValidator.validateListAllPlayerRequestByPlayerId(playerId);
 		TeamMemberDAO dao = new TeamMemberDAO();
@@ -171,7 +173,7 @@ public void acceptRequest(int requestId, int captainId) throws ValidationExcepti
 		TeamMember teamMember = this.findById(requestId);
 		int playerId = teamMember.getUserId();
 		
-		Set<TeamRequestDTO> listOfRequest = this.listAllPlayerRequestByPlayerId(playerId);
+		List<TeamRequestDTO> listOfRequest = this.listAllPlayerRequestByPlayerId(playerId);
 		for (TeamRequestDTO request : listOfRequest) {
 		    if(request.getRequestId() != requestId && request.getRequestStatus() != 0) {
 		    	System.out.println(request.getRequestId() + " "+  playerId);
@@ -179,6 +181,23 @@ public void acceptRequest(int requestId, int captainId) throws ValidationExcepti
 		    }
 		}
 		dao.acceptRequest(requestId);
+		
+	}catch(PersistanceException e) {
+ 		e.printStackTrace();
+		throw new ServiceException(e.getMessage());
+ 	}
+				
+}
+
+
+public void switchCaptain(int teamId, int captainId, int newCaptainId) throws ValidationException, ServiceException{
+	
+	
+	try {	
+		TeamMemberValidator.validateSwitchCaptain(teamId, captainId, newCaptainId);
+		TeamMemberDAO dao = new TeamMemberDAO();
+		
+		dao.switchCaptain(teamId, captainId, newCaptainId);
 		
 	}catch(PersistanceException e) {
  		e.printStackTrace();

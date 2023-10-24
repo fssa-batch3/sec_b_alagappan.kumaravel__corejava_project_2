@@ -2,6 +2,7 @@ package in.fssa.sportshub.validator;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -173,6 +174,44 @@ public class TeamMemberValidator {
 		
 	}
 	
+	
+	public static void validateSwitchCaptain(int teamId, int captainId, int newCaptainId) throws ValidationException {
+		try {
+			TeamMemberService teamMemberService = new TeamMemberService();
+			boolean checkPlayerExist = PlayerValidator.playerExist(captainId);
+			if(!checkPlayerExist){
+				throw new ValidationException("Captain not exist");
+			}
+			
+			boolean checkNewPlayerExist = PlayerValidator.playerExist(newCaptainId);
+			if(!checkNewPlayerExist){
+				throw new ValidationException("New captain not exist");
+			}
+			boolean isCaptain = TeamMemberValidator.isPlayerCaptain(captainId);
+			if(!isCaptain){
+				throw new ValidationException("Player not a captain of team");
+			}
+			
+			boolean isCaptain1 = TeamMemberValidator.isPlayerCaptainOfSpecificTeam(captainId, teamId);
+			if(!isCaptain1){
+				throw new ValidationException("player not a captian of this team");
+			}
+			
+			TeamMember teamMembervalidate = teamMemberService.findByPlayerId(newCaptainId);
+			if(teamMembervalidate == null) {
+				throw new ValidationException("New captain not in any team");
+			}
+			
+			if(teamId != teamMembervalidate.getTeamId()) {
+				throw new ValidationException("New captain not a player of this team");
+			}
+			
+		} catch (ValidationException | ServiceException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public static void validateRejectRequest(int requestId, int captainId) throws ValidationException {
 		TeamMemberService teamMemberService = new TeamMemberService();
 		try {
@@ -216,7 +255,7 @@ public class TeamMemberValidator {
 			}
 			
 			MatchRequestService matchRequestServ = new MatchRequestService();
-			Set<MatchRequestDTO> listOfMatchInvitation = matchRequestServ.listOfMyMatchByPlayerId(playerId);
+			List<MatchRequestDTO> listOfMatchInvitation = matchRequestServ.listOfMyMatchByPlayerId(playerId);
 			LocalDateTime currentTime = LocalDateTime.now();
 			Set<MatchRequestDTO> filteredList = listOfMatchInvitation.stream()
 			    .filter(matchRequest -> matchRequest.getMatchTime().isAfter(currentTime))
